@@ -1,0 +1,23 @@
+<% if ((success && success.length) || (error && error.length)) { %>
+  <div
+    id="flash-message"
+    class="mb-4 rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg
+           transition-all duration-500
+           <%= success && success.length ? 'bg-green-600' : 'bg-red-600' %>"
+  >
+    <%= success && success.length ? success[0] : error[0] %>
+  </div>
+
+  <script>
+    (function () {
+      const flash = document.getElementById("flash-message");
+      if (!flash) return;
+
+      setTimeout(() => {
+        flash.style.opacity = "0";
+        flash.style.transform = "translateY(-8px)";
+        setTimeout(() => flash.remove(), 500);
+      }, 2000);
+    })();
+  </script>
+<% } %>
