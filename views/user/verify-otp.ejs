@@ -1,0 +1,272 @@
+<style>
+    /* Custom CSS to style the OTP input boxes */
+    .otp-input {
+        width: 3rem;
+        /* Width of the box */
+        height: 3.5rem;
+        /* Height of the box */
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        /* rounded-lg */
+        border: 1px solid #333333;
+        /* ring-neutral-800 */
+        background-color: #2C2C2C;
+        /* bg-dark-input */
+        color: #ffffff;
+        /* text-white */
+        transition: all 0.2s;
+    }
+
+    .otp-input:focus {
+        outline: none;
+        border-color: #38E07B;
+        /* focus:ring-primary-hover */
+        box-shadow: 0 0 0 2px #38E07B;
+        /* focus:ring-2 */
+    }
+
+    /* Style for the container to prevent horizontal scrollbar on small screens */
+    .min-h-screen {
+        min-height: 100vh;
+    }
+</style>
+
+<div class="flex h-screen w-full items-center justify-center px-4 sm:px-6">
+
+    <div class="w-full max-w-md bg-card-dark rounded-xl p-8 shadow-2xl ring-1 ring-white/10 my-6">
+
+        <header class="mb-4 text-center">
+            <div class="flex justify-center mb-4">
+                <div class="p-3 rounded-full bg-dark-input">
+                    <svg class="w-8 h-8 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M3 3h18c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2zm0 2v.5L12 13l9-7.5V5H3zM3 19h18V7l-9 7.5L3 7v12z" />
+                    </svg>
+                </div>
+            </div>
+            <h1 class="text-2xl font-bold text-white mb-2">Verify Your Email</h1>
+            <p class="text-sm text-neutral-400">
+                We've sent a 6-digit verification code to your registered email address.
+            </p>
+        </header>
+
+        <form id="otpForm" action="/verify-otp" method="POST" class="space-y-6">
+
+            <div class="flex justify-between space-x-2 sm:space-x-3">
+                <input type="hidden" name="otp" id="otpHidden">
+                <input type="text" id="otp-1" maxlength="1"
+                    class="otp-input focus:border-primary focus:shadow-primary/40"
+                    onkeyup="moveToNext(this, 'otp-2')" />
+                <input type="text" id="otp-2" maxlength="1"
+                    class="otp-input focus:border-primary focus:shadow-primary/40"
+                    onkeyup="moveToNext(this, 'otp-3')" />
+                <input type="text" id="otp-3" maxlength="1"
+                    class="otp-input focus:border-primary focus:shadow-primary/40"
+                    onkeyup="moveToNext(this, 'otp-4')" />
+                <input type="text" id="otp-4" maxlength="1"
+                    class="otp-input focus:border-primary focus:shadow-primary/40"
+                    onkeyup="moveToNext(this, 'otp-5')" />
+                <input type="text" id="otp-5" maxlength="1"
+                    class="otp-input focus:border-primary focus:shadow-primary/40"
+                    onkeyup="moveToNext(this, 'otp-6')" />
+                <input type="text" id="otp-6" maxlength="1"
+                    class="otp-input focus:border-primary focus:shadow-primary/40"
+                    onkeyup="moveToNext(this, 'submitButton')" />
+            </div>
+            <p id="otpErr" class="text-sm text-red-500 text-center hidden">Please enter the full 6-digit code.</p>
+
+            <button type="submit" id="submitButton"
+                class="w-full rounded-lg bg-primary py-3.5 text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
+                Verify OTP
+            </button>
+
+            <div class="text-center space-y-3 pt-4">
+                <p class="text-sm text-neutral-400">
+                    Didn't receive the code?
+                    <a id="resendOtp"
+                        class="font-bold text-white hover:text-primary underline transition-colors opacity-50 pointer-events-none">Resend
+                        OTP</a>
+                </p>
+
+                <div class="flex justify-center items-center text-sm text-neutral-500">
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2V7h2v9z" />
+                    </svg>
+                    <span id="resend-timer">00:30</span>
+                </div>
+
+                <a href="#"
+                    class="inline-flex items-center text-sm text-neutral-400 hover:text-white transition-colors">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Forgot Password
+                </a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+
+    const OTP_DURATION = 30;
+    const STORAGE_KEY = "otp_expire_time";
+
+    const otpForm = document.getElementById("otpForm");
+    const otpInputs = Array.from(document.querySelectorAll(".otp-input"));
+    const otpHidden = document.getElementById("otpHidden");
+    const otpErr = document.getElementById("otpErr");
+    const timerEl = document.getElementById("resend-timer");
+    const resendLink = document.getElementById("resendOtp");
+
+    //OTP input auto move
+
+    function moveToNext(currentInput, nextInputId) {
+        if (currentInput.value.length === 1) {
+            const nextInput = document.getElementById(nextInputId);
+            if (nextInput) nextInput.focus();
+        }
+    }
+
+    //Time fromatting
+
+    function formatTime(seconds) {
+        const min = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+    }
+
+    let timerInterval = null;
+
+    function startTimer(timeLeft) {
+
+        if (timerInterval) clearInterval(timerInterval);
+
+        resendLink.classList.add("opacity-50", "pointer-events-none");
+
+        timerEl.textContent = formatTime(timeLeft);
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+
+            if (timeLeft < 0) {
+                clearInterval(timerInterval);
+                timerEl.textContent = "Expired";
+
+                resendLink.classList.remove("opacity-50", "pointer-events-none");
+                localStorage.removeItem(STORAGE_KEY);
+                return;
+            }
+
+            timerEl.textContent = formatTime(timeLeft);
+        }, 1000);
+    }
+
+    window.onload = () => {
+        document.getElementById("otp-1").focus();
+
+        let expireTime = localStorage.getItem(STORAGE_KEY);
+
+        // FIRST TIME USER (NO TIMER STORED)
+        if (!expireTime) {
+            expireTime = Date.now() + OTP_DURATION * 1000;
+            localStorage.setItem(STORAGE_KEY, expireTime);
+            startTimer(OTP_DURATION);
+            return;
+        }
+
+        const remaining = Math.ceil((expireTime - Date.now()) / 1000);
+
+        // TIMER STILL RUNNING
+        if (remaining > 0) {
+            startTimer(remaining);
+        }
+        // TIMER EXPIRED → RESTART FOR NEW OTP
+        else {
+            localStorage.removeItem(STORAGE_KEY);
+
+            const newExpire = Date.now() + OTP_DURATION * 1000;
+            localStorage.setItem(STORAGE_KEY, newExpire);
+            startTimer(OTP_DURATION);
+        }
+    };
+
+    resendLink.addEventListener("click", async () => {
+        if (resendLink.classList.contains("pointer-events-none")) return;
+
+        try {
+            resendLink.textContent = "Sending...";
+            resendLink.classList.add("opacity-50", "pointer-events-none");
+
+            console.log("before feching");
+
+            const res = await fetch("/resend-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+                otpErr.textContent = data.message;
+                otpErr.classList.remove("hidden");
+
+                resendLinkresendLink.textContent = "Resend OTP";
+                resendLink.classList.remove("opacity-50", "pointer-events-none");
+                return;
+            }
+
+            // Restart timer
+            const expireTime = Date.now() + OTP_DURATION * 1000;
+            localStorage.setItem(STORAGE_KEY, expireTime);
+            startTimer(OTP_DURATION);
+
+            resendLink.textContent = "Resend OTP";
+
+        } catch (err) {
+            otpErr.textContent = "Network error. Please try again.";
+            otpErr.classList.remove("hidden");
+
+            resendLink.textContent = "Resend OTP";
+            resendLink.classList.remove("opacity-50", "pointer-events-none");
+        }
+    });
+
+
+    //Form submitting
+
+    otpForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const otpCode = otpInputs.map(i => i.value).join("");
+        otpErr.classList.add("hidden");
+
+        if (otpCode.length !== 6 || isNaN(otpCode)) {
+            otpErr.textContent = "Please enter the full 6-digit code.";
+            otpErr.classList.remove("hidden");
+            otpInputs.forEach(i => i.style.borderColor = "red");
+            return;
+        }
+
+        otpInputs.forEach(i => i.style.borderColor = "");
+
+        otpHidden.value = otpCode;
+
+        otpForm.submit();
+    });
+
+    resendLink.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        if (resendLink.classList.contains("pointer-events-none")) return;
+
+        const newExpire = Date.now() + OTP_DURATION * 1000;
+        localStorage.setItem(STORAGE_KEY, newExpire);
+
+        window.location.reload();
+    });
+</script>

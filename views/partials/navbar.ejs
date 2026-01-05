@@ -13,6 +13,7 @@
                     "input-dark": "#121212",
                     "card-dark": "#1c2e24", // Slightly lighter for contrast
                 },
+                
                 fontFamily: {
                     "display": ["Spline Sans", "Noto Sans", "sans-serif"],
                     "body": ["Spline Sans", "Noto Sans", "sans-serif"],
@@ -71,6 +72,7 @@
                         </div>
 
                         <div class="p-5 flex flex-col">
+                            
                             <div class="mb-3 px-1">
                                 <h3 class="text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 font-display">
                                     Welcome
@@ -81,17 +83,72 @@
                             </div>
 
                             <div class="flex flex-col gap-3">
-                                <button
+                                <button onclick="window.location.href='/login'"
                                     class="relative flex w-full h-10 items-center justify-center rounded-lg bg-primary text-background-dark hover:bg-[#2fd16f] transition-all duration-200 shadow-[0_0_20px_rgba(54,226,123,0.25)]">
                                     <span class="text-sm font-bold tracking-wide">Log In</span>
                                 </button>
 
-                                <button
+                                <button onclick="window.location.href='/signup'"
                                     class="flex w-full h-10 items-center justify-center rounded-lg border border-white/10 hover:border-primary/40 hover:bg-white/5 text-white transition-all duration-200">
                                     <span class="text-sm font-semibold tracking-wide">Create Account</span>
                                 </button>
                             </div>
                         </div>
+
+
+                         <!-- <div class="p-5 flex flex-col">
+                            <% if (!currentUser) { %>
+                            <div class="mb-3 px-1">
+                                <h3 class="text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 font-display">
+                                    Welcome
+                                </h3>
+                            </div>
+
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-5">
+                            </div>
+
+                            <div class="flex flex-col gap-3">
+                                <button onclick="window.location.href='/login'"
+                                    class="relative flex w-full h-10 items-center justify-center rounded-lg bg-primary text-background-dark hover:bg-[#2fd16f] transition-all duration-200 shadow-[0_0_20px_rgba(54,226,123,0.25)]">
+                                    <span class="text-sm font-bold tracking-wide">Log In</span>
+                                </button>
+
+                                <button onclick="window.location.href='/signup'"
+                                    class="flex w-full h-10 items-center justify-center rounded-lg border border-white/10 hover:border-primary/40 hover:bg-white/5 text-white transition-all duration-200">
+                                    <span class="text-sm font-semibold tracking-wide">Create Account</span>
+                                </button>
+                            </div>
+
+                            <% } else{ %>
+                                
+                                <div class="mb-3 px-1">
+                                <h3 class="text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 font-display">
+                                    Welcome
+                                </h3>
+                            </div>
+
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-5">
+                            </div>
+
+                            <div class="flex flex-col gap-3">
+                                <button onclick="window.location.href='/login'"
+                                    class="relative flex w-full h-10 items-center justify-center rounded-lg bg-primary text-background-dark hover:bg-[#2fd16f] transition-all duration-200 shadow-[0_0_20px_rgba(54,226,123,0.25)]">
+                                    <span class="text-sm font-bold tracking-wide">Account</span>
+                                </button>
+
+                                <button onclick="window.location.href='/login'"
+                                    class="flex w-full h-10 items-center justify-center rounded-lg border border-white/10 hover:border-primary/40 hover:bg-white/5 text-white transition-all duration-200">
+                                    <span class="text-sm font-semibold tracking-wide">Logout</span>
+                                </button>
+                            </div>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div> -->
 
                     </div>
                 </div>

@@ -9,6 +9,8 @@ import { fileURLToPath } from "url";
 import expressLayouts from "express-ejs-layouts";
 import userRoutes from "./routes/user.routes.js";
 import sessionConfig from "./config/sessionStore.js";
+import passport from "passport";
+import "./config/passport.js";
 
 
 
@@ -36,6 +38,14 @@ app.use((req, res, next) => {
 app.use(nocache());
 
 app.use(expressLayouts);
+
+app.use((req,res,next)=>{
+    res.locals.currentUser=req.session.user||null;
+    next();
+})
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.set("view engine","ejs");

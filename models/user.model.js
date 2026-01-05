@@ -1,7 +1,7 @@
-import mongoose, { Schema }  from "mongoose";
-const {Scema}=mongoose;
+import mongoose from "mongoose";
 
-const userSchema=new Schema(
+
+const userSchema=new mongoose.Schema(
     {
         name:{
             type:String,
@@ -18,7 +18,8 @@ const userSchema=new Schema(
         },
         phone:{
             type:String,
-            default:null
+            default:null,
+            sparse:true
         },
         password:{
             type:String
