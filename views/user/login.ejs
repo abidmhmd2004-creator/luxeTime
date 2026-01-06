@@ -1,7 +1,6 @@
-
 <body class="bg-rich-black font-display text-slate-200 transition-colors duration-300">
   <div class="flex min-h-screen w-full flex-col lg:flex-row">
-    <div class="flex w-full flex-col justify-center px-6 py-6 lg:w-1/2 lg:px-20 xl:px-32 bg-rich-black">
+    <div class="flex w-full flex-col justify-center px-6 py-6 lg:w-1/2 lg:px-20 xl:px-32 bg-black">
 
 
       <div class="mx-auto w-full max-w-md lg:w-[420px] xl:w-[460px] mt-4 lg:mt-0 animate-fade-in
@@ -11,55 +10,56 @@
           <h1 class="mb-2 text-center font-bold tracking-tight text-white lg:text-4xl">Login</h1>
           <p class="text-gray-400">Access your orders, wishlist, and exclusive offers.</p>
         </div>
-        <form action="#" class="space-y-4">
+        <form action="#" method="POST" id="loginForm" class="space-y-4" novalidate>
           <div>
             <label class="mb-2 block text-sm font-medium text-gray-300" for="email">Email Address</label>
-            <input
-              class="block w-full rounded-full border-border-dark bg-input-dark px-5 py-3 text-white placeholder-gray-500 focus:border-gold-accent focus:bg-input-dark focus:ring-1 focus:ring-gold-accent sm:text-sm transition-all duration-200"
-              id="email" name="email" placeholder="Enter your email" required="" type="email" />
+            <input id="email" name="email" type="email" placeholder="Enter your email"
+              class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+            <p id="emailErr" class="text-xs text-red-500 mt-1 hidden"></p>
           </div>
           <div>
             <label class="mb-2 block text-sm font-medium text-gray-300" for="password">Password</label>
-            <input
-              class="block w-full rounded-full border-border-dark bg-input-dark px-5 py-3 text-white placeholder-gray-500 focus:border-gold-accent focus:bg-input-dark focus:ring-1 focus:ring-gold-accent sm:text-sm transition-all duration-200"
-              id="password" name="password" placeholder="Enter your password" required="" type="password" />
+            <input id="password" name="password" type="password" placeholder="Enter your password"
+              class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+            
+              <p id="passwordErr" class="text-xs text-red-500 mt-1 hidden"></p>
           </div>
           <div class="flex items-center justify-end">
-            <a class="text-sm font-medium text-gray-400 hover:underline transition-colors" href="#">Forgot Password?</a>
+            <a class="text-sm font-medium text-gray-400 hover:underline transition-colors" href="/forgot-password">Forgot Password?</a>
           </div>
-          <button
-            class="w-full rounded-full bg-[#38E07B]  px-5 py-3.5 text-center text-sm font-bold text-black shadow-lg hover:bg-white hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-700 transition-all duration-300"
-            type="submit">Login</button>
-          <div class="relative my-6">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-border-dark"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="bg-rich-black px-4 text-gray-500">OR</span>
-            </div>
+          <button type="submit"
+            class="w-full rounded-lg bg-primary py-3.5 text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
+            Login
+          </button>
+          <div class="relative flex justify-center items-center py-2">
+            <div class="absolute w-full border-t border-neutral-700"></div>
+            <span class="relative text-sm font-medium text-neutral-500 bg-card-dark px-3">OR</span>
           </div>
           <div class="grid  gap-4">
-            <button
-              class="flex w-full items-center justify-center gap-2 rounded-full border border-border-dark bg-input-dark px-5 py-3 text-sm font-medium text-gray-300 hover:bg-gold-accent hover:border-gold-accent hover:text-black transition-colors"
-              type="button">
-              <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24">
+            <button type="button" onclick="window.location.href='/auth/google'"
+              class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-dark-input px-5 py-3 text-sm font-medium text-gray-300 hover:bg-neutral-800 transition-colors">
+              <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                 <path
-                  d="M12.0003 20.45c-4.666 0-8.45-3.784-8.45-8.45 0-4.666 3.784-8.45 8.45-8.45 4.666 0 8.45 3.784 8.45 8.45 0 4.666-3.784 8.45-8.45 8.45z"
-                  fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></path>
+                  d="M12.001 4.75a6.52 6.52 0 00-4.48 1.84l-2.67-2.67A10 10 0 0112.001 2c2.72 0 5.22.95 7.15 2.58l-2.88 2.22A6.52 6.52 0 0012.001 4.75z"
+                  fill="#EA4335" />
                 <path
-                  d="M17.5252 14.85c.348-.95.538-1.95.538-3 0-4.575-3.553-8.312-8.063-8.45h-.263c-4.666 0-8.45 3.784-8.45 8.45 0 4.666 3.784 8.45 8.45 8.45.65 0 1.288-.075 1.9-.213"
-                  fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></path>
-                <path d="M11.5126 9.337l2.875 3.65-2.875 3.638" fill="none" stroke="currentColor" stroke-linecap="round"
-                  stroke-linejoin="round" stroke-width="2"></path>
+                  d="M4.851 7.21a10 10 0 000 9.58l2.7 2.1c.88-2.14 2.82-3.7 5.21-4.04l.05-2.73a6.51 6.51 0 01-5.71-3.71l-2.25-1.2Z"
+                  fill="#FBBC04" />
+                <path
+                  d="M12.001 19.25a6.52 6.52 0 004.86-2.1l2.88 2.22A10 10 0 0112.001 22c-2.72 0-5.22-.95-7.15-2.58l2.67-2.67a6.52 6.52 0 004.48 2.45Z"
+                  fill="#34A853" />
+                <path
+                  d="M19.141 12c0-.52-.05-1.03-.15-1.53h-7.07v3.06h4.01a3.63 3.63 0 01-1.58 2.37v2.02h2.59c1.55-1.42 2.46-3.5 2.46-5.88z"
+                  fill="#4285F4" />
               </svg>
-              Google
+              Login with Google
             </button>
 
           </div>
           <p class="text-center text-sm font-light text-gray-500">
             Don’t have an account?
             <a class="font-semibold text-white hover:text-gold-accent hover:underline underline-offset-4 transition-colors"
-              href="#">Sign Up</a>
+              href="/signup">Sign Up</a>
           </p>
         </form>
       </div>
@@ -101,3 +101,49 @@
     </div>
   </div>
 </body>
+<script>
+  const loginForm = document.getElementById("loginForm");
+
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+
+  const emailErr = document.getElementById("emailErr");
+  const passwordErr = document.getElementById("passwordErr");
+
+  loginForm.addEventListener("submit", (e) => {
+    let valid = true;
+
+    emailErr.classList.add("hidden");
+    passwordErr.classList.add("hidden");
+
+    emailErr.textContent = "";
+    passwordErr.textContent = "";
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // EMAIL VALIDATION
+    if (emailInput.value.trim() === "") {
+      emailErr.textContent = "Email is required";
+      emailErr.classList.remove("hidden");
+      valid = false;
+    } else if (!emailRegex.test(emailInput.value.trim())) {
+      emailErr.textContent = "Enter a valid email address";
+      emailErr.classList.remove("hidden");
+      valid = false;
+    }
+
+    // PASSWORD VALIDATION
+    if (passwordInput.value.trim() === "") {
+      passwordErr.textContent = "Password is required";
+      passwordErr.classList.remove("hidden");
+      valid = false;
+    } else if (passwordInput.value.length < 6) {
+      passwordErr.textContent = "Password must be at least 6 characters";
+      passwordErr.classList.remove("hidden");
+      valid = false;
+    }
+    if (!valid) {
+      e.preventDefault();
+    }
+  });
+</script>

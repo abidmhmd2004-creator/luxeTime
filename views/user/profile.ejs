@@ -1,0 +1,91 @@
+<div class="h-full w-full px-4 sm:px-6 py-6 bg-black">
+
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
+        <%- include('../partials/sidebar') %>
+
+            <main class="flex-1 space-y-6">
+
+                <div class="bg-dark-green rounded-xl p-6 shadow-xl flex items-center space-x-4">
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined text-6xl text-neutral-400 p-2 border-2 border-yellow-500 rounded-full">account_circle</span>
+                        <span
+                            class="material-symbols-outlined absolute bottom-0 right-0 text-yellow-500 bg-dark-green rounded-full p-0.5 text-lg">verified</span>
+                    </div>
+                    <div class="text-white">
+                        <h2 class="text-2xl font-bold">Alexander Doe</h2>
+                        <p class="text-sm text-neutral-400">alexander.doe@example.com</p>
+                    </div>
+                </div>
+
+                <div class="bg-dark-green rounded-xl p-6 shadow-xl space-y-6">
+                    <h3 class="text-lg font-semibold text-white flex items-center space-x-2">
+                        <span class="material-symbols-outlined text-lg text-yellow-500">folder_person</span>
+                        <span>Personal Information</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div>
+                            <label class="block text-xs font-medium text-neutral-400 mb-1">Full Name</label>
+                            <div class="relative">
+                                <input type="text" value="Alexander Doe" disabled
+                                    class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
+                                <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">edit</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-neutral-400 mb-1">Email Address</label>
+                            <div class="relative">
+                                <input type="email" value="alexander.doe@example.com" disabled
+                                    class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
+                                <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">mail</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-neutral-400 mb-1">Phone Number</label>
+                            <div class="relative">
+                                <input type="text" value="+1 (555) 123-4567" disabled
+                                    class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
+                                <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">call</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-neutral-400 mb-1">Date of Birth</label>
+                            <div class="relative">
+                                <input type="text" value="15 Aug 1990" disabled
+                                    class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
+                                <span
+                                    class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">calendar_month</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="flex justify-end pt-4 space-x-3">
+                        <button type="button"
+                            class="px-5 py-3 rounded-lg text-white font-semibold border border-green-700/80 hover:bg-green-800/50 transition">
+                            Change Email
+                        </button>
+                        <button type="button"
+                            class="px-5 py-3 rounded-lg text-white font-semibold border border-green-700/80 hover:bg-green-800/50 transition">
+                            Change Password
+                        </button>
+                        <button type="button"
+                            class="px-5 py-3 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
+                            Edit Profile
+                        </button>
+                    </div>
+
+                </div>
+
+            </main>
+    </div>
+
+</div>

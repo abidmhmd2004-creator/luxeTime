@@ -51,28 +51,35 @@ export const postSignup = async (req, res) => {
 
 
         const existingUser = await User.findOne({ email });
+        console.log(existingUser);
         
 
-        if (existingUser) {
+        if (existingUser && existingUser.isVerified) {
             req.flash("error", "Email already registered,Please login!");
             return res.redirect("/signup");
         }
+        
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user= await User.create({
+
+
+        const user= await User.findOneAndUpdate({email},
+            {
             name,
             email,
             phone,
             referralCode,
             password: hashedPassword,
             isVerified: false
-        });
-
+        },{upsert:true,new:true});
+        
         await createAndSendOtp(user);
+
 
         req.session.otp={
             userId:user._id.toString(),
+            email:user.email,
             purpose: "signup"
 
         }
@@ -102,3 +109,164 @@ export const showLogin=async(req,res)=>{
         res.status(500).send("Server error");
     }
 };
+
+
+export const postLogin=async(req,res)=>{
+    try{
+
+        const {email,password}=req.body;
+
+        if(!email||!password){
+            req.flash("error","ALl fields are required");
+            return res.redirect("/login");
+        }
+
+        const user=await User.findOne({email});
+
+        if(!user){
+            req.flash("error","Invalid  email or password");
+            return res.redirect("/login");
+        }
+
+        if(!user.isVerified){
+            req.flash("error","PLease verify your email first");
+            return res.redirect("/login");
+        }
+
+        const isPasswordMatch= await bcrypt.compare(password,user.password);
+
+        if(!isPasswordMatch){
+            req.flash("error","Invalid email or password");
+            return res.redirect("/login");
+        }
+
+        req.session.user={
+            id:user._id,
+            name:user.name,
+            email:user.email
+        };
+        res.redirect("/home");
+
+    }catch(err){
+        console.log(err);
+        res.status(500).send("Login failed");
+    }
+}
+
+
+
+
+
+
+export const loadForgotPass=async (req,res)=>{
+    try{
+
+        delete req.session.email;
+        delete req.session.purpose;
+        
+        return res.render("user/forgot-password");
+    }catch(err){
+        console.log("Error loading page");
+        res.status(500).send("server error");
+    }
+}
+
+
+export const postForgotPass=async (req,res)=>{
+    try{
+        const {email}=req.body;
+
+        if(!email){
+            req.flash("error","Email is required");
+            return res.redirect("/forgot-password")
+        }
+
+        const user=await User.findOne({email});
+
+        if(!user){
+            req.flash("error","No account found with this email");
+            return res.redirect("/forgot-password");
+        }
+
+        await createAndSendOtp(user);
+
+        req.session.otp={
+            userId:user._id.toString(),
+            email:user.email,
+            purpose:"forgot-password"
+
+        }
+        res.redirect("/verify-otp")
+    }catch(err){
+        console.error(err);
+        res.status(500).send("Something went wrong");
+    }
+}
+
+
+export const getResetPassword=(req,res)=>{
+    try{
+        if(!req.session.resetUserId){
+            return res.redirect("/forgot-password")
+        }
+        res.render("user/reset-password")
+    }catch(err){
+        console.error(err);
+        res.status(500).send("Somethng went wrong");
+    }
+}
+
+
+export const postResetPassword =async(req,res)=>{
+    try{
+        if(!req.session.resetUserId){
+            req.flash("error","Unauthorized request");
+            return res.redirect("/reset-password")
+        }
+
+        const {newPassword,confirmPassword}=req.body;
+
+        if(!newPassword||!confirmPassword){
+            req.flash("error","All fields are required");
+        }
+
+        if(newPassword.length<6){
+            req.flash("error","Password must be at least 6 charactors");
+            return res.redirect("/reset-password");
+        }
+
+        if(newPassword!==confirmPassword){
+            req.flash("error","Password do not macth");
+        }
+
+        const userId=req.session.resetUserId;
+
+        const hashedPassword=await bcrypt.hash(newPassword,10);
+
+        const data=await User.findByIdAndUpdate(userId,{password:hashedPassword});
+
+        delete req.session.resetUserId;
+
+         res.redirect("/login");
+
+
+    }catch(err){
+        console.log(err);
+        res.status(500).send("failed to reset password");
+
+    }
+}
+
+
+
+export const logout=(req,res)=>{
+    req.session.destroy(err=>{
+        if(err){
+            console.error(err);
+            return res.send("Logout failed");
+        }
+
+        res.clearCookie("luxetime.sid");
+        res.redirect("/")
+    })
+}

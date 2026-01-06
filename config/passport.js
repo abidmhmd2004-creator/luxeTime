@@ -15,14 +15,40 @@ async (accessToken,refreshToken,profile,done)=>{
         let existingUser=await User.findOne({googleId:profile.id});
         if(existingUser){
             return done(null,existingUser);
-        }else{
-            const newUser=new User({
-                name:profile.displayName,
-                email:profile.emails[0].value,
-                googleId:profile.id,
-            })
-            done(null,newUser)
         }
+        // else{
+        //     const newUser=new User({
+        //         name:profile.displayName,
+        //         email:profile.emails[0].value,
+        //         googleId:profile.id,
+        //     })
+        //     done(null,newUser)
+        // }
+
+        const email=profile.emails?.[0]?.value;
+
+        // if(!email){
+        //     return done(new Error("Google account has no email"),null);
+        // }
+
+        existingUser=await User.findOne({email});
+
+        if(existingUser){
+            existingUser.googleId=profile.id;
+            existingUser.isVerified=true;
+            await existingUser.save()
+
+            return done(null,existingUser);
+        }
+
+        const newUser=await User.create({
+            name:profile.displayName,
+            email,
+            googleId:profile.id,
+            isVerified:true
+        });
+        return done(null,newUser);
+
         }catch(err){
             return done(err,null);
     }
