@@ -12,6 +12,7 @@ import sessionConfig from "./config/sessionStore.js";
 import passport from "passport";
 import "./config/passport.js";
 import { checkUser } from "./middlewares/auth.js";
+// import { userContext } from "./middlewares/userContext.middleware.js";
 
 const app=express();
 
@@ -48,6 +49,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(checkUser);
+// app.use(userContext);
 
 
 app.set("view engine","ejs");

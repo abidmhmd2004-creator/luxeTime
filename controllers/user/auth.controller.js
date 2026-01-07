@@ -74,7 +74,7 @@ export const postSignup = async (req, res) => {
             isVerified: false
         },{upsert:true,new:true});
         
-        await createAndSendOtp(user);
+        await createAndSendOtp(user,"signup");
 
 
         req.session.otp={
@@ -188,7 +188,7 @@ export const postForgotPass=async (req,res)=>{
             return res.redirect("/forgot-password");
         }
 
-        await createAndSendOtp(user);
+        await createAndSendOtp(user,"forgot-password");
 
         req.session.otp={
             userId:user._id.toString(),

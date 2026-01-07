@@ -4,7 +4,7 @@
                 <div class="flex items-center space-x-3 text-white">
                     <span class="material-symbols-outlined text-2xl">account_circle</span>
                     <div>
-                        <p class="font-semibold text-lg">Alexander Doe</p>
+                        <p class="font-semibold text-lg"><%= user.name %></p>
                         <p class="text-xs text-green-300">Premium Member</p>
                     </div>
                 </div>
@@ -13,34 +13,34 @@
             <nav class="bg-dark-green rounded-xl p-3 shadow-xl space-y-1">
                 <ul class="space-y-1">
                     <li>
-                        <a href="#" class="flex justify-between items-center px-3 py-3 rounded-lg bg-green-700/50 text-white font-medium hover:bg-green-700/60 transition">
+                        <a href="/profile" class="sidebar-link flex justify-between items-center px-3 py-3 rounded-lg bg-green-700/50 text-white font-medium hover:bg-green-700/60 transition">
                             <div class="flex items-center space-x-2">
                                 <span class="material-symbols-outlined text-base">person</span>
                                 <span>Profile</span>
                             </div>
-                            <span class="w-2 h-2 bg-primary rounded-full"></span>
+                            <!-- <span class="w-2 h-2 bg-primary rounded-full"></span> -->
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center space-x-2 px-3 py-3 rounded-lg text-neutral-300 hover:bg-green-800/40 transition">
+                        <a href="#" class="sidebar-link flex items-center space-x-2 px-3 py-3 rounded-lg text-neutral-300 hover:bg-green-800/40 transition">
                             <span class="material-symbols-outlined text-base">shopping_bag</span>
                             <span>My Orders</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center space-x-2 px-3 py-3 rounded-lg text-neutral-300 hover:bg-green-800/40 transition">
+                        <a href="#" class="sidebar-link flex items-center space-x-2 px-3 py-3 rounded-lg text-neutral-300 hover:bg-green-800/40 transition">
                             <span class="material-symbols-outlined text-base">account_balance_wallet</span>
                             <span>Wallet</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center space-x-2 px-3 py-3 rounded-lg text-neutral-300 hover:bg-green-800/40 transition">
+                        <a href="/address" class="sidebar-link flex items-center space-x-2 px-3 py-3 rounded-lg text-neutral-300 hover:bg-green-800/40 transition">
                             <span class="material-symbols-outlined text-base">home_pin</span>
                             <span>Address</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center space-x-2 px-3 py-3 rounded-lg text-neutral-300 hover:bg-green-800/40 transition">
+                        <a href="#" class="sidebar-link flex items-center space-x-2 px-3 py-3 rounded-lg text-neutral-300 hover:bg-green-800/40 transition">
                             <span class="material-symbols-outlined text-base">person_add</span>
                             <span>Refer & Earn</span>
                         </a>
@@ -59,3 +59,28 @@
                 </ul>
             </nav>
         </aside>
+
+
+        <script>
+  const links = document.querySelectorAll(".sidebar-link");
+  const currentPath = window.location.pathname;
+
+  links.forEach(link => {
+    // Remove default active styles
+    link.classList.remove("bg-green-700/50", "text-white", "font-medium");
+
+    // Match current URL
+    if (link.getAttribute("href") === currentPath) {
+      link.classList.add("bg-green-700/50", "text-white", "font-medium");
+    }
+
+    // Click handling (client-side highlight)
+    link.addEventListener("click", () => {
+      links.forEach(l =>
+        l.classList.remove("bg-green-700/50", "text-white", "font-medium")
+      );
+
+      link.classList.add("bg-green-700/50", "text-white", "font-medium");
+    });
+  });
+</script>

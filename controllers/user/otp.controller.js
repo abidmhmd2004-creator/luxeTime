@@ -25,7 +25,6 @@ export const verifyOtp = async (req, res) => {
     const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
 
     const otpRecord = await Otp.findOne({ userId, otp: hashedOtp });
-    console.log(otpRecord);
 
     if (!otpRecord) {
         req.flash("error", "Invalid OTP");
@@ -47,7 +46,9 @@ export const verifyOtp = async (req, res) => {
         req.session.user = {
             id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            // phone:user.phone,
+            // dob:user.DOB
         }
 
         await Otp.deleteMany({ userId });
@@ -62,6 +63,17 @@ export const verifyOtp = async (req, res) => {
 
         return res.redirect("/reset-password");
     }
+
+    if(purpose==="change-email"){
+
+        await User.findByIdAndUpdate(userId,{
+            email:req.session.otp.email
+        })
+        delete req.session.otp;
+        return res.redirect("/profile");
+    }
+
+
     res.redirect("/login");
 }
 
@@ -73,26 +85,37 @@ export const resentOtp = async (req, res) => {
         if (!req.session.otp) {
             return res.status(401).json({
                 success: false,
-                message: "Sessio expired"
+                message: "Session expired"
             })
         }
 
-        const { userId, purpose } = req.session.otp;
+        const { userId, purpose ,email } = req.session.otp;
 
-        const user = await User.findById(userId);
+        // const user = await User.findById(userId);
 
-        if (!user) {
+        // if (!user) {
+        //     return res.status(404).json({
+        //         success: false,
+        //         message: "User not found"
+        //     })
+        // }
+
+        if (!email) {
             return res.status(404).json({
                 success: false,
-                message: "User not found"
+                message: "User email not found"
             })
         }
+
 
         await Otp.deleteMany({ userId });
 
-        await createAndSendOtp(user);
+        // await createAndSendOtp(user,purpose);
 
-        return res.json({
+                await createAndSendOtp({_id:userId,email},purpose);
+
+
+       return res.json({
             success: true,
             message: "OTP resent successfully"
         })
