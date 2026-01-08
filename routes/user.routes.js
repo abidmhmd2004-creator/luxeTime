@@ -14,7 +14,7 @@ import { redirectIfAuthenticated } from "../middlewares/auth.js";
 import passport from "passport";
 import { requireAuth } from "../middlewares/auth.js";
 import { getChangePassword, getProfile, loadChangeEmail, loadEditProfile, postChangeEmail, postChangePassword, postEditProfile } from "../controllers/user/profile.controller.js";
-import { getAddress } from "../controllers/user/address.controller.js";
+import { addAddress, deleteAddress, editAddress, getAddress } from "../controllers/user/address.controller.js";
 
 
 
@@ -71,5 +71,9 @@ router.get("/change-email", loadChangeEmail);
 router.post("/change-email",postChangeEmail);
 
 router.get("/address",getAddress);
+router.post("/add-address",addAddress);
+router.post("/edit-address/:id",editAddress);
+
+router.delete("/delete-address/:id",deleteAddress);
 
 export default router;

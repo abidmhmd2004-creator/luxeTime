@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const addressSchema =new Schema(
+const addressSchema =new mongoose.Schema(
     {
         userId:{
             type:mongoose.Schema.Types.ObjectId,
@@ -9,7 +9,7 @@ const addressSchema =new Schema(
             index:true
         },
 
-        fulName:{
+        fullName:{
             type:String,
             required:true,
             trim:true
@@ -37,11 +37,6 @@ const addressSchema =new Schema(
             required:true,
             trim:true
         },
-        city:{
-            type:String,
-            required:true,
-            trim:true
-        },
 
         state:{
             type:String,
@@ -58,6 +53,12 @@ const addressSchema =new Schema(
         country:{
             type:String,
             default:"India"
+        },
+
+        addressType:{
+            type:String,
+            enum:["Home","Office","Other"],
+            default:"Home"
         },
 
         isDefault:{
