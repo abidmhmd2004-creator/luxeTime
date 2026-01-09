@@ -1,0 +1,181 @@
+<%- include('../partials/adminSidebar') %>
+
+
+    <main class="flex-1 p-8 space-y-8 overflow-y-auto">
+
+        <div class="space-y-1">
+            <p class="text-xs text-neutral-500">/ Admin / <span class="text-primary">Customers</span></p>
+            <h1 class="text-2xl font-bold">Customers</h1>
+            <p class="text-sm text-neutral-400">Manage registered customers.</p>
+        </div>
+
+        <div class="bg-[#232726] p-4 rounded-xl shadow-lg space-y-5">
+    <h2 class="text-lg font-semibold text-white">SEARCH CUSTOMERS</h2>
+    <div class="grid grid-cols-12 gap-2 items-end">
+        <div class="col-span-12 sm:col-span-7">
+            <label for="searchQuery" class="text-xs uppercase text-neutral-400 font-medium">Search by name or
+                email...</label>
+            <input type="text" id="searchQuery" placeholder="Search by name or email..."
+                class="w-full bg-black px-3 mt-2 rounded-2xl py-3 text-sm text-white placeholder-[#5E6261] focus:outline-none"
+                title="Search by customer name or email" />
+        </div>
+
+        <div class="col-span-6 sm:col-span-2">
+            <label for="statusFilter" class="text-xs uppercase text-neutral-400 font-medium">Status</label>
+            <div class="relative mt-2">
+                <select id="statusFilter"
+                    class="custom-field w-full px-3 py-3 appearance-none bg-gray-950 rounded-2xl text-white pr-8 focus:outline-none">
+                    <option class="bg-gray-950 text-white">All Statuses</option>
+                    <option class="bg-gray-950 text-white">Active</option>
+                    <option class="bg-gray-950 text-white">Blocked</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none text-base">
+                    keyboard_arrow_down
+                </span>
+            </div>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3 flex space-x-2 justify-end">
+            <button
+                class="w-auto px-4 py-2 rounded-lg border border-neutral-600 text-neutral-300 hover:bg-neutral-800 transition">
+                Clear
+            </button>
+            <button
+                class="w-auto flex items-center justify-center space-x-1 px-4 py-2 rounded-lg bg-green-500 text-black font-bold hover:bg-green-600 transition">
+                <span class="material-symbols-outlined text-lg">search</span>
+                <span>Search</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+        <div class="bg-card-dark p-6 rounded-xl shadow-lg space-y-4">
+            <div class="flex justify-between items-center border-b border-neutral-700 pb-3 ">
+                <h3 class="text-lg font-semibold">Registered Users</h3>
+                <p class="text-sm text-neutral-400">Showing 1-10 of 1,248 customers</p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-neutral-300">
+                    <thead>
+                        <tr class="text-left text-neutral-400 border-b border-neutral-700">
+                            <th class="py-3 pr-4 font-normal">CUSTOMER NAME</th>
+                            <th class="py-3 pr-4 font-normal">EMAIL ADDRESS</th>
+                            <th class="py-3 pr-4 font-normal">PHONE NUMBER</th>
+                            <th class="py-3 pr-4 font-normal">JOINED DATE</th>
+                            <th class="py-3 pr-4 font-normal">STATUS</th>
+                            <th class="py-3 font-normal text-center">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
+                            <td class="py-3 font-medium text-white flex items-center space-x-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold">
+                                    RV</div>
+                                <span>Rahul Verma</span>
+                            </td>
+                            <td class="py-3">rahul.verma@example.com</td>
+                            <td class="py-3">+91 98765 43210</td>
+                            <td class="py-3">Oct 12, 2022</td>
+                            <td class="py-3"><span
+                                    class="bg-light-green/20 text-light-green px-2 py-0.5 rounded text-xs font-medium">ACTIVE</span>
+                            </td>
+                            <td class="py-3 text-center">
+                                <label class="flex justify-center items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked>
+                                    <div
+                                        class="relative w-11 h-6 bg-green-500 rounded-full peer-checked:bg-red-500 toggle-switch-bg">
+                                        <div
+                                            class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full toggle-switch-circle transform peer-checked:translate-x-full">
+                                        </div>
+                                    </div>
+                                    <span class="ml-2 text-xs text-neutral-500 peer-checked:text-white">Block</span>
+                                </label>
+                            </td>
+                        </tr>
+
+                        <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
+                            <td class="py-3 font-medium text-white flex items-center space-x-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-xs font-bold">
+                                    SK</div>
+                                <span>Sneha Kapoor</span>
+                            </td>
+                            <td class="py-3">sneha.kapoor@example.com</td>
+                            <td class="py-3">+91 99123 45678</td>
+                            <td class="py-3">Sep 05, 2023</td>
+                            <td class="py-3"><span
+                                    class="bg-red-500/20 text-red-500 px-2 py-0.5 rounded text-xs font-medium">BLOCKED</span>
+                            </td>
+                            <td class="py-3 text-center">
+                                <label class="flex justify-center items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer">
+                                    <div
+                                        class="relative w-11 h-6 bg-neutral-600 rounded-full peer-checked:bg-red-500 toggle-switch-bg">
+                                        <div
+                                            class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full toggle-switch-circle transform peer-checked:translate-x-full">
+                                        </div>
+                                    </div>
+                                    <span class="ml-2 text-xs text-white peer-checked:text-white">Unblock</span>
+                                </label>
+                            </td>
+                        </tr>
+
+                        <tr class="hover:bg-neutral-800/50 transition">
+                            <td class="py-3 font-medium text-white flex items-center space-x-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-xs font-bold">
+                                    AM</div>
+                                <span>Amit Mishra</span>
+                            </td>
+                            <td class="py-3">amit.mishra@example.com</td>
+                            <td class="py-3">+91 97034 56789</td>
+                            <td class="py-3">Jan 22, 2024</td>
+                            <td class="py-3"><span
+                                    class="bg-light-green/20 text-light-green px-2 py-0.5 rounded text-xs font-medium">ACTIVE</span>
+                            </td>
+                            <td class="py-3 text-center">
+                                <label class="flex justify-center items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked>
+                                    <div
+                                        class="relative w-11 h-6 bg-green-500 rounded-full peer-checked:bg-red-500 toggle-switch-bg">
+                                        <div
+                                            class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full toggle-switch-circle transform peer-checked:translate-x-full">
+                                        </div>
+                                    </div>
+                                    <span class="ml-2 text-xs text-neutral-500 peer-checked:text-white">Block</span>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-end items-center pt-4 text-sm space-x-2">
+                <p class="text-neutral-500">Showing 1 to 10 of 1248 entries</p>
+                <div class="flex items-center space-x-1">
+                    <button class="p-2 rounded-full text-neutral-500 hover:bg-card-dark/50 transition">
+                        <span class="material-symbols-outlined text-lg">chevron_left</span>
+                    </button>
+                    <button class="w-8 h-8 rounded-full bg-primary text-black font-bold">1</button>
+                    <button
+                        class="w-8 h-8 rounded-full bg-card-dark text-neutral-300 hover:bg-neutral-800 transition">2</button>
+                    <button
+                        class="w-8 h-8 rounded-full bg-card-dark text-neutral-300 hover:bg-neutral-800 transition">3</button>
+                    <span class="text-neutral-500">...</span>
+                    <button
+                        class="w-8 h-8 rounded-full bg-card-dark text-neutral-300 hover:bg-neutral-800 transition">12</button>
+                    <button class="p-2 rounded-full text-neutral-500 hover:bg-card-dark/50 transition">
+                        <span class="material-symbols-outlined text-lg">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>

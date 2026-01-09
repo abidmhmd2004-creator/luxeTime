@@ -1,61 +1,61 @@
 import mongoose from "mongoose";
 
 
-const userSchema=new mongoose.Schema(
+const userSchema = new mongoose.Schema(
     {
-        name:{
-            type:String,
-            required:true,
-            trim:true
+        name: {
+            type: String,
+            required: true,
+            trim: true
         },
-        email:{
-            type:String,
-            required:true,
-            trim:true,
-            unique:true,
-            lovercase:true,
-            index:true
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true,
+            lovercase: true,
+            index: true
         },
-        phone:{
-            type:String,
-            default:null,
-            sparse:true
+        phone: {
+            type: String,
+            default: null,
+            sparse: true
         },
-        password:{
-            type:String
+        password: {
+            type: String
         },
-        googleId:{
-            type:String,
-            unique:true,
-            sparse:true
+        googleId: {
+            type: String,
+            unique: true,
+            sparse: true
         },
-        otp:{
-            type:String
+        otp: {
+            type: String
         },
-        otpExpiry:{
-            type:Date
+        otpExpiry: {
+            type: Date
         },
-        isVerified:{
-            type:Boolean,
-            default:false
+        isVerified: {
+            type: Boolean,
+            default: false
         },
-        role:{
-            type:String,
-            enum:["user","admin"],
-            default:"user"
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user"
         },
-        DOB:{
-            type:Date
+        DOB: {
+            type: Date
         },
-        isBlocked:{
-            type:Boolean,
-            default:false
+        isBlocked: {
+            type: Boolean,
+            default: false
         },
-        profileImage:{
-            type:String
+        profileImage: {
+            type: String
         },
-        referralCode:String,
-        referredBy:String
-    },{timestamp:true});
+        referralCode: String,
+        referredBy: String
+    }, { timestamps: true });
 
-    export default mongoose.model("User",userSchema);
+export default mongoose.model("User", userSchema);

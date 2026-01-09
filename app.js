@@ -12,7 +12,9 @@ import sessionConfig from "./config/sessionStore.js";
 import passport from "passport";
 import "./config/passport.js";
 import { checkUser } from "./middlewares/auth.js";
+import adminRoutes from "./routes/admin.routes.js";
 // import { userContext } from "./middlewares/userContext.middleware.js";
+import morgan from "morgan";
 
 const app=express();
 
@@ -51,6 +53,7 @@ app.use(passport.session());
 app.use(checkUser);
 // app.use(userContext);
 
+app.use(morgan("dev"));
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -58,9 +61,14 @@ app.set("views",path.join(__dirname,"views"));
 app.set("layout","layouts/user");
 
 app.use("/",userRoutes);
+app.use("/admin",adminRoutes);
+
 
 app.get("/",(req,res)=>{
     res.redirect("/home");
+})
+app.get("/admin",(req,res)=>{
+    res.redirect("/admin/login");
 })
 
 export default app;
