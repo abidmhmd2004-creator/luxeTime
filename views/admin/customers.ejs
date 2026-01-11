@@ -8,46 +8,51 @@
             <h1 class="text-2xl font-bold">Customers</h1>
             <p class="text-sm text-neutral-400">Manage registered customers.</p>
         </div>
-
+<form action="/admin/customers" method="get">
         <div class="bg-[#232726] p-4 rounded-xl shadow-lg space-y-5">
-    <h2 class="text-lg font-semibold text-white">SEARCH CUSTOMERS</h2>
-    <div class="grid grid-cols-12 gap-2 items-end">
-        <div class="col-span-12 sm:col-span-7">
-            <label for="searchQuery" class="text-xs uppercase text-neutral-400 font-medium">Search by name or
-                email...</label>
-            <input type="text" id="searchQuery" placeholder="Search by name or email..."
-                class="w-full bg-black px-3 mt-2 rounded-2xl py-3 text-sm text-white placeholder-[#5E6261] focus:outline-none"
-                title="Search by customer name or email" />
-        </div>
+            <h2 class="text-lg font-semibold text-white">SEARCH CUSTOMERS</h2>
+            <div class="grid grid-cols-12 gap-2 items-end">
+                <div class="col-span-12 sm:col-span-7">
+                    <label for="searchQuery" class="text-xs uppercase text-neutral-400 font-medium" >Search by name or
+                        email...</label>
+                    <input type="text" id="search" name="search" placeholder="Search by name or email..." value="<%=search %>"
+                        class="w-full bg-black px-3 mt-2 rounded-2xl py-3 text-sm text-white placeholder-[#5E6261] focus:outline-none"
+                        title="Search by customer name or email" />
+                </div>
 
-        <div class="col-span-6 sm:col-span-2">
-            <label for="statusFilter" class="text-xs uppercase text-neutral-400 font-medium">Status</label>
-            <div class="relative mt-2">
-                <select id="statusFilter"
-                    class="custom-field w-full px-3 py-3 appearance-none bg-gray-950 rounded-2xl text-white pr-8 focus:outline-none">
-                    <option class="bg-gray-950 text-white">All Statuses</option>
-                    <option class="bg-gray-950 text-white">Active</option>
-                    <option class="bg-gray-950 text-white">Blocked</option>
-                </select>
-                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none text-base">
-                    keyboard_arrow_down
-                </span>
+                <div class="col-span-6 sm:col-span-2">
+                    <label for="statusFilter" class="text-xs uppercase text-neutral-400 font-medium">Status</label>
+                    <div class="relative mt-2">
+                        <select id="statusFilter" name="status"
+                            class="custom-field w-full px-3 py-3 appearance-none bg-gray-950 rounded-2xl text-white pr-8 focus:outline-none">
+                            <option class="bg-gray-950 text-white" value="">All Statuses</option>
+                            <option class="bg-gray-950 text-white" value="Active">Active</option>
+                            <option class="bg-gray-950 text-white" value="Blocked">Blocked</option>
+                        </select>
+                        <span
+                            class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none text-base">
+                            keyboard_arrow_down
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-span-6 sm:col-span-3 flex space-x-2 justify-end">
+                    <button 
+                        class="w-auto px-4 py-2 rounded-lg border border-neutral-600 text-neutral-300 hover:bg-neutral-800 transition">
+                        <a href="/admin/customers">
+                        Clear
+                        </a>
+                    </button>
+                    <button type="submit"
+                        class="w-auto flex items-center justify-center space-x-1 px-4 py-2 rounded-lg bg-green-500 text-black font-bold hover:bg-green-600 transition">
+                        <span class="material-symbols-outlined text-lg">search</span>
+                        <span>Search</span>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="col-span-6 sm:col-span-3 flex space-x-2 justify-end">
-            <button
-                class="w-auto px-4 py-2 rounded-lg border border-neutral-600 text-neutral-300 hover:bg-neutral-800 transition">
-                Clear
-            </button>
-            <button
-                class="w-auto flex items-center justify-center space-x-1 px-4 py-2 rounded-lg bg-green-500 text-black font-bold hover:bg-green-600 transition">
-                <span class="material-symbols-outlined text-lg">search</span>
-                <span>Search</span>
-            </button>
-        </div>
-    </div>
-</div>
+        </form>
 
 
 
@@ -60,6 +65,8 @@
             </div>
 
             <div class="overflow-x-auto">
+                                <%- include('../partials/alerts') %>
+
                 <table class="min-w-full text-sm text-neutral-300">
                     <thead>
                         <tr class="text-left text-neutral-400 border-b border-neutral-700">
@@ -72,110 +79,154 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
-                            <td class="py-3 font-medium text-white flex items-center space-x-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold">
-                                    RV</div>
-                                <span>Rahul Verma</span>
-                            </td>
-                            <td class="py-3">rahul.verma@example.com</td>
-                            <td class="py-3">+91 98765 43210</td>
-                            <td class="py-3">Oct 12, 2022</td>
-                            <td class="py-3"><span
-                                    class="bg-light-green/20 text-light-green px-2 py-0.5 rounded text-xs font-medium">ACTIVE</span>
-                            </td>
-                            <td class="py-3 text-center">
-                                <label class="flex justify-center items-center cursor-pointer">
-                                    <input type="checkbox" value="" class="sr-only peer" checked>
-                                    <div
-                                        class="relative w-11 h-6 bg-green-500 rounded-full peer-checked:bg-red-500 toggle-switch-bg">
-                                        <div
-                                            class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full toggle-switch-circle transform peer-checked:translate-x-full">
-                                        </div>
-                                    </div>
-                                    <span class="ml-2 text-xs text-neutral-500 peer-checked:text-white">Block</span>
-                                </label>
-                            </td>
-                        </tr>
+                        <% if (users.length===0){ %>
+                            <tr>
+                                <td colspan="6" class="text-center py-6 text-neutral-500">
+                                    No customers found
+                                </td>
+                            </tr>
+                            <% } %>
 
-                        <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
-                            <td class="py-3 font-medium text-white flex items-center space-x-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-xs font-bold">
-                                    SK</div>
-                                <span>Sneha Kapoor</span>
-                            </td>
-                            <td class="py-3">sneha.kapoor@example.com</td>
-                            <td class="py-3">+91 99123 45678</td>
-                            <td class="py-3">Sep 05, 2023</td>
-                            <td class="py-3"><span
-                                    class="bg-red-500/20 text-red-500 px-2 py-0.5 rounded text-xs font-medium">BLOCKED</span>
-                            </td>
-                            <td class="py-3 text-center">
-                                <label class="flex justify-center items-center cursor-pointer">
-                                    <input type="checkbox" value="" class="sr-only peer">
-                                    <div
-                                        class="relative w-11 h-6 bg-neutral-600 rounded-full peer-checked:bg-red-500 toggle-switch-bg">
-                                        <div
-                                            class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full toggle-switch-circle transform peer-checked:translate-x-full">
-                                        </div>
-                                    </div>
-                                    <span class="ml-2 text-xs text-white peer-checked:text-white">Unblock</span>
-                                </label>
-                            </td>
-                        </tr>
+                                <% users.forEach(user=> { %>
+                                    <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
+                                        <td class="py-3 font-medium text-white flex items-center space-x-3">
+                                            <!-- <div
+                                            class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold">
+                                            RV</div> -->
+                                            <span>
+                                                <%= user.name %>
+                                            </span>
+                                        </td>
+                                        <td class="py-3">
+                                            <%= user.email %>
+                                        </td>
+                                        <td class="py-3">
+                                            <%= user.phone || '-' %>
+                                        </td>
+                                        <td class="py-3">
+                                            <%= user.createdAt ? user.createdAt.toDateString():'-' %>
+                                        </td>
+                                        <td class="py-3"><span
+                                                class=" text-light-green px-2 py-0.5 rounded text-xs font-medium <%= user.isBlocked?'bg-red-500/20 text-red-400' :'bg-light-green/20 text-light-green ' %>"><%= user.isBlocked ?'BLOCKED':'ACTIVE' %></span>
+                                        </td>
+                                        <!-- <td class="py-3 text-center">
+                                            <form action="/admin/customers/toggle/<%= user._id %>" method="POST">
+                                            <label class="flex justify-center items-center cursor-pointer">
+                                                <input type="checkbox" value="" class="sr-only peer" onchange="this.form.submit()" <%= user.isBlocked?'':' checked' %> >
+                                                <div
+                                                    class="relative w-11 h-6  rounded-full  toggle-switch-bg <%= user.isBlocked? 'bg-red-500':'bg-green-500' %> ">
+                                                    <div
+                                                        class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full toggle-switch-circle <%= user.isBlocked? '' : 'translate-x-full' %>">
+                                                    </div>
+                                                </div>
+                                                <span
+                                                    class="ml-2 text-xs <%= user.isBlocked? 'text-white':'text-neutral-500' %>"><%= user.isBlocked?'Unblock':'Block' %></span>
+                                            </label>
+                                            </form>
+                                        </td> -->
 
-                        <tr class="hover:bg-neutral-800/50 transition">
-                            <td class="py-3 font-medium text-white flex items-center space-x-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-xs font-bold">
-                                    AM</div>
-                                <span>Amit Mishra</span>
-                            </td>
-                            <td class="py-3">amit.mishra@example.com</td>
-                            <td class="py-3">+91 97034 56789</td>
-                            <td class="py-3">Jan 22, 2024</td>
-                            <td class="py-3"><span
-                                    class="bg-light-green/20 text-light-green px-2 py-0.5 rounded text-xs font-medium">ACTIVE</span>
-                            </td>
-                            <td class="py-3 text-center">
-                                <label class="flex justify-center items-center cursor-pointer">
-                                    <input type="checkbox" value="" class="sr-only peer" checked>
-                                    <div
-                                        class="relative w-11 h-6 bg-green-500 rounded-full peer-checked:bg-red-500 toggle-switch-bg">
-                                        <div
-                                            class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full toggle-switch-circle transform peer-checked:translate-x-full">
-                                        </div>
-                                    </div>
-                                    <span class="ml-2 text-xs text-neutral-500 peer-checked:text-white">Block</span>
-                                </label>
-                            </td>
-                        </tr>
+
+                                        <td class="py-3 text-center">
+  <form 
+    action="/admin/customers/toggle/<%= user._id %>" 
+    method="POST" 
+    class="toggleform"
+    data-status="<%= user.isBlocked ? 'unblock' : 'block' %>"
+  >
+    <label class="flex justify-center items-center cursor-pointer">
+      <input type="checkbox" class="sr-only peer" <%= user.isBlocked ? '' : 'checked' %>>
+
+      <div class="relative w-11 h-6 rounded-full 
+        <%= user.isBlocked ? 'bg-red-500' : 'bg-green-500' %>">
+        <div class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full 
+          <%= user.isBlocked ? '' : 'translate-x-full' %>">
+        </div>
+      </div>
+
+      <span class="ml-2 text-xs">
+        <%= user.isBlocked ? 'Unblock' : 'Block' %>
+      </span>
+    </label>
+  </form>
+</td>
+
+
+
+                                    </tr>
+
+                                    <% }) %>
                     </tbody>
                 </table>
             </div>
 
-            <div class="flex justify-end items-center pt-4 text-sm space-x-2">
-                <p class="text-neutral-500">Showing 1 to 10 of 1248 entries</p>
-                <div class="flex items-center space-x-1">
-                    <button class="p-2 rounded-full text-neutral-500 hover:bg-card-dark/50 transition">
-                        <span class="material-symbols-outlined text-lg">chevron_left</span>
-                    </button>
-                    <button class="w-8 h-8 rounded-full bg-primary text-black font-bold">1</button>
-                    <button
-                        class="w-8 h-8 rounded-full bg-card-dark text-neutral-300 hover:bg-neutral-800 transition">2</button>
-                    <button
-                        class="w-8 h-8 rounded-full bg-card-dark text-neutral-300 hover:bg-neutral-800 transition">3</button>
-                    <span class="text-neutral-500">...</span>
-                    <button
-                        class="w-8 h-8 rounded-full bg-card-dark text-neutral-300 hover:bg-neutral-800 transition">12</button>
-                    <button class="p-2 rounded-full text-neutral-500 hover:bg-card-dark/50 transition">
-                        <span class="material-symbols-outlined text-lg">chevron_right</span>
-                    </button>
-                </div>
+            <div class="flex items-center justify-center  space-x-4 mt-8 text-sm">
+
+                <% if (currentPage>1) { %>
+                    <a href="/admin/customers?page=<%= currentPage-1  %>&search =<%=search %>&status=<%=status %>"
+                        class="flex items-center space-x-1 px-3 py-2 rounded-lg text-neutral-300 hover:bg-dark-green/50 hover:text-white transition-colors duration-200">
+                        <span class="material-symbols-outlined text-base">arrow_back</span>
+                        <span>Prev</span>
+                    </a>
+                    <% } else { %>
+                        <span class="flex items-center space-x-1 px-3 py-2 text-neutral-600 cursor-not-allowed">
+                            <span class="material-symbols-outlined text-base">arrow_back</span>
+                            <span>Prev</span>
+                        </span>
+                        <% } %>
+
+                            <span
+                                class="px-4 py-2 rounded-lg font-semibold bg-primary/20 text-primary border border-primary/50">
+                                Page <%=currentPage %> of <%= totalPages %>
+                            </span>
+
+                            <% if(currentPage<totalPages){ %>
+                                <a href="/admin/customers?page=<%= currentPage +1 %>&search =<%=search %>&status=<%=status %>"
+                                    class="flex items-center space-x-1 px-3 py-2 rounded-lg text-neutral-300 hover:bg-dark-green/50 hover:text-white transition-colors duration-200">
+                                    <span>Next</span>
+                                    <span class="material-symbols-outlined text-base">arrow_forward</span>
+                                </a>
+                                <% } else { %>
+                                    <span
+                                        class="flex items-center space-x-1 px-3 py-2 text-neutral-600 cursor-not-allowed">
+                                        <span>Next</span>
+                                        <span class="material-symbols-outlined text-base">arrow_forward</span>
+                                    </span>
+                                    <% } %>
+
             </div>
 
         </div>
 
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  document.querySelectorAll(".toggleform input[type='checkbox']")
+    .forEach(checkbox => {
+
+      checkbox.addEventListener("change", function () {
+        const form = this.closest("form");
+        const action = form.dataset.status;
+
+        // revert UI until confirmation
+        this.checked = !this.checked;
+
+        Swal.fire({
+          title: "Are you sure?",
+          text: `Do you want to ${action} this user?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: action === "block" ? "#ef4444" : "#22c55e",
+          confirmButtonText: `Yes, ${action}`,
+          cancelButtonText: "Cancel"
+        }).then(result => {
+          if (result.isConfirmed) {
+            form.submit(); // ✅ backend called
+          }
+        });
+      });
+
+    });
+
+</script>

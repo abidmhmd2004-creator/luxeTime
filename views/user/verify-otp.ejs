@@ -54,6 +54,8 @@
 
         <form id="otpForm" action="/verify-otp" method="POST" class="space-y-6">
 
+          <%- include('../partials/alerts') %>
+
             <div class="flex justify-between space-x-2 sm:space-x-3">
                 <input type="hidden" name="otp" id="otpHidden">
                 <input type="text" id="otp-1" maxlength="1"
@@ -259,14 +261,14 @@
         otpForm.submit();
     });
 
-    resendLink.addEventListener("click", (e) => {
-        e.preventDefault();
+    // resendLink.addEventListener("click", (e) => {
+    //     e.preventDefault();
 
-        if (resendLink.classList.contains("pointer-events-none")) return;
+    //     if (resendLink.classList.contains("pointer-events-none")) return;
 
-        const newExpire = Date.now() + OTP_DURATION * 1000;
-        localStorage.setItem(STORAGE_KEY, newExpire);
+    //     const newExpire = Date.now() + OTP_DURATION * 1000;
+    //     localStorage.setItem(STORAGE_KEY, newExpire);
 
-        window.location.reload();
-    });
+    //     window.location.reload();
+    // });
 </script>

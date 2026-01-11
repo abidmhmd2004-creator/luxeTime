@@ -75,7 +75,17 @@ export const createAndSendOtp=async(user,purpose)=>{
         throw new Error("OTP email missing");
     }
 
+    const existingOtp=await Otp.findOne({userId:user._id});
+
+    if(existingOtp ){
+        const now=Date.now();
+        const diff=(now-existingOtp.lastSentAt.getTime())/1000;
+        if(diff<30){
+            throw new Error("otp-cooldown");
+        }
+
     await Otp.deleteMany({ userId: user._id });
+    }
     
     const otpCode=generateOtp();
 
@@ -84,8 +94,12 @@ export const createAndSendOtp=async(user,purpose)=>{
     await Otp.create({
         userId:user._id,
         otp:hashedOtp,
+        lastSentAt:new Date()
     });
 
 
     await sendOtpMail(user.email,otpCode,purpose);
 }
+
+
+

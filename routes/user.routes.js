@@ -9,7 +9,7 @@ import { verifyOtp } from "../controllers/user/otp.controller.js";
 import { resentOtp } from "../controllers/user/otp.controller.js";
 import { loadForgotPass } from "../controllers/user/auth.controller.js"
 import { postLogin } from "../controllers/user/auth.controller.js";
-import { redirectIfAuthenticated } from "../middlewares/auth.js";
+import { redirectIfAuthenticated, requireOtpSession } from "../middlewares/auth.js";
 
 import passport from "passport";
 import { requireAuth } from "../middlewares/auth.js";
@@ -25,12 +25,11 @@ router.get("/home", showhomePage);
 router.get("/signup", redirectIfAuthenticated, showSignup);
 router.post("/signup", postSignup);
 
-router.get("/verify-otp", showVerifyOtp);
+router.get("/verify-otp",requireOtpSession ,showVerifyOtp);
 router.post("/verify-otp", verifyOtp);
 
 router.post("/resend-otp", resentOtp);
-
-router.get("/login", redirectIfAuthenticated, showLogin);
+router.get("/login",redirectIfAuthenticated, showLogin);
 router.post("/login", postLogin);
 
 router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
@@ -47,7 +46,7 @@ router.get("/auth/google/callback", passport.authenticate("google", { failureRed
         res.redirect("/home")
     })
 
-router.get("/forgot-password", loadForgotPass);
+router.get("/forgot-password",loadForgotPass);
 router.post("/forgot-password", postForgotPass)
 
 router.get("/reset-password", getResetPassword);
@@ -55,22 +54,18 @@ router.post("/reset-password", postResetPassword);
 
 router.get("/logout", logout);
 
-// router.get("/profile", requireAuth, (req, res) => {
-//     res.render("user/profile");
-// })
+router.get("/profile", requireAuth,getProfile);
 
-router.get("/profile", getProfile);
-
-router.get("/edit-profile", loadEditProfile);
+router.get("/edit-profile",requireAuth,loadEditProfile);
 router.post("/edit-profile", postEditProfile);
 
-router.get("/change-password", getChangePassword);
+router.get("/change-password", requireAuth,getChangePassword);
 router.post("/change-Password", postChangePassword);
 
-router.get("/change-email", loadChangeEmail);
+router.get("/change-email",requireAuth,loadChangeEmail);
 router.post("/change-email",postChangeEmail);
 
-router.get("/address",getAddress);
+router.get("/address",requireAuth,getAddress);
 router.post("/add-address",addAddress);
 router.post("/edit-address/:id",editAddress);
 

@@ -64,11 +64,19 @@ app.use("/",userRoutes);
 app.use("/admin",adminRoutes);
 
 
+
 app.get("/",(req,res)=>{
     res.redirect("/home");
 })
 app.get("/admin",(req,res)=>{
     res.redirect("/admin/login");
 })
+
+
+
+app.use((req,res)=>{
+    res.status(404).render("user/404");
+})
+
 
 export default app;

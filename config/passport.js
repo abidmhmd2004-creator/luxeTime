@@ -27,9 +27,6 @@ async (accessToken,refreshToken,profile,done)=>{
 
         const email=profile.emails?.[0]?.value;
 
-        // if(!email){
-        //     return done(new Error("Google account has no email"),null);
-        // }
 
         existingUser=await User.findOne({email});
 

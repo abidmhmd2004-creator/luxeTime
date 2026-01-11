@@ -1,3 +1,5 @@
+import User from "../models/user.model.js"
+
 export const checkUser=(req,res,next)=>{
     if(req.session.user){
         res.locals.user=req.session.user;
@@ -10,7 +12,7 @@ export const checkUser=(req,res,next)=>{
 
 export const requireAuth=(req,res,next)=>{
     if(!req.session.user){
-        return res.redirect("/user/login")
+        return res.redirect("/login")
     }
     next();
 }
@@ -18,6 +20,14 @@ export const requireAuth=(req,res,next)=>{
 export const redirectIfAuthenticated = (req,res,next)=>{
     if(req.session.user){
         return res.redirect("/home");
+    }
+    next();
+}
+
+
+export const requireOtpSession =async (req,res,next)=>{
+    if(!req.session.otp){
+        return res.redirect("/signup");
     }
     next();
 }

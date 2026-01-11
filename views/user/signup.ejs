@@ -12,94 +12,98 @@
                     </p>
                 </header>
 
-                <form id="signupForm" method="POST" class="space-y-4" novalidate>
+                <form id="signupForm"  method="POST" class="space-y-4" novalidate>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-neutral-200 mb-2">Full Name</label>
-                        <input id="name" name="name" type="text" placeholder="Enter your full name"
-                            class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                        <p id="nameErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-neutral-200 mb-2">Email Address</label>
-                        <input id="email" name="email" type="email" placeholder="Enter your email"
-                            class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                        <p id="emailErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-neutral-200 mb-2">Mobile Number</label>
-                        <input id="phone" name="phone" type="tel" placeholder="Enter your phone number"
-                            class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                        <p id="phoneErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-neutral-200 mb-2">Referral Code</label>
-                        <input id="referralCode" name="referralCode" type="text" placeholder="Enter your referalCode"
-                            class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                        <p id="nameErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-neutral-200 mb-2">Password</label>
-                        <input id="password" name="password" type="password" placeholder="Create a password"
-                            class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                        <p id="passwordErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-neutral-200 mb-2">Confirm Password</label>
-                        <input id="confirm-password" type="password" placeholder="Re-enter your password"
-                            class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                        <p id="confirmPasswordErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                    </div>
-
-                    <div class="flex items-start pt-2">
-                        <div class="flex h-5 items-center">
-                            <input id="terms" name="terms" type="checkbox" required
-                                class="h-4 w-4 rounded border-neutral-700 bg-neutral-800 text-primary focus:ring-primary cursor-pointer" />
-                        </div>
-                        <div class="ml-3 text-sm leading-5">
-                            <label class="font-medium text-neutral-400" for="terms">I agree to the <a
-                                    class="font-bold text-white hover:text-primary underline transition-colors"
-                                    href="#">Terms & Conditions</a> and <a
-                                    class="font-bold text-white hover:text-primary underline transition-colors"
-                                    href="#">Privacy Policy</a>.</label>
-                        </div>
-                    </div>
-
-                    <div class="pt-2 space-y-3">
-                        <button type="submit"
-                            class="w-full rounded-lg bg-primary py-3.5 text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
-                            Create Account
-                        </button>
-
-                        <div class="relative flex justify-center items-center py-2">
-                            <div class="absolute w-full border-t border-neutral-700"></div>
-                            <span class="relative text-sm font-medium text-neutral-500 bg-card-dark px-3">OR</span>
+                    <!-- Flash alerts -->
+                    <%- include('../partials/alerts') %>
+                    
+                        <div>
+                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Full Name</label>
+                            <input id="name" name="name" type="text" placeholder="Enter your full name"
+                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+                            <p id="nameErr" class="text-xs text-red-500 mt-1 hidden"></p>
                         </div>
 
-                        <button type="button" onclick="window.location.href='/auth/google'"
-                            class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-dark-input px-5 py-3 text-sm font-medium text-gray-300 hover:bg-neutral-800 transition-colors">
-                            <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12.001 4.75a6.52 6.52 0 00-4.48 1.84l-2.67-2.67A10 10 0 0112.001 2c2.72 0 5.22.95 7.15 2.58l-2.88 2.22A6.52 6.52 0 0012.001 4.75z"
-                                    fill="#EA4335" />
-                                <path
-                                    d="M4.851 7.21a10 10 0 000 9.58l2.7 2.1c.88-2.14 2.82-3.7 5.21-4.04l.05-2.73a6.51 6.51 0 01-5.71-3.71l-2.25-1.2Z"
-                                    fill="#FBBC04" />
-                                <path
-                                    d="M12.001 19.25a6.52 6.52 0 004.86-2.1l2.88 2.22A10 10 0 0112.001 22c-2.72 0-5.22-.95-7.15-2.58l2.67-2.67a6.52 6.52 0 004.48 2.45Z"
-                                    fill="#34A853" />
-                                <path
-                                    d="M19.141 12c0-.52-.05-1.03-.15-1.53h-7.07v3.06h4.01a3.63 3.63 0 01-1.58 2.37v2.02h2.59c1.55-1.42 2.46-3.5 2.46-5.88z"
-                                    fill="#4285F4" />
-                            </svg>
-                            Login with Google
-                        </button>
-                    </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Email Address</label>
+                            <input id="email" name="email" type="email" placeholder="Enter your email"
+                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+                            <p id="emailErr" class="text-xs text-red-500 mt-1 hidden"></p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Mobile Number</label>
+                            <input id="phone" name="phone" type="tel" placeholder="Enter your phone number"
+                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+                            <p id="phoneErr" class="text-xs text-red-500 mt-1 hidden"></p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Referral Code</label>
+                            <input id="referralCode" name="referralCode" type="text"
+                                placeholder="Enter your referalCode"
+                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+                            <p id="referralErr" class="text-xs text-red-500 mt-1 hidden"></p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Password</label>
+                            <input id="password" name="password" type="password" placeholder="Create a password"
+                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+                            <p id="passwordErr" class="text-xs text-red-500 mt-1 hidden"></p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Confirm Password</label>
+                            <input id="confirm-password" type="password" placeholder="Re-enter your password"
+                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+                            <p id="confirmPasswordErr" class="text-xs text-red-500 mt-1 hidden"></p>
+                        </div>
+
+                        <div class="flex items-start pt-2">
+                            <div class="flex h-5 items-center">
+                                <input id="terms" name="terms" type="checkbox" required
+                                    class="h-4 w-4 rounded border-neutral-700 bg-neutral-800 text-primary focus:ring-primary cursor-pointer" />
+                            </div>
+                            <div class="ml-3 text-sm leading-5">
+                                <label class="font-medium text-neutral-400" for="terms">I agree to the <a
+                                        class="font-bold text-white hover:text-primary underline transition-colors"
+                                        href="#">Terms & Conditions</a> and <a
+                                        class="font-bold text-white hover:text-primary underline transition-colors"
+                                        href="#">Privacy Policy</a>.</label>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 space-y-3">
+                            <button type="submit"
+                                class="w-full rounded-lg bg-primary py-3.5 text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
+                                Create Account
+                            </button>
+
+                            <div class="relative flex justify-center items-center py-2">
+                                <div class="absolute w-full border-t border-neutral-700"></div>
+                                <span class="relative text-sm font-medium text-neutral-500 bg-card-dark px-3">OR</span>
+                            </div>
+
+                            <button type="button" onclick="window.location.href='/auth/google'"
+                                class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-dark-input px-5 py-3 text-sm font-medium text-gray-300 hover:bg-neutral-800 transition-colors">
+                                <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12.001 4.75a6.52 6.52 0 00-4.48 1.84l-2.67-2.67A10 10 0 0112.001 2c2.72 0 5.22.95 7.15 2.58l-2.88 2.22A6.52 6.52 0 0012.001 4.75z"
+                                        fill="#EA4335" />
+                                    <path
+                                        d="M4.851 7.21a10 10 0 000 9.58l2.7 2.1c.88-2.14 2.82-3.7 5.21-4.04l.05-2.73a6.51 6.51 0 01-5.71-3.71l-2.25-1.2Z"
+                                        fill="#FBBC04" />
+                                    <path
+                                        d="M12.001 19.25a6.52 6.52 0 004.86-2.1l2.88 2.22A10 10 0 0112.001 22c-2.72 0-5.22-.95-7.15-2.58l2.67-2.67a6.52 6.52 0 004.48 2.45Z"
+                                        fill="#34A853" />
+                                    <path
+                                        d="M19.141 12c0-.52-.05-1.03-.15-1.53h-7.07v3.06h4.01a3.63 3.63 0 01-1.58 2.37v2.02h2.59c1.55-1.42 2.46-3.5 2.46-5.88z"
+                                        fill="#4285F4" />
+                                </svg>
+                                Login with Google
+                            </button>
+                        </div>
                 </form>
 
                 <p class="mt-6 text-center text-sm text-neutral-400">

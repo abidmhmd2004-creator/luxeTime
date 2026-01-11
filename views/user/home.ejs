@@ -1,5 +1,7 @@
 
 <main class="flex-grow">
+
+    
     <!-- Hero Section -->
     <section class="relative mx-auto max-w-[1440px] px-4 py-6 md:px-10">
         <div class="overflow-hidden rounded-3xl bg-[#1c2e24]">
@@ -43,14 +45,57 @@
             </div>
         </div>
     </section>
+ <!-- Featured Collections (Cards with horizontal layout) -->
+    <section class="mx-auto max-w-[1440px] px-4 py-16 md:px-10">
+        <h2 class="mb-8 text-3xl font-bold text-white md:text-4xl">Browse by Category</h2>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Collection 1 -->
+            <div
+                class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12">
+                <div class="absolute inset-0 bg-cover bg-center opacity-60"
+                    data-alt="Close up of mechanical watch gears"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA71T4JEEICQFWIHLkCzrPo0FZmdduDRhAyn8X8mriHIgup2XZjt-o9Hf3zZRIs5DaE7Y615LSJswTQBcjZon2045bcv6uAi-9iXOiuIxMZpbb3j3_aR7DbQrC1Frwdpr7nTW32XSxCbKaUko6BvMUWYOLN3XX614dxzvAGAEo-LxhquYyMd5TfWw9aAjJIZ9HA-7ie6fFjzP48sgska7Vup7CaLRBlJekrWA6ChSLUEZdC9gq2lpZyqBpbcF_uWd914zu9AeUr3pqk");'>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
+                <div class="relative z-10 max-w-sm">
+                    <h3 class="text-2xl font-bold text-white md:text-3xl">Shop By Men</h3>
+                    <p class="mt-2 text-gray-300">Intricate designs for the true connoisseur. Experience the heartbeat
+                        of time.</p>
+                    <button
+                        class="mt-6 flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors">
+                        Explore Collection <span class="material-symbols-outlined text-base">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Collection 2 -->
+            <div
+                class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12">
+                <div class="absolute inset-0 bg-cover bg-center opacity-60"
+                    data-alt="Person checking time on smartwatch while running"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHL-Nn69Z0Ixe0n3YRde7BJYpaZsgrkGWrHUoIBSLAB9l4kt2DKfo7JU18JJsOMgvOwZ80MNnq5vfnzRVM_k4U-jrBWoHc865LbnH7LCk3icuPYckSKIaRLHrcVAh0tL4vZvLXcJQFqcsW8WAuxtJSNdg2C74qYd1iHHmgXO6CJkRcwtisICnKx0M81VX8FaGIQl7qrW_umeBo_54CRXAYCtmCs3DNQxcEX-6it2gjV0nmW2lkpF9nLFuKpT9BfL-xcoO7Iwuy1IIZ");'>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
+                <div class="relative z-10 max-w-sm">
+                    <h3 class="text-2xl font-bold text-white md:text-3xl">Shop By Men</h3>
+                    <p class="mt-2 text-gray-300">Rugged, waterproof, and smart. Built to keep up with your every move.
+                    </p>
+                    <button
+                        class="mt-6 flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors">
+                        Shop Sport <span class="material-symbols-outlined text-base">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Browse by Category -->
     <section class="mx-auto max-w-[1440px] px-4 py-12 md:px-10">
         <div class="mb-8 flex items-end justify-between">
             <div>
-                <h2 class="text-3xl font-bold text-white md:text-4xl">Browse by Category</h2>
+                <h2 class="text-3xl font-bold text-white md:text-4xl">Browse By Brands</h2>
                 <p class="mt-2 text-gray-400">Curated collections for every occasion</p>
             </div>
-            <a class="hidden text-sm font-bold text-primary hover:text-white md:block" href="#">View All Categories
+            <a class="hidden text-sm font-bold text-primary hover:text-white md:block" href="#">View All Brands
                 -&gt;</a>
         </div>
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
@@ -63,7 +108,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                 <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Men's Watches</h3>
+                    <h3 class="text-lg font-bold text-white">Fastrak</h3>
                 </div>
             </a>
             <!-- Category Item 2 -->
@@ -75,7 +120,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                 <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Women's Watches</h3>
+                    <h3 class="text-lg font-bold text-white">Titan</h3>
                 </div>
             </a>
             <!-- Category Item 3 -->
@@ -87,7 +132,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                 <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Smart Watches</h3>
+                    <h3 class="text-lg font-bold text-white">Apple</h3>
                 </div>
             </a>
             <!-- Category Item 4 -->
@@ -99,7 +144,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                 <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Premium</h3>
+                    <h3 class="text-lg font-bold text-white">Rolex</h3>
                 </div>
             </a>
             <!-- Category Item 5 -->
@@ -111,7 +156,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                 <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Deals &amp; Offers</h3>
+                    <h3 class="text-lg font-bold text-white">More</h3>
                 </div>
             </a>
         </div>
@@ -145,7 +190,7 @@
                         <h3 class="text-lg font-bold text-white">Chronos Silver Elite</h3>
                         <p class="text-sm text-gray-400">Classic Series</p>
                         <div class="mt-auto flex items-center justify-between pt-4">
-                            <span class="text-xl font-bold text-primary">$2,450</span>
+                            <span class="text-xl font-bold text-primary">₹2,450</span>
                             <button
                                 class="flex items-center justify-center rounded-full bg-white p-2 text-black hover:bg-primary transition-colors">
                                 <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
@@ -175,7 +220,7 @@
                         <h3 class="text-lg font-bold text-white">Royal Oak Gold</h3>
                         <p class="text-sm text-gray-400">Luxury Collection</p>
                         <div class="mt-auto flex items-center justify-between pt-4">
-                            <span class="text-xl font-bold text-primary">$8,900</span>
+                            <span class="text-xl font-bold text-primary">₹8,900</span>
                             <button
                                 class="flex items-center justify-center rounded-full bg-white p-2 text-black hover:bg-primary transition-colors">
                                 <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
@@ -204,7 +249,7 @@
                         <h3 class="text-lg font-bold text-white">Noir Minimalist</h3>
                         <p class="text-sm text-gray-400">Everyday Wear</p>
                         <div class="mt-auto flex items-center justify-between pt-4">
-                            <span class="text-xl font-bold text-primary">$350</span>
+                            <span class="text-xl font-bold text-primary">₹350</span>
                             <button
                                 class="flex items-center justify-center rounded-full bg-white p-2 text-black hover:bg-primary transition-colors">
                                 <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
@@ -234,7 +279,7 @@
                         <h3 class="text-lg font-bold text-white">Apex Pro Smart</h3>
                         <p class="text-sm text-gray-400">Tech Series</p>
                         <div class="mt-auto flex items-center justify-between pt-4">
-                            <span class="text-xl font-bold text-primary">$599</span>
+                            <span class="text-xl font-bold text-primary">₹599</span>
                             <button
                                 class="flex items-center justify-center rounded-full bg-white p-2 text-black hover:bg-primary transition-colors">
                                 <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
@@ -245,48 +290,7 @@
             </div>
         </div>
     </section>
-    <!-- Featured Collections (Cards with horizontal layout) -->
-    <section class="mx-auto max-w-[1440px] px-4 py-16 md:px-10">
-        <h2 class="mb-8 text-3xl font-bold text-white md:text-4xl">Featured Collections</h2>
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <!-- Collection 1 -->
-            <div
-                class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12">
-                <div class="absolute inset-0 bg-cover bg-center opacity-60"
-                    data-alt="Close up of mechanical watch gears"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA71T4JEEICQFWIHLkCzrPo0FZmdduDRhAyn8X8mriHIgup2XZjt-o9Hf3zZRIs5DaE7Y615LSJswTQBcjZon2045bcv6uAi-9iXOiuIxMZpbb3j3_aR7DbQrC1Frwdpr7nTW32XSxCbKaUko6BvMUWYOLN3XX614dxzvAGAEo-LxhquYyMd5TfWw9aAjJIZ9HA-7ie6fFjzP48sgska7Vup7CaLRBlJekrWA6ChSLUEZdC9gq2lpZyqBpbcF_uWd914zu9AeUr3pqk");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
-                <div class="relative z-10 max-w-sm">
-                    <h3 class="text-2xl font-bold text-white md:text-3xl">The Mechanic Series</h3>
-                    <p class="mt-2 text-gray-300">Intricate designs for the true connoisseur. Experience the heartbeat
-                        of time.</p>
-                    <button
-                        class="mt-6 flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors">
-                        Explore Collection <span class="material-symbols-outlined text-base">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-            <!-- Collection 2 -->
-            <div
-                class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12">
-                <div class="absolute inset-0 bg-cover bg-center opacity-60"
-                    data-alt="Person checking time on smartwatch while running"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHL-Nn69Z0Ixe0n3YRde7BJYpaZsgrkGWrHUoIBSLAB9l4kt2DKfo7JU18JJsOMgvOwZ80MNnq5vfnzRVM_k4U-jrBWoHc865LbnH7LCk3icuPYckSKIaRLHrcVAh0tL4vZvLXcJQFqcsW8WAuxtJSNdg2C74qYd1iHHmgXO6CJkRcwtisICnKx0M81VX8FaGIQl7qrW_umeBo_54CRXAYCtmCs3DNQxcEX-6it2gjV0nmW2lkpF9nLFuKpT9BfL-xcoO7Iwuy1IIZ");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
-                <div class="relative z-10 max-w-sm">
-                    <h3 class="text-2xl font-bold text-white md:text-3xl">Active Life</h3>
-                    <p class="mt-2 text-gray-300">Rugged, waterproof, and smart. Built to keep up with your every move.
-                    </p>
-                    <button
-                        class="mt-6 flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors">
-                        Shop Sport <span class="material-symbols-outlined text-base">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
+   
     <!-- Benefits Strip -->
     <section class="border-y border-[#29382f] bg-[#111714]">
         <div class="mx-auto flex max-w-[1440px] flex-wrap justify-center gap-8 px-4 py-12 md:justify-between md:px-10">
@@ -296,7 +300,7 @@
                 </div>
                 <div>
                     <h4 class="font-bold text-white">Free Shipping</h4>
-                    <p class="text-sm text-gray-400">On all orders over $200</p>
+                    <p class="text-sm text-gray-400">On all orders over ₹200</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -345,11 +349,11 @@
                         <input
                             class="w-full rounded-full border-2 border-[#111714]/10 bg-white/50 px-6 py-3 text-[#111714] placeholder-[#111714]/50 backdrop-blur-sm focus:border-[#111714] focus:outline-none focus:ring-0"
                             placeholder="Enter your email" type="email" />
-                        <button
+                        <!-- <button
                             class="whitespace-nowrap rounded-full bg-[#111714] px-8 py-3 font-bold text-white hover:bg-black transition-colors"
                             type="submit">
                             Subscribe
-                        </button>
+                        </button> -->
                     </form>
                     <p class="mt-3 text-xs text-[#111714]/60">By subscribing you agree to our Terms &amp; Conditions.
                     </p>
@@ -394,9 +398,7 @@
                 <ul class="flex flex-col gap-4 text-sm text-gray-400">
                     <li><a class="hover:text-primary transition-colors" href="#">Men's Watches</a></li>
                     <li><a class="hover:text-primary transition-colors" href="#">Women's Watches</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Smart Watches</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Accessories</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Sale</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#">Kids Watches</a></li>
                 </ul>
             </div>
             <div>
@@ -414,7 +416,6 @@
                 <ul class="flex flex-col gap-4 text-sm text-gray-400">
                     <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
                     <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Press</a></li>
                     <li><a class="hover:text-primary transition-colors" href="#">Stores</a></li>
                 </ul>
             </div>
