@@ -114,7 +114,6 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
         const fileInput = document.getElementById('profilePictureInput');
         const deleteButton = document.getElementById('deletePictureButton');
         const container = document.getElementById('profilePictureContainer');
@@ -132,11 +131,9 @@
                     img.src = e.target.result;
                     img.classList.add('w-[72px]', 'h-[72px]', 'object-cover', 'rounded-full', 'border-2', 'border-yellow-500'); 
                     
-                    // Logic to replace the default icon or existing image
                     container.innerHTML = '';
                     container.appendChild(img);
                     
-                    // Re-add the verified badge and hover overlay after replacing content
                     reAddImageElements(container);
                     
                     // Optional: Show delete button if hidden
@@ -144,7 +141,6 @@
                 };
                 reader.readAsDataURL(file);
                 
-                // *** Implement AJAX call here to upload the new image ***
             }
         });
 
@@ -152,19 +148,15 @@
         deleteButton.addEventListener('click', (e) => {
             e.preventDefault();
             
-            // Revert back to the default icon state
             container.innerHTML = '';
             container.appendChild(defaultIcon.cloneNode(true)); // Clone the default icon span
             reAddImageElements(container);
             
-            // Hide the delete button (assuming default state has no image to delete)
             deleteButton.style.display = 'none'; 
             
-            // *** Implement AJAX call here to remove the image from the server/database ***
             alert('Profile picture deleted!');
         });
         
-        // Helper function to re-add static elements after content replacement
         function reAddImageElements(container) {
             // Re-add the verified badge
             const badge = document.createElement('span');
@@ -179,10 +171,7 @@
             container.appendChild(overlay);
         }
 
-        // Initial check: Hide delete button if no custom image is present
-        // (You would need a server-side check here. For display, we assume the icon means no custom image)
         if (defaultIcon.tagName === 'SPAN') { 
             deleteButton.style.display = 'none';
         }
-    });
 </script>

@@ -20,32 +20,32 @@ export const postSignup = async (req, res) => {
         if (!name || !/^[A-Za-z ]+$/.test(name)) {
             req.flash("error", "Name can only contain letters")
 
-            return res.render("user/signup");
+            return res.redirect("/signup");
         }
 
         if (name.length > 30 || name.length < 3) {
             req.flash("error", "Name should be between 3-30 characters");
-            return res.render("user/signup");
+            return res.redirect("/signup");
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             req.flash("error", "Please enter a valid email address")
 
-            return res.render("user/signup");
+            return res.redirect("/signup");
         }
 
         const phoneRegex = /^[6-9]\d{9}$/;
         if (!phoneRegex.test(phone)) {
             req.flash("error", "Please enter a valid Phone Number")
 
-            return res.render("user/signup");
+            return res.redirect("/signup");
         }
 
         if (password.length < 6) {
             req.flash("error", "Password need minimum 6 characters")
 
-            return res.render("user/signup");
+            return res.redirect("/signup");
         }
 
 
@@ -107,14 +107,11 @@ export const showVerifyOtp = async (req, res) => {
     try {
         res.render("user/verify-otp")
     } catch (err) {
-        console.log("Errorloading verify-otp");
-        if (err.message === "OTP already sented") {
-            req.flash("error", "OTP already sent.Please wait");
-            return res.redirect("/verify-otp");
-        }
-        throw err;
+        console.log(err);
+        res.satus(500).send("Failed to load ");
     }
 }
+
 
 
 

@@ -77,7 +77,7 @@ export const postChangePassword=async(req,res)=>{
 
     await User.findByIdAndUpdate(user._id,{password:hashed});
 
-    res.redirect("profile");
+    res.redirect("/profile");
 }
 
 

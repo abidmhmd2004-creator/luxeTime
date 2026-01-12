@@ -20,7 +20,7 @@ import { addAddress, deleteAddress, editAddress, getAddress } from "../controlle
 
 const router = express.Router();
 
-router.get("/home", showhomePage);
+router.get("/home", requireAuth,showhomePage);
 
 router.get("/signup", redirectIfAuthenticated, showSignup);
 router.post("/signup", postSignup);

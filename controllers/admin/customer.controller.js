@@ -66,6 +66,9 @@ export const toggleCustomerStatus = async (req,res)=>{
             return res.redirect("/admin/customers");
         }
 
+
+        
+
         user.isBlocked=!user.isBlocked;
         await user.save();
 

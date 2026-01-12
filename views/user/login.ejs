@@ -18,6 +18,7 @@
               <label class="mb-2 block text-sm font-medium text-gray-300" for="email">Email Address</label>
               <input id="email" name="email" type="email" placeholder="Enter your email"
                 class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
+              
               <p id="emailErr" class="text-xs text-red-500 mt-1 hidden"></p>
             </div>
             <div>
@@ -25,6 +26,11 @@
               <input id="password" name="password" type="password" placeholder="Enter your password"
                 class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
 
+              <span
+                class="material-symbols-outlined absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-500 cursor-pointer"
+                onclick="togglePasswordVisibility('password')">
+                visibility_off
+              </span>
               <p id="passwordErr" class="text-xs text-red-500 mt-1 hidden"></p>
             </div>
             <div class="flex items-center justify-end">
@@ -94,18 +100,23 @@
             Experience the pinnacle of craftsmanship and style. Your journey to timeless elegance begins here.
           </p>
         </div>
-        <div class="flex items-center gap-6 text-sm font-medium text-gray-500">
-          <p>© 2024 Luxe Time Inc.</p>
-          <div class="flex gap-4">
-            <a class="hover:text-gold-accent transition-colors" href="#">Privacy</a>
-            <a class="hover:text-gold-accent transition-colors" href="#">Terms</a>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </body>
 <script>
+  function togglePasswordVisibility(id) {
+    const input = document.getElementById(id);
+    const icon = input.nextElementSibling;
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = 'visibility';
+    } else {
+      input.type = 'password';
+      icon.textContent = 'visibility_off'; 
+    }
+  }
   const loginForm = document.getElementById("loginForm");
 
   const emailInput = document.getElementById("email");
