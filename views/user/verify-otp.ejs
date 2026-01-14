@@ -96,7 +96,7 @@
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2V7h2v9z" />
                     </svg>
-                    <span id="resend-timer">00:30</span>
+                    <span id="resend-timer">05:00</span>
                 </div>
 
                 <a href="#"
@@ -114,8 +114,7 @@
 </div>
 
 <script>
-
-    const OTP_DURATION = 30;
+    const OTP_DURATION = 60;
     const STORAGE_KEY = "otp_expire_time";
 
     const otpForm = document.getElementById("otpForm");
@@ -125,16 +124,15 @@
     const timerEl = document.getElementById("resend-timer");
     const resendLink = document.getElementById("resendOtp");
 
-    //OTP input auto move
 
-    function moveToNext(currentInput, nextInputId) {
+    let timerInterval = null;
+
+     function moveToNext(currentInput, nextInputId) {
         if (currentInput.value.length === 1) {
             const nextInput = document.getElementById(nextInputId);
             if (nextInput) nextInput.focus();
         }
     }
-
-    //Time fromatting
 
     function formatTime(seconds) {
         const min = Math.floor(seconds / 60);
@@ -142,23 +140,19 @@
         return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
     }
 
-    let timerInterval = null;
-
     function startTimer(timeLeft) {
-
         if (timerInterval) clearInterval(timerInterval);
 
+        // Disable resend while timer is running
         resendLink.classList.add("opacity-50", "pointer-events-none");
-
         timerEl.textContent = formatTime(timeLeft);
 
         timerInterval = setInterval(() => {
             timeLeft--;
 
-            if (timeLeft < 0) {
+            if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 timerEl.textContent = "Expired";
-
                 resendLink.classList.remove("opacity-50", "pointer-events-none");
                 localStorage.removeItem(STORAGE_KEY);
                 return;
@@ -168,32 +162,42 @@
         }, 1000);
     }
 
+    // Function to set a fresh 60s timer in storage and start it
+    function triggerNewOTP() {
+        const expireTime = Date.now() + OTP_DURATION * 1000;
+        localStorage.setItem(STORAGE_KEY, expireTime);
+        startTimer(OTP_DURATION);
+    }
+
     window.onload = () => {
         document.getElementById("otp-1").focus();
 
         let expireTime = localStorage.getItem(STORAGE_KEY);
 
-        // FIRST TIME USER (NO TIMER STORED)
-        if (!expireTime) {
-            expireTime = Date.now() + OTP_DURATION * 1000;
-            localStorage.setItem(STORAGE_KEY, expireTime);
-            startTimer(OTP_DURATION);
-            return;
-        }
+        if (expireTime) {
+            const remaining = Math.ceil((expireTime - Date.now()) / 1000);
 
-        const remaining = Math.ceil((expireTime - Date.now()) / 1000);
+            if (remaining > 0) {
+                // If there is active time left, resume it
+                startTimer(remaining);
+            } else {
+                // If time already passed, show expired and don't restart
+                timerEl.textContent = "Expired";
+                resendLink.classList.remove("opacity-50", "pointer-events-none");
+                localStorage.removeItem(STORAGE_KEY);
+            }
+        } else {
+    
+            const isFreshLoad = true; 
+            
 
-        // TIMER STILL RUNNING
-        if (remaining > 0) {
-            startTimer(remaining);
-        }
-        // TIMER EXPIRED → RESTART FOR NEW OTP
-        else {
-            localStorage.removeItem(STORAGE_KEY);
-
-            const newExpire = Date.now() + OTP_DURATION * 1000;
-            localStorage.setItem(STORAGE_KEY, newExpire);
-            startTimer(OTP_DURATION);
+            if (!sessionStorage.getItem("initial_load_done")) {
+                sessionStorage.setItem("initial_load_done", "true");
+                triggerNewOTP();
+            } else {
+                timerEl.textContent = "Expired";
+                resendLink.classList.remove("opacity-50", "pointer-events-none");
+            }
         }
     };
 
@@ -202,10 +206,6 @@
 
         try {
             resendLink.textContent = "Sending...";
-            resendLink.classList.add("opacity-50", "pointer-events-none");
-
-            console.log("before feching");
-
             const res = await fetch("/resend-otp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
@@ -216,49 +216,28 @@
             if (!data.success) {
                 otpErr.textContent = data.message;
                 otpErr.classList.remove("hidden");
-
-                resendLinkresendLink.textContent = "Resend OTP";
-                resendLink.classList.remove("opacity-50", "pointer-events-none");
+                resendLink.textContent = "Resend OTP";
                 return;
             }
 
-            // Restart timer
-            const expireTime = Date.now() + OTP_DURATION * 1000;
-            localStorage.setItem(STORAGE_KEY, expireTime);
-            startTimer(OTP_DURATION);
-
+            triggerNewOTP();
             resendLink.textContent = "Resend OTP";
 
         } catch (err) {
             otpErr.textContent = "Network error. Please try again.";
             otpErr.classList.remove("hidden");
-
             resendLink.textContent = "Resend OTP";
-            resendLink.classList.remove("opacity-50", "pointer-events-none");
         }
     });
 
-
-    //Form submitting
-
     otpForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
         const otpCode = otpInputs.map(i => i.value).join("");
-        otpErr.classList.add("hidden");
-
         if (otpCode.length !== 6 || isNaN(otpCode)) {
             otpErr.textContent = "Please enter the full 6-digit code.";
             otpErr.classList.remove("hidden");
-            otpInputs.forEach(i => i.style.borderColor = "red");
             return;
         }
-
-        otpInputs.forEach(i => i.style.borderColor = "");
-
         otpHidden.value = otpCode;
-
-        otpForm.submit();
+        otpForm.submit(); 
     });
-
 </script>

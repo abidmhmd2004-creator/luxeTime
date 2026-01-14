@@ -63,7 +63,7 @@
         <div class="bg-card-dark p-6 rounded-xl shadow-lg space-y-4">
             <div class="flex justify-between items-center border-b border-neutral-700 pb-3 ">
                 <h3 class="text-lg font-semibold">Registered Users</h3>
-                <p class="text-sm text-neutral-400">Showing 1-10 of 1,248 customers</p>
+                <!-- <p class="text-sm text-neutral-400">Showing 1-10 of 1,248 customers</p> -->
             </div>
 
             <div class="overflow-x-auto">
@@ -196,7 +196,6 @@
                     const form = this.closest("form");
                     const action = form.dataset.status;
 
-                    // revert UI until confirmation
                     this.checked = !this.checked;
 
                     Swal.fire({

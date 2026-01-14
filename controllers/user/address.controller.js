@@ -27,8 +27,7 @@ export const getAddress = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
-        res.status(500).send("Loadin failed");
+        next(error)
     }
 }
 
@@ -82,7 +81,6 @@ export const getAddress = async (req, res) => {
             });
             return res.json({ success: true });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ success: false });
+            next(err)
         }
     }

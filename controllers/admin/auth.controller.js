@@ -9,8 +9,7 @@ export const loadAdminLogin=async (req,res)=>{
         }
         res.render("admin/login",{layout:"layouts/admin"});
     }catch(err){
-        console.error(err);
-        res.status(500).send("Loading failed");
+        next(err);
     }
 }
 
@@ -34,15 +33,14 @@ export const postAdminLogin =async (req,res)=>{
         }
 
         req.session.admin={
-            id:admin._id,
+            id:admin._id.toString(),
             email:admin.email,
             role:admin.role
         }
         return res.redirect("/admin/dashboard");
 
     } catch (error) {
-        console.log(error);
-        res.status(500).send("Something wrong");
+        next(error)
         
     }
 }
@@ -52,8 +50,11 @@ export const postAdminLogin =async (req,res)=>{
 
 export const adminLogout=async(req,res)=>{
     req.session.destroy(()=>{
-        res.redirect("/admin/login")
+
+    res.clearCookie("luxetime.admin.sid");
+   return res.redirect("/admin/login");
     })
+    
 }
 
 

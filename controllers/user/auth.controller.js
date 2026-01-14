@@ -7,8 +7,7 @@ export const showSignup = async (req, res) => {
     try {
         res.render("user/signup");
     } catch (err) {
-        console.log("Error loading signup page");
-        res.status(500).send("Server error")
+        next(err);
     }
 };
 
@@ -91,7 +90,7 @@ export const postSignup = async (req, res) => {
             purpose: "signup"
 
         }
-        res.redirect("/verify-otp");
+        return res.redirect("/verify-otp");
     } catch (err) {
         if (err.message === "otp-cooldown") {
             req.flash("error", "OTP already sent. Please wait 30 seconds");
@@ -107,8 +106,7 @@ export const showVerifyOtp = async (req, res) => {
     try {
         res.render("user/verify-otp")
     } catch (err) {
-        console.log(err);
-        res.satus(500).send("Failed to load ");
+        next(err)
     }
 }
 
@@ -117,10 +115,10 @@ export const showVerifyOtp = async (req, res) => {
 
 export const showLogin = async (req, res) => {
     try {
+
         return res.render("user/login");
     } catch (err) {
-        console.log("Error loading login page");
-        res.status(500).send("Server error");
+        next(err)
     }
 };
 
@@ -130,12 +128,15 @@ export const postLogin = async (req, res) => {
 
         const { email, password } = req.body;
 
+
         if (!email || !password) {
             req.flash("error", "ALl fields are required");
             return res.redirect("/login");
         }
 
         const user = await User.findOne({ email });
+
+
 
         if (!user) {
             req.flash("error", "Invalid  email or password");
@@ -152,23 +153,33 @@ export const postLogin = async (req, res) => {
             return res.redirect("/login");
         }
 
+        if(user.role==="admin"){
+            req.flash("error","Use the admin login");
+            return res.redirect("/login");
+        }
+
+        if(user.googleId && !user.password){
+            req.flash("error","This account is google signup ,please signup using google:");
+            return res.redirect("/login");
+        }
+
         const isPasswordMatch = await bcrypt.compare(password, user.password);
 
         if (!isPasswordMatch) {
-            req.flash("error", "Invalid email or password");
+            req.flash("error", "In bvalid email or password");
             return res.redirect("/login");
         }
 
         req.session.user = {
-            id: user._id,
+            id: user._id.toString(),
             name: user.name,
             email: user.email
         };
-        res.redirect("/home");
+        console.log(req.session.user.id);
+       return  res.redirect("/home");
 
     } catch (err) {
-        console.log(err);
-        res.status(500).send("Login failed");
+        next(err)
     }
 }
 
@@ -185,8 +196,7 @@ export const loadForgotPass = async (req, res) => {
         delete req.session.purpose;
         return res.render("user/forgot-password");
     } catch (err) {
-        console.log("Error loading page");
-        res.status(500).send("server error");
+       next(err)
     }
 }
 
@@ -236,8 +246,7 @@ export const getResetPassword = (req, res) => {
         }
         res.render("user/reset-password")
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Somethng went wrong");
+        next(err)
     }
 }
 
@@ -253,6 +262,7 @@ export const postResetPassword = async (req, res) => {
 
         if (!newPassword || !confirmPassword) {
             req.flash("error", "All fields are required");
+            return res.redirect("/reset-password");
         }
 
         if (newPassword.length < 6) {
@@ -262,6 +272,7 @@ export const postResetPassword = async (req, res) => {
 
         if (newPassword !== confirmPassword) {
             req.flash("error", "Password do not macth");
+            return res.redirect("/reset-password")
         }
 
         const userId = req.session.resetUserId;
@@ -272,12 +283,11 @@ export const postResetPassword = async (req, res) => {
 
         delete req.session.resetUserId;
 
-        res.redirect("/login");
+        return res.redirect("/home");
 
 
     } catch (err) {
-        console.log(err);
-        res.status(500).send("failed to reset password");
+        next(err)
 
     }
 }
@@ -285,13 +295,12 @@ export const postResetPassword = async (req, res) => {
 
 
 export const logout = (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            console.error(err);
-            return res.send("Logout failed");
-        }
 
-        res.clearCookie("luxetime.sid");
-        res.redirect("/")
+    req.session.destroy(()=>{
+
+        res.clearCookie("luxetime.user.sid");
+        return res.redirect("/")
+    
     })
+   
 }

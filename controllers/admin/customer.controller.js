@@ -1,4 +1,5 @@
 
+import mongoose from "mongoose";
 import User from "../../models/user.model.js"
 
 export const getCustomers =async(req,res)=>{
@@ -48,8 +49,7 @@ export const getCustomers =async(req,res)=>{
                 totalUsers
             })
         } catch (err) {
-        console.log(err);
-        res.status(500).send("Server error");
+        next(err)
     }
 }
 
@@ -70,17 +70,25 @@ export const toggleCustomerStatus = async (req,res)=>{
         
 
         user.isBlocked=!user.isBlocked;
+// console.log(req.cookies)
+//         res.clearCookie("luxetime.sid")
         await user.save();
+        console.log("blocked")
+
+        if(user.isBlocked){
+            const session=mongoose.connection.collection("user_sessions");
+
+            await session.deleteMany({"session.user.id":userId});
+        }
 
         req.flash("success",user.isBlocked ?"User blocked successfully":"User unblocked successfully");
 
-        res.redirect("/admin/customers");
+       return  res.redirect("/admin/customers");
 
 
     } catch (err) {
-
-        console.log(err);
-        res.redirect("/admin/customers");
+    console.log(err)
+     next(err)
         
     }
 }

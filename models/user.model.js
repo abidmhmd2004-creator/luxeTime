@@ -52,8 +52,16 @@ const userSchema = new mongoose.Schema(
             default: false
         },
         profileImage: {
-            type: String
+            url: {
+                type: String,
+                default: ""
+            },
+            publicId: {
+                type: String,
+                default: ""
+            }
         },
+
         referralCode: String,
         referredBy: String
     }, { timestamps: true });

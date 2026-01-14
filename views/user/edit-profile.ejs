@@ -10,7 +10,7 @@
             </p>
         </div>
 
-        <form action="/edit-profile" method="POST" class="space-y-4">
+        <form action="/edit-profile" method="POST" id="editProfileForm" class="space-y-4">
             
             <div class="relative">
                 <span class="absolute left-10 top-1.5 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Full Name</span>
@@ -20,6 +20,8 @@
                     class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-white placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm focus:ring-primary" />
                 
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">person</span>
+                        <p class="mt-1 text-xs text-red-500 hidden" id="nameError"></p>
+
             </div>
 
             <div class="relative">
@@ -30,6 +32,8 @@
                     class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-white placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm focus:ring-primary" />
                 
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">call</span>
+                        <p class="mt-1 text-xs text-red-500 hidden" id="phoneError"></p>
+
             </div>
             
             <!-- <div class="relative">
@@ -56,3 +60,49 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById("editProfileForm").addEventListener("submit", function (e) {
+    const name = document.getElementById("fullName");
+    const phone = document.getElementById("phoneNumber");
+
+    const nameError = document.getElementById("nameError");
+    const phoneError = document.getElementById("phoneError");
+
+    let isValid = true;
+
+    nameError.classList.add("hidden");
+    phoneError.classList.add("hidden");
+
+    // Name validation
+    if (!name.value.trim()) {
+        nameError.textContent = "Full name is required";
+        nameError.classList.remove("hidden");
+        isValid = false;
+    } else if (!/^[A-Za-z ]+$/.test(name.value)) {
+        nameError.textContent = "Only letters and spaces allowed";
+        nameError.classList.remove("hidden");
+        isValid = false;
+    } else if (name.value.trim().length < 3) {
+        nameError.textContent = "Name must be at least 3 characters";
+        nameError.classList.remove("hidden");
+        isValid = false;
+    }
+
+    // Phone validation (optional)
+    if (phone.value.trim() && !/^[6-9]\d{9}$/.test(phone.value)) {
+        phoneError.textContent = "Enter a valid 10-digit phone number";
+        phoneError.classList.remove("hidden");
+        isValid = false;
+    }
+    if (!/^\d+$/.test(phone.value)) {
+        phoneError.textContent = "Phone number must contain only digits";
+        phoneError.classList.remove("hidden");
+        isValid=false
+    }
+
+    if (!isValid) {
+        e.preventDefault(); // stop form submission
+    }
+});
+</script>

@@ -8,13 +8,15 @@ import path from "path";
 import { fileURLToPath } from "url";
 import expressLayouts from "express-ejs-layouts";
 import userRoutes from "./routes/user.routes.js";
-import sessionConfig from "./config/sessionStore.js";
+import  { adminSession, userSession } from "./config/sessionStore.js";
 import passport from "passport";
 import "./config/passport.js";
 import { checkUser } from "./middlewares/auth.js";
 import adminRoutes from "./routes/admin.routes.js";
 // import { userContext } from "./middlewares/userContext.middleware.js";
 import morgan from "morgan";
+import { checkBlockedUser } from "./middlewares/checkBlockeduser.js";
+import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app=express();
 
@@ -28,7 +30,11 @@ app.use(express.static(path.join(__dirname,"public")));
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
-app.use(sessionConfig);
+app.use("/admin",adminSession);
+app.use(userSession);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash());
 
@@ -43,14 +49,19 @@ app.use(nocache());
 app.use(expressLayouts);
 
 app.use((req,res,next)=>{
-    res.locals.currentUser=req.session.user||null;
+    if(req.session&&req.session.user){
+    res.locals.currentUser=req.session?.user;
+    }else{
+        res.locals.currentUser=null;
+    }
     next();
 })
 
-app.use(passport.initialize());
-app.use(passport.session());
 
-app.use(checkUser);
+
+
+// app.use(checkBlockedUser);
+// app.use(checkUser);
 // app.use(userContext);
 
 app.use(morgan("dev"));
@@ -60,7 +71,7 @@ app.set("views",path.join(__dirname,"views"));
 
 app.set("layout","layouts/user");
 
-app.use("/",userRoutes);
+app.use("/",checkBlockedUser,checkUser,userRoutes);
 app.use("/admin",adminRoutes);
 
 
@@ -72,11 +83,16 @@ app.get("/admin",(req,res)=>{
     res.redirect("/admin/login");
 })
 
+// app.get("/500", (req, res, next) => {
+//   throw new Error("Testing 500 error");
+// });
 
 
 app.use((req,res)=>{
     res.status(404).render("user/404");
 })
+
+app.use(errorHandler);
 
 
 export default app;

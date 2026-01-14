@@ -3,175 +3,184 @@
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
         <%- include('../partials/sidebar') %>
 
-        <main class="flex-1 space-y-6">
+            <main class="flex-1 space-y-6">
 
-            <div class="bg-dark-green rounded-xl p-6 shadow-xl flex items-center space-x-4">
-                
-                <div class="flex flex-col items-center space-y-2">
-                    <div class="relative group">
-                        
-                        <input type="file" id="profilePictureInput" class="hidden" accept="image/*" />
-                        
-                        <label for="profilePictureInput" class="cursor-pointer relative block rounded-full" id="profilePictureContainer">
-                            
-                            <span id="currentProfileImage"
-                                class="material-symbols-outlined text-6xl text-neutral-400 p-2 border-2 border-yellow-500 rounded-full transition-opacity duration-300">
-                                account_circle
-                            </span>
+                <div class="bg-dark-green rounded-xl p-6 shadow-xl flex items-center space-x-4">
 
-                            <div
-                                class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition duration-300">
-                                <span class="material-symbols-outlined text-white text-3xl">add_a_photo</span>
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="relative group">
+
+                            <form id="profileImageForm" action="/upload-photo" method="POST"
+                                enctype="multipart/form-data">
+
+                                <input type="file" name="profileImage" id="profilePictureInput" class="hidden"
+                                    accept="image/*" />
+
+                            </form>
+
+                            <label for="profilePictureInput" class="cursor-pointer relative block rounded-full"
+                                id="profilePictureContainer">
+
+                                <% if (user.profileImage?.url) { %>
+                                    <img src="<%= user.profileImage.url %>"
+                                        class="w-[72px] h-[72px] object-cover rounded-full border-2 border-yellow-500" />
+                                    <% } else { %>
+                                        <span
+                                            class="material-symbols-outlined text-6xl text-neutral-400 p-2 border-2 border-yellow-500 rounded-full">
+                                            account_circle
+                                        </span>
+
+                                        <% } %>
+
+
+                                            <div
+                                                class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition duration-300">
+                                                <span
+                                                    class="material-symbols-outlined text-white text-3xl">add_a_photo</span>
+                                            </div>
+
+                                            <span
+                                                class="material-symbols-outlined absolute bottom-0 right-0 text-yellow-500 bg-dark-green rounded-full p-0.5 text-lg">verified</span>
+                            </label>
+
+                        </div>
+
+                        <div id="deleteButtonContainer">
+                            <% if (user.profileImage?.url) { %>
+                                <form action="/delete-photo" method="POST">
+                                    <button type="submit" id="deletePictureButton"
+                                        class="text-xs text-red-400 hover:text-red-300 transition flex items-center space-x-1 mt-1">
+                                        <span class="material-symbols-outlined text-sm">delete</span>
+                                        <span>Delete Picture</span>
+                                    </button>
+                                </form>
+                                <% } %>
+                        </div>
+
+                    </div>
+
+                    <div class="text-white">
+                        <h2 class="text-2xl font-bold">
+                            <%= user.name %>
+                        </h2>
+                        <p class="text-sm text-neutral-400">
+                            <%= user.email %>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-dark-green rounded-xl p-6 shadow-xl space-y-6">
+
+                    <%- include('../partials/alerts') %>
+
+                        <h3 class="text-lg font-semibold text-white flex items-center space-x-2">
+                            <span class="material-symbols-outlined text-lg text-yellow-500">folder_person</span>
+                            <span>Personal Information</span>
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                            <div>
+                                <label class="block text-xs font-medium text-neutral-400 mb-1">Full Name</label>
+                                <div class="relative">
+                                    <input type="text" value="<%= user.name %>" disabled
+                                        class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
+                                    <span
+                                        class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">edit</span>
+                                </div>
                             </div>
-                            
-                            <span
-                                class="material-symbols-outlined absolute bottom-0 right-0 text-yellow-500 bg-dark-green rounded-full p-0.5 text-lg">verified</span>
-                        </label>
-                        
-                    </div>
-                    
-                    <button type="button" id="deletePictureButton"
-                        class="text-xs text-red-400 hover:text-red-300 transition flex items-center space-x-1 mt-1">
-                        <span class="material-symbols-outlined text-sm">delete</span>
-                        <span>Delete Picture</span>
-                    </button>
-                </div>
-                
-                <div class="text-white">
-                    <h2 class="text-2xl font-bold"><%= user.name %></h2>
-                    <p class="text-sm text-neutral-400"><%= user.email %></p>
-                </div>
-            </div>
 
-            <div class="bg-dark-green rounded-xl p-6 shadow-xl space-y-6">
-                <h3 class="text-lg font-semibold text-white flex items-center space-x-2">
-                    <span class="material-symbols-outlined text-lg text-yellow-500">folder_person</span>
-                    <span>Personal Information</span>
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    
-                    <div>
-                        <label class="block text-xs font-medium text-neutral-400 mb-1">Full Name</label>
-                        <div class="relative">
-                            <input type="text" value="<%= user.name %>" disabled
-                                class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
-                            <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">edit</span>
-                        </div>
-                    </div>
+                            <div>
+                                <label class="block text-xs font-medium text-neutral-400 mb-1">Email Address</label>
+                                <div class="relative">
+                                    <input type="email" value="<%=user.email %>" disabled
+                                        class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
+                                    <span
+                                        class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">mail</span>
+                                </div>
+                            </div>
 
-                    <div>
-                        <label class="block text-xs font-medium text-neutral-400 mb-1">Email Address</label>
-                        <div class="relative">
-                            <input type="email" value="<%=user.email %>" disabled
-                                class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
-                            <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">mail</span>
-                        </div>
-                    </div>
+                            <div>
+                                <label class="block text-xs font-medium text-neutral-400 mb-1">Phone Number</label>
+                                <div class="relative">
+                                    <input type="tel" value="<%= user.phone ||'-' %>" disabled
+                                        class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
+                                    <span
+                                        class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">call</span>
+                                </div>
+                            </div>
 
-                    <div>
-                        <label class="block text-xs font-medium text-neutral-400 mb-1">Phone Number</label>
-                        <div class="relative">
-                            <input type="tel" value="<%= user.phone ||'-' %>" disabled
-                                class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
-                            <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">call</span>
+                            <div>
+                                <label class="block text-xs font-medium text-neutral-400 mb-1">Date of Birth</label>
+                                <div class="relative">
+                                    <input type="text" value="<%= user.dob ? user.dob.toDateString():'-' %>" disabled
+                                        class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
+                                    <span
+                                        class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">calendar_month</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label class="block text-xs font-medium text-neutral-400 mb-1">Date of Birth</label>
-                        <div class="relative">
-                            <input type="text" value="<%= user.dob ? user.dob.toDateString():'-' %>" disabled
-                                class="w-full rounded-lg border-0 bg-green-900/40 py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 placeholder:text-neutral-600 sm:text-sm sm:leading-6 cursor-not-allowed" />
-                            <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">calendar_month</span>
+                        <div class="flex justify-end pt-4 space-x-3">
+                            <button type="button" onclick="window.location.href='/change-email'"
+                                class="px-5 py-3 rounded-lg text-white font-semibold border border-green-700/80 hover:bg-green-800/50 transition">
+                                Change Email
+                            </button>
+                            <button type="button" onclick="window.location.href='/change-password'"
+                                class="px-5 py-3 rounded-lg text-white font-semibold border border-green-700/80 hover:bg-green-800/50 transition">
+                                Change Password
+                            </button>
+                            <button type="button" onclick="window.location.href='/edit-profile'"
+                                class="px-5 py-3 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
+                                Edit Profile
+                            </button>
                         </div>
-                    </div>
+
                 </div>
 
-                <div class="flex justify-end pt-4 space-x-3">
-                    <button type="button" onclick="window.location.href='/change-email'"
-                        class="px-5 py-3 rounded-lg text-white font-semibold border border-green-700/80 hover:bg-green-800/50 transition">
-                        Change Email
-                    </button>
-                    <button type="button" onclick="window.location.href='/change-password'"
-                        class="px-5 py-3 rounded-lg text-white font-semibold border border-green-700/80 hover:bg-green-800/50 transition">
-                        Change Password
-                    </button>
-                    <button type="button" onclick="window.location.href='/edit-profile'"
-                        class="px-5 py-3 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
-                        Edit Profile
-                    </button>
-                </div>
-
-            </div>
-
-        </main>
+            </main>
     </div>
 
 </div>
 
 <script>
-        const fileInput = document.getElementById('profilePictureInput');
-        const deleteButton = document.getElementById('deletePictureButton');
-        const container = document.getElementById('profilePictureContainer');
-        const defaultIcon = document.getElementById('currentProfileImage'); // The default icon element
+    const fileInput = document.getElementById('profilePictureInput');
+    const deleteButton = document.getElementById('deletePictureButton');
+    const container = document.getElementById('profilePictureContainer');
+    const defaultIcon = document.getElementById('currentProfileImage');
 
-        // 1. Image Preview/Upload Logic
-        fileInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const file = this.files[0];
-                const reader = new FileReader();
+    fileInput.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            const reader = new FileReader();
 
-                reader.onload = function(e) {
-                    // Create an <img> element for the preview
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.classList.add('w-[72px]', 'h-[72px]', 'object-cover', 'rounded-full', 'border-2', 'border-yellow-500'); 
-                    
-                    container.innerHTML = '';
-                    container.appendChild(img);
-                    
-                    reAddImageElements(container);
-                    
-                    // Optional: Show delete button if hidden
-                    deleteButton.style.display = 'flex';
-                };
-                reader.readAsDataURL(file);
-                
-            }
-        });
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('w-[72px]', 'h-[72px]', 'object-cover', 'rounded-full', 'border-2', 'border-yellow-500');
 
-        // 2. Delete Picture Logic
-        deleteButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            container.innerHTML = '';
-            container.appendChild(defaultIcon.cloneNode(true)); // Clone the default icon span
-            reAddImageElements(container);
-            
-            deleteButton.style.display = 'none'; 
-            
-            alert('Profile picture deleted!');
-        });
-        
-        function reAddImageElements(container) {
-            // Re-add the verified badge
-            const badge = document.createElement('span');
-            badge.classList.add('material-symbols-outlined', 'absolute', 'bottom-0', 'right-0', 'text-yellow-500', 'bg-dark-green', 'rounded-full', 'p-0.5', 'text-lg');
-            badge.textContent = 'verified';
-            container.appendChild(badge);
-            
-            // Re-add the hover overlay
-            const overlay = document.createElement('div');
-            overlay.classList.add('absolute', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-black/50', 'rounded-full', 'opacity-0', 'group-hover:opacity-100', 'transition', 'duration-300');
-            overlay.innerHTML = '<span class="material-symbols-outlined text-white text-3xl">add_a_photo</span>';
-            container.appendChild(overlay);
+                container.innerHTML = '';
+                container.appendChild(img);
+
+                reAddImageElements(container);
+
+                if (deleteButtonContainer) deleteButtonContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            document.getElementById('profileImageForm').submit();
         }
+    });
 
-        if (defaultIcon.tagName === 'SPAN') { 
-            deleteButton.style.display = 'none';
-        }
+    function reAddImageElements(container) {
+        const badge = document.createElement('span');
+        badge.classList.add('material-symbols-outlined', 'absolute', 'bottom-0', 'right-0', 'text-yellow-500', 'bg-dark-green', 'rounded-full', 'p-0.5', 'text-lg');
+        badge.textContent = 'verified';
+        container.appendChild(badge);
+
+        const overlay = document.createElement('div');
+        overlay.classList.add('absolute', 'inset-0', 'flex', 'items-center', 'justify-center', 'bg-black/50', 'rounded-full', 'opacity-0', 'group-hover:opacity-100', 'transition', 'duration-300');
+        overlay.innerHTML = '<span class="material-symbols-outlined text-white text-3xl">add_a_photo</span>';
+        container.appendChild(overlay);
+    }
+
 </script>

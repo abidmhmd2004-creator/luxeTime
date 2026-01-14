@@ -9,7 +9,7 @@ export const otpEmailTemplates = {
       <h2>Welcome to LuxeTime </h2>
       <p>Your verification code is:</p>
       <h1 style="letter-spacing:4px">${otp}</h1>
-      <p>This OTP is valid for <b>5 minutes</b>.</p>`
+      <p>This OTP is valid for <b>1 minutes</b>.</p>`
     },
 
     "forgot-password": {
@@ -18,7 +18,7 @@ export const otpEmailTemplates = {
       <h2>Password Reset Request</h2>
       <p>Use the OTP below to reset your password:</p>
       <h1 style="letter-spacing:4px">${otp}</h1>
-      <p>This OTP expires in <b>5 minutes</b>.</p>
+      <p>This OTP expires in <b>1 minutes</b>.</p>
       <p>If you didn’t request this, ignore this email.</p>`
     },
 
@@ -28,7 +28,7 @@ export const otpEmailTemplates = {
       <h2>Email Reset Request</h2>
       <p>Use the OTP below to reset your email:</p>
       <h1 style="letter-spacing:4px">${otp}</h1>
-      <p>This OTP expires in <b>5 minutes</b>.</p>
+      <p>This OTP expires in <b>1 minutes</b>.</p>
       <p>If you didn’t request this, ignore this email.</p>`
     },
 };

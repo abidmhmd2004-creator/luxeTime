@@ -18,18 +18,18 @@ export const verifyOtp = async (req, res) => {
         const otpRecord = await Otp.findOne({ userId, otp: hashedOtp });
 
         if (!otpRecord) {
-            req.flash("error", "Invalid OTP");
+            req.flash("error", "Invalid OTP or Expired");
             return res.redirect("/verify-otp");
         }
         if (otpRecord.otp !== hashedOtp) {
-            req.flash("error", "Invalid OTP");
+            req.flash("error", "Incorrect OTP");
             return res.redirect("/verify-otp");
         }
 
-        if (otpRecord.expiresAt < new Date()) {
-            req.flash("error", "OTP expired");
-            return res.redirect("/verify-otp");
-        }
+        // if (otpRecord.expiresAt < new Date()) {
+        //     req.flash("error", "OTP expired");
+        //     return res.redirect("/verify-otp");
+        // }
 
         if (purpose === "signup") {
             await User.findByIdAndUpdate(userId, {
@@ -71,9 +71,7 @@ export const verifyOtp = async (req, res) => {
 
         res.redirect("/login");
     } catch (err) {
-        console.error(err);
-        req.flash("error", "Something went wrong");
-        res.redirect("/verify-otp");
+        next(err)
     }
 };
 
@@ -118,7 +116,7 @@ export const resentOtp = async (req, res) => {
         if (err.message === "otp-cooldown") {
             return res.status(200).json({
                 success: false,
-                message: "Please wait 30 seconds before resending OTP"
+                message: "Please wait 60 seconds before resending OTP"
             });
         }
 
