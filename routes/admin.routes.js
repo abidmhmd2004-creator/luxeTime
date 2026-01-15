@@ -12,7 +12,7 @@ router.post("/login",postAdminLogin);
 router.get("/dashboard",adminAuth,getDashboard);
 
 router.get("/customers",adminAuth,getCustomers);
-router.post("/customers/toggle/:userId",adminAuth,toggleCustomerStatus)
+router.patch("/customers/toggle/:userId",adminAuth,toggleCustomerStatus)
 
 router.get("/logout",adminLogout)
 

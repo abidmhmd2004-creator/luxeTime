@@ -2,29 +2,25 @@ import User from "../../models/user.model.js";
 import bcrypt from "bcrypt"
 import { createAndSendOtp } from "../../utils/otp.util.js";
 import cloudinary from "../../config/cloudinary.js";
+import asyncHandler from "../../utils/asyncHandler.js";
 
-export const getProfile = async (req, res) => {
-    try {
+export const getProfile = asyncHandler(async (req, res) => {
+    
         const user = await User.findById(req.session.user.id).select("-password");
         res.render("user/profile", { user });
-    } catch (err) {
-        next(err)
-    }
-}
+    
+})
 
-export const loadEditProfile = async (req, res) => {
-    try {
+export const loadEditProfile =asyncHandler( async (req, res) => {
+    
         const user = await User.findById(req.session.user.id).select("-password");
         res.render("user/edit-profile", { user });
-    } catch (error) {
-        next(error)
-    }
-}
+    
+})
 
 
-export const postEditProfile = async (req, res) => {
-    try {
-
+export const postEditProfile =asyncHandler( async (req, res) => {
+   
         const { name, phone, dob } = req.body;
 
         if (!name) {
@@ -38,24 +34,20 @@ export const postEditProfile = async (req, res) => {
         });
         req.session.user.name = name;
         res.redirect("/profile")
-    } catch (err) {
-        next(err)
-    }
+    
 
-}
+})
 
-export const getChangePassword = async (req, res) => {
-    try {
+export const getChangePassword =asyncHandler( async (req, res) => {
+    
         const user = await User.findById(req.session.user.id)
         if (!user.password && user.googleId) {
             req.flash("error", "Google users cannot change password");
             return res.redirect("/profile");
         }
         res.render("user/change-password");
-    } catch (err) {
-        next(err)
-    }
-}
+    
+})
 
 
 export const postChangePassword = async (req, res) => {
@@ -87,24 +79,26 @@ export const postChangePassword = async (req, res) => {
 
 
 
-export const loadChangeEmail = async (req, res) => {
-    try {
+export const loadChangeEmail =asyncHandler( async (req, res) => {
+    
         res.render("user/change-email");
-    } catch (err) {
-        next(err)
-    }
-}
+    
+})
 
 
-export const postChangeEmail = async (req, res) => {
-    try {
+export const postChangeEmail = asyncHandler(async (req, res) => {
+  
 
         const { newEmail } = req.body;
 
-        const exists = await User.findOne({ newEmail });
-        if (exists) {
-            req.falsh("error", "newEmail already in use");
+        const exists = await User.findOne({email: newEmail});
+        if (exists  && exists.isVerified) {
+            req.flash("error", "newEmail already in use");
             return res.redirect("/change-email");
+        }
+
+        if(exists && !exists.isVerified){
+            await User.deleteOne({email:newEmail})
         }
 
         const user = await User.findById(req.session.user.id);
@@ -119,18 +113,14 @@ export const postChangeEmail = async (req, res) => {
         }
         res.redirect("/verify-otp")
 
-    } catch (error) {
-        next(err)
-
-    }
-}
+    
+})
 
 
-export const uploadProfileImage = async (req, res) => {
-    try {
+export const uploadProfileImage =asyncHandler( async (req, res) => {
+    
         const imageUrl = req.file.path;
         const publicId = req.file.filename;
-        console.log(publicId)
 
         await User.findByIdAndUpdate(req.session.user.id, {
             profileImage: {
@@ -139,13 +129,11 @@ export const uploadProfileImage = async (req, res) => {
             }
         });
         return res.redirect("/profile");
-    } catch (err) {
-        next(err)
-    }
-}
+    
+})
 
-export const deleteProfileImage = async (req, res) => {
-    try {
+export const deleteProfileImage =asyncHandler( async (req, res) => {
+   
         const user = await User.findById(req.session.user.id);
         console.log(user.publicId)
 
@@ -163,10 +151,8 @@ export const deleteProfileImage = async (req, res) => {
         await user.save();
 
         return res.redirect("/profile")
-    } catch (err) {
-       next(err)
-    }
-}
+    
+})
 
 
 

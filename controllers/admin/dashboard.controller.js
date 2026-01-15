@@ -1,9 +1,7 @@
 
-
-export const getDashboard =async (req,res)=>{
-    try {
+import asyncHandler from "../../utils/asyncHandler.js";
+export const getDashboard =asyncHandler(async (req,res)=>{
+    
         res.render("admin/dashboard",{layout:"layouts/admin"})
-    } catch (error) {
-        next(error)
-    }
-}
+    
+})

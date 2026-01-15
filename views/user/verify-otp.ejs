@@ -2,32 +2,24 @@
     /* Custom CSS to style the OTP input boxes */
     .otp-input {
         width: 3rem;
-        /* Width of the box */
         height: 3.5rem;
-        /* Height of the box */
         text-align: center;
         font-size: 1.5rem;
         font-weight: bold;
         border-radius: 0.5rem;
-        /* rounded-lg */
         border: 1px solid #333333;
-        /* ring-neutral-800 */
         background-color: #2C2C2C;
-        /* bg-dark-input */
         color: #ffffff;
-        /* text-white */
         transition: all 0.2s;
     }
 
     .otp-input:focus {
         outline: none;
         border-color: #38E07B;
-        /* focus:ring-primary-hover */
         box-shadow: 0 0 0 2px #38E07B;
-        /* focus:ring-2 */
     }
 
-    /* Style for the container to prevent horizontal scrollbar on small screens */
+    /* Style for the container */
     .min-h-screen {
         min-height: 100vh;
     }
@@ -52,31 +44,28 @@
             </p>
         </header>
 
-        <form id="otpForm" action="/verify-otp" method="POST" class="space-y-6">
+        <div id="server-alert-container">
+            <%- include('../partials/alerts') %>
+        </div>
 
-          <%- include('../partials/alerts') %>
+        <form id="otpForm" action="/verify-otp" method="POST" class="space-y-6">
 
             <div class="flex justify-between space-x-2 sm:space-x-3">
                 <input type="hidden" name="otp" id="otpHidden">
-                <input type="text" id="otp-1" maxlength="1"
-                    class="otp-input focus:border-primary focus:shadow-primary/40"
-                    onkeyup="moveToNext(this, 'otp-2')" />
-                <input type="text" id="otp-2" maxlength="1"
-                    class="otp-input focus:border-primary focus:shadow-primary/40"
-                    onkeyup="moveToNext(this, 'otp-3')" />
-                <input type="text" id="otp-3" maxlength="1"
-                    class="otp-input focus:border-primary focus:shadow-primary/40"
-                    onkeyup="moveToNext(this, 'otp-4')" />
-                <input type="text" id="otp-4" maxlength="1"
-                    class="otp-input focus:border-primary focus:shadow-primary/40"
-                    onkeyup="moveToNext(this, 'otp-5')" />
-                <input type="text" id="otp-5" maxlength="1"
-                    class="otp-input focus:border-primary focus:shadow-primary/40"
-                    onkeyup="moveToNext(this, 'otp-6')" />
-                <input type="text" id="otp-6" maxlength="1"
-                    class="otp-input focus:border-primary focus:shadow-primary/40"
-                    onkeyup="moveToNext(this, 'submitButton')" />
+                <input type="text" id="otp-1" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-2')"
+                    onkeydown="handleBackspace(event, 'otp-1', null)" />
+                <input type="text" id="otp-2" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-3')"
+                    onkeydown="handleBackspace(event, 'otp-2', 'otp-1')" />
+                <input type="text" id="otp-3" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-4')"
+                    onkeydown="handleBackspace(event, 'otp-3', 'otp-2')" />
+                <input type="text" id="otp-4" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-5')"
+                    onkeydown="handleBackspace(event, 'otp-4', 'otp-3')" />
+                <input type="text" id="otp-5" maxlength="1" class="otp-input" oninput="moveToNext(this, 'otp-6')"
+                    onkeydown="handleBackspace(event, 'otp-5', 'otp-4')" />
+                <input type="text" id="otp-6" maxlength="1" class="otp-input" oninput="moveToNext(this, 'submitButton')"
+                    onkeydown="handleBackspace(event, 'otp-6', 'otp-5')" />
             </div>
+
             <p id="otpErr" class="text-sm text-red-500 text-center hidden">Please enter the full 6-digit code.</p>
 
             <button type="submit" id="submitButton"
@@ -88,7 +77,7 @@
                 <p class="text-sm text-neutral-400">
                     Didn't receive the code?
                     <a id="resendOtp"
-                        class="font-bold text-white hover:text-primary underline transition-colors opacity-50 pointer-events-none">Resend
+                        class="font-bold text-white hover:text-primary underline transition-colors opacity-50 pointer-events-none cursor-pointer">Resend
                         OTP</a>
                 </p>
 
@@ -96,17 +85,17 @@
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2V7h2v9z" />
                     </svg>
-                    <span id="resend-timer">05:00</span>
+                    <span id="resend-timer">00:00</span>
                 </div>
 
-                <a href="#"
+                <!-- <a href="/forgot-password"
                     class="inline-flex items-center text-sm text-neutral-400 hover:text-white transition-colors">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     Back to Forgot Password
-                </a>
+                </a> -->
             </div>
         </form>
 
@@ -117,91 +106,118 @@
     const OTP_DURATION = 60;
     const STORAGE_KEY = "otp_expire_time";
 
+    // --- DOM Elements ---
+
     const otpForm = document.getElementById("otpForm");
     const otpInputs = Array.from(document.querySelectorAll(".otp-input"));
     const otpHidden = document.getElementById("otpHidden");
     const otpErr = document.getElementById("otpErr");
     const timerEl = document.getElementById("resend-timer");
     const resendLink = document.getElementById("resendOtp");
-
+    const serverAlertContainer = document.getElementById("server-alert-container");
 
     let timerInterval = null;
 
-     function moveToNext(currentInput, nextInputId) {
-        if (currentInput.value.length === 1) {
-            const nextInput = document.getElementById(nextInputId);
-            if (nextInput) nextInput.focus();
-        }
-    }
-
+    // --- Helper: Format Time ---
     function formatTime(seconds) {
         const min = Math.floor(seconds / 60);
         const sec = seconds % 60;
         return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
     }
 
-    function startTimer(timeLeft) {
+    // --- Core Timer Logic ---
+    function startCountdown(secondsLeft) {
         if (timerInterval) clearInterval(timerInterval);
-
-        // Disable resend while timer is running
         resendLink.classList.add("opacity-50", "pointer-events-none");
-        timerEl.textContent = formatTime(timeLeft);
+        timerEl.textContent = formatTime(secondsLeft);
 
         timerInterval = setInterval(() => {
-            timeLeft--;
-
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                timerEl.textContent = "Expired";
-                resendLink.classList.remove("opacity-50", "pointer-events-none");
-                localStorage.removeItem(STORAGE_KEY);
-                return;
+            secondsLeft--;
+            if (secondsLeft <= 0) {
+                stopTimer();
+            } else {
+                timerEl.textContent = formatTime(secondsLeft);
             }
-
-            timerEl.textContent = formatTime(timeLeft);
         }, 1000);
     }
 
-    // Function to set a fresh 60s timer in storage and start it
-    function triggerNewOTP() {
-        const expireTime = Date.now() + OTP_DURATION * 1000;
-        localStorage.setItem(STORAGE_KEY, expireTime);
-        startTimer(OTP_DURATION);
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerEl.textContent = "Expired";
+        resendLink.classList.remove("opacity-50", "pointer-events-none");
     }
 
-    window.onload = () => {
-        document.getElementById("otp-1").focus();
+    // --- Initialize Logic ---
+    function initializeTimer() {
+        const storedExpiry = localStorage.getItem(STORAGE_KEY);
+        const navEntry = performance.getEntriesByType("navigation")[0];
+        const navType = navEntry ? navEntry.type : "navigate";
 
-        let expireTime = localStorage.getItem(STORAGE_KEY);
+        // Check for server-side error messages in the DOM
+        const hasServerError = serverAlertContainer && serverAlertContainer.innerText.trim().length > 0;
+        const isReloadOrBack = (navType === 'reload' || navType === 'back_forward');
 
-        if (expireTime) {
-            const remaining = Math.ceil((expireTime - Date.now()) / 1000);
-
-            if (remaining > 0) {
-                // If there is active time left, resume it
-                startTimer(remaining);
-            } else {
-                // If time already passed, show expired and don't restart
-                timerEl.textContent = "Expired";
-                resendLink.classList.remove("opacity-50", "pointer-events-none");
-                localStorage.removeItem(STORAGE_KEY);
-            }
+        if ((isReloadOrBack || hasServerError) && storedExpiry) {
+            const remaining = Math.ceil((storedExpiry - Date.now()) / 1000);
+            if (remaining > 0) startCountdown(remaining);
+            else stopTimer();
         } else {
-    
-            const isFreshLoad = true; 
-            
+            triggerNewOTP();
+        }
+    }
 
-            if (!sessionStorage.getItem("initial_load_done")) {
-                sessionStorage.setItem("initial_load_done", "true");
-                triggerNewOTP();
-            } else {
-                timerEl.textContent = "Expired";
-                resendLink.classList.remove("opacity-50", "pointer-events-none");
+    function triggerNewOTP() {
+        const expiryTimestamp = Date.now() + OTP_DURATION * 1000;
+        localStorage.setItem(STORAGE_KEY, expiryTimestamp);
+        startCountdown(OTP_DURATION);
+    }
+
+    // --- Input Handling (Typing & Backspace) ---
+    window.moveToNext = function (currentInput, nextInputId) {
+        if (currentInput.value.length === 1 && /^[0-9]$/.test(currentInput.value)) {
+            const nextInput = document.getElementById(nextInputId);
+            if (nextInput) nextInput.focus();
+        } else if (currentInput.value.length === 1) {
+            currentInput.value = ""; // Clear invalid chars
+        }
+    };
+
+    window.handleBackspace = function (event, currentId, prevId) {
+        if (event.key === "Backspace") {
+            const currentInput = document.getElementById(currentId);
+            if (currentInput.value === "" && prevId) {
+                document.getElementById(prevId).focus();
             }
         }
     };
 
-    resendLink.addEventListener("click", async () => {
+    // --- COPY PASTE LOGIC  ---
+    function handlePaste(e) {
+        e.preventDefault();
+        const paste = (e.clipboardData || window.clipboardData).getData('text');
+
+        const cleanPaste = paste.replace(/\D/g, '').slice(0, 6); 
+
+        if (!cleanPaste) return;
+
+        otpInputs.forEach((input, index) => {
+            if (cleanPaste[index]) {
+                input.value = cleanPaste[index];
+            }
+        });
+
+        // Focus the appropriate next box
+        if (cleanPaste.length === 6) {
+            document.getElementById('submitButton').focus();
+        } else {
+            const nextIndex = cleanPaste.length;
+            if (otpInputs[nextIndex]) otpInputs[nextIndex].focus();
+        }
+    }
+
+    // --- Resend & Submit Handlers ---
+    resendLink.addEventListener("click", async (e) => {
+        e.preventDefault();
         if (resendLink.classList.contains("pointer-events-none")) return;
 
         try {
@@ -210,22 +226,23 @@
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             });
-
             const data = await res.json();
 
-            if (!data.success) {
-                otpErr.textContent = data.message;
+            if (data.success) {
+
+                otpErr.classList.add("hidden");
+                // Clear inputs on resend
+                otpInputs.forEach(input => input.value = "");
+                otpInputs[0].focus();
+                triggerNewOTP();
+            } else {
+                otpErr.textContent = data.message || "Failed to resend.";
                 otpErr.classList.remove("hidden");
-                resendLink.textContent = "Resend OTP";
-                return;
             }
-
-            triggerNewOTP();
-            resendLink.textContent = "Resend OTP";
-
         } catch (err) {
-            otpErr.textContent = "Network error. Please try again.";
+            otpErr.textContent = "Network error.";
             otpErr.classList.remove("hidden");
+        } finally {
             resendLink.textContent = "Resend OTP";
         }
     });
@@ -233,11 +250,23 @@
     otpForm.addEventListener("submit", (e) => {
         const otpCode = otpInputs.map(i => i.value).join("");
         if (otpCode.length !== 6 || isNaN(otpCode)) {
+            e.preventDefault();
             otpErr.textContent = "Please enter the full 6-digit code.";
             otpErr.classList.remove("hidden");
             return;
         }
         otpHidden.value = otpCode;
-        otpForm.submit(); 
     });
+
+    // --- Initialization ---
+    window.onload = () => {
+        if (otpInputs[0]) otpInputs[0].focus();
+
+        // Attach Paste Event Listener to ALL inputs
+        otpInputs.forEach(input => {
+            input.addEventListener('paste', handlePaste);
+        });
+
+        initializeTimer();
+    };
 </script>

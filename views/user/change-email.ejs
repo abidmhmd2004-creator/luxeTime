@@ -10,7 +10,7 @@
             </p>
         </div>
 
-        <form action="/change-email" method="POST" id="emailForm" class="space-y-4">
+        <form action="/change-email/?_method=PATCH" method="POST" id="emailForm" class="space-y-4">
 
             <!-- Flash alerts -->
             <%- include('../partials/alerts') %>
@@ -90,24 +90,3 @@
     })
 </script>
 
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const toggleButtons = document.querySelectorAll('.password-toggle');
-
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = button.getAttribute('data-target');
-                const targetInput = document.getElementById(targetId);
-
-                if (targetInput.type === 'password') {
-                    targetInput.type = 'text';
-                    button.textContent = 'visibility';
-                } else {
-                    targetInput.type = 'password';
-                    button.textContent = 'visibility_off';
-                }
-            });
-        });
-    });
-</script> -->

@@ -5,6 +5,7 @@ import session from "express-session";
 import flash from "connect-flash";
 import nocache from "nocache";
 import path from "path";
+import methodsOverride from "method-override";
 import { fileURLToPath } from "url";
 import expressLayouts from "express-ejs-layouts";
 import userRoutes from "./routes/user.routes.js";
@@ -29,6 +30,8 @@ app.use(express.static(path.join(__dirname,"public")));
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
+
+app.use(methodsOverride("_method"));
 
 app.use("/admin",adminSession);
 app.use(userSession);
@@ -90,6 +93,7 @@ app.get("/admin",(req,res)=>{
 
 app.use((req,res)=>{
     res.status(404).render("user/404");
+
 })
 
 app.use(errorHandler);

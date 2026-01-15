@@ -2,14 +2,11 @@ import express from "express";
 import bcrypt from "bcrypt";
 import User from "../../models/user.model.js";
 import { createAndSendOtp } from "../../utils/otp.util.js";
+import asyncHandler from "../../utils/asyncHandler.js";
 
-export const showSignup = async (req, res) => {
-    try {
+export const showSignup = asyncHandler(async (req, res) => {
         res.render("user/signup");
-    } catch (err) {
-        next(err);
-    }
-};
+});
 
 
 export const postSignup = async (req, res) => {
@@ -102,35 +99,30 @@ export const postSignup = async (req, res) => {
     }
 }
 
-export const showVerifyOtp = async (req, res) => {
-    try {
+export const showVerifyOtp =asyncHandler( async (req, res) => {
+   
         res.render("user/verify-otp")
-    } catch (err) {
-        next(err)
-    }
-}
+    
+})
 
 
 
-
-export const showLogin = async (req, res) => {
-    try {
+export const showLogin = asyncHandler(async (req, res) => {
+    
 
         return res.render("user/login");
-    } catch (err) {
-        next(err)
-    }
-};
+    
+});
 
 
-export const postLogin = async (req, res) => {
-    try {
+export const postLogin =asyncHandler( async (req, res) => {
+    
 
         const { email, password } = req.body;
 
 
         if (!email || !password) {
-            req.flash("error", "ALl fields are required");
+            req.flash("error", "All fields are required");
             return res.redirect("/login");
         }
 
@@ -144,7 +136,7 @@ export const postLogin = async (req, res) => {
         }
 
         if (!user.isVerified) {
-            req.flash("error", "PLease verify your email first");
+            req.flash("error", "Please verify your email first");
             return res.redirect("/login");
         }
 
@@ -166,7 +158,7 @@ export const postLogin = async (req, res) => {
         const isPasswordMatch = await bcrypt.compare(password, user.password);
 
         if (!isPasswordMatch) {
-            req.flash("error", "In bvalid email or password");
+            req.flash("error", "Invalid  password");
             return res.redirect("/login");
         }
 
@@ -178,27 +170,21 @@ export const postLogin = async (req, res) => {
         console.log(req.session.user.id);
        return  res.redirect("/home");
 
-    } catch (err) {
-        next(err)
-    }
-}
+    
+})
 
 
 
 
 
 
-export const loadForgotPass = async (req, res) => {
-    try {
-
-
-        delete req.session.email;
+export const loadForgotPass =asyncHandler( async (req, res) => {
+   
+        // delete req.session.email;
         delete req.session.purpose;
         return res.render("user/forgot-password");
-    } catch (err) {
-       next(err)
-    }
-}
+    
+})
 
 
 export const postForgotPass = async (req, res) => {
@@ -208,6 +194,11 @@ export const postForgotPass = async (req, res) => {
         if (!email) {
             req.flash("error", "Email is required");
             return res.redirect("/forgot-password")
+        }
+        
+        if(req.session.user && email!==req.session.user.email){
+            req.flash("error","Please enter registered email");
+            return res.redirect("/forgot-password");
         }
 
         const user = await User.findOne({ email });
@@ -239,20 +230,18 @@ export const postForgotPass = async (req, res) => {
 
 
 
-export const getResetPassword = (req, res) => {
-    try {
+export const getResetPassword =asyncHandler(async (req, res) => {
+    
         if (!req.session.resetUserId) {
             return res.redirect("/forgot-password")
         }
         res.render("user/reset-password")
-    } catch (err) {
-        next(err)
-    }
-}
+    
+})
 
 
-export const postResetPassword = async (req, res) => {
-    try {
+export const postResetPassword =asyncHandler( async (req, res) => {
+    
         if (!req.session.resetUserId) {
             req.flash("error", "Unauthorized request");
             return res.redirect("/reset-password")
@@ -286,11 +275,8 @@ export const postResetPassword = async (req, res) => {
         return res.redirect("/home");
 
 
-    } catch (err) {
-        next(err)
-
-    }
-}
+    
+})
 
 
 

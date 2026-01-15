@@ -116,7 +116,7 @@
 
 
                                             <td class="py-3 text-center">
-                                                <form action="/admin/customers/toggle/<%= user._id %>" method="POST"
+                                                <form action="/admin/customers/toggle/<%= user._id %>/?_method=PATCH" method="POST"
                                                     class="toggleform"
                                                     data-status="<%= user.isBlocked ? 'unblock' : 'block' %>">
                                                     <label class="flex justify-center items-center cursor-pointer">

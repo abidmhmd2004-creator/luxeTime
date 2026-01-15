@@ -92,7 +92,8 @@ export const createAndSendOtp = async (user, purpose) => {
     await Otp.create({
         userId: user._id,
         otp: hashedOtp,
-        lastSentAt: new Date()
+        lastSentAt: new Date(),
+        expiresAt:new Date(Date.now()+60*1000)
     });
 
 

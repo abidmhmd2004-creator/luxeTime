@@ -1,20 +1,18 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import User from "../../models/user.model.js";
+import asyncHandler from "../../utils/asyncHandler.js";
 
-export const loadAdminLogin=async (req,res)=>{
-    try{
+export const loadAdminLogin=asyncHandler(async (req,res)=>{
+
         if(req.session.admin){
             return res.redirect("/admin/dashboard");
         }
         res.render("admin/login",{layout:"layouts/admin"});
-    }catch(err){
-        next(err);
-    }
-}
+    
+})
 
-export const postAdminLogin =async (req,res)=>{
-    try {
+export const postAdminLogin =asyncHandler(async (req,res)=>{
         
         const {email,password}=req.body;
 
@@ -38,23 +36,19 @@ export const postAdminLogin =async (req,res)=>{
             role:admin.role
         }
         return res.redirect("/admin/dashboard");
-
-    } catch (error) {
-        next(error)
-        
-    }
-}
+       
+});
 
 
 
 
-export const adminLogout=async(req,res)=>{
+export const adminLogout=asyncHandler(async(req,res)=>{
     req.session.destroy(()=>{
 
     res.clearCookie("luxetime.admin.sid");
    return res.redirect("/admin/login");
     })
     
-}
+})
 
 

@@ -1,9 +1,10 @@
 
 import mongoose from "mongoose";
 import User from "../../models/user.model.js"
+import asyncHandler from "../../utils/asyncHandler.js";
 
-export const getCustomers =async(req,res)=>{
-    try {
+export const getCustomers =asyncHandler(async(req,res)=>{
+  
 
         const page=parseInt(req.query.page)||1;
 
@@ -48,15 +49,11 @@ export const getCustomers =async(req,res)=>{
                 limit,
                 totalUsers
             })
-        } catch (err) {
-        next(err)
-    }
-}
+})
 
 
-export const toggleCustomerStatus = async (req,res)=>{
-    try {
-
+export const toggleCustomerStatus =asyncHandler( async (req,res)=>{
+    
            const {userId}=req.params;
 
         const user= await User.findById(userId);
@@ -86,9 +83,5 @@ export const toggleCustomerStatus = async (req,res)=>{
        return  res.redirect("/admin/customers");
 
 
-    } catch (err) {
-    console.log(err)
-     next(err)
-        
-    }
-}
+
+})

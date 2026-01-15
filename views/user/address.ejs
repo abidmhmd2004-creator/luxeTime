@@ -178,6 +178,9 @@
                             class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Pincode</span>
                         <input type="text" id="addPincode" name="pincode" placeholder="10001" required
                             class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
+                        <p id="addPincodeError" class="text-xs text-red-400 mt-1 hidden">
+                            Invalid pincode
+                        </p>
                     </div>
                 </div>
 
@@ -286,6 +289,9 @@
                             class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Pincode</span>
                         <input type="text" id="editPincode" name="pincode" required
                             class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
+                        <p id="editPincodeError" class="text-xs text-red-400 mt-1 hidden">
+                            Invalid pincode
+                        </p>
                     </div>
                 </div>
 
@@ -342,15 +348,22 @@
     function openEditAddressModal(addr) {
 
         editModal.classList.remove("hidden");
-        editForm.action = `/edit-address/${addr._id}`;
+        editForm.action = `/edit-address/${addr._id}?_method=PATCH`;
 
         // fill inputs
         document.getElementById("editFullName").value = addr.fullName || "";
         document.getElementById("editMobileNumber").value = addr.phone || "";
         document.getElementById("editAddress1").value = addr.streetAddress || "";
-        document.getElementById("editCity").value = addr.city || "";
-        document.getElementById("editState").value = addr.state || "";
-        document.getElementById("editPincode").value = addr.pincode || "";
+        const editCity = document.getElementById("editCity").value = addr.city || "";
+        const editState = document.getElementById("editState").value = addr.state || "";
+        const editPincode = document.getElementById("editPincode").value = addr.pincode || "";
+        const addPincode = document.getElementById("addPincode");
+        const addCity = document.getElementById("addCity");
+        const addState = document.getElementById("addState");
+        const addPincodeError = document.getElementById("addPincodeError");
+        const editPincodeError = document.getElementById("editPincodeError");
+
+
 
         // radio buttons
         document.querySelectorAll("input[name='addressType']")
@@ -401,4 +414,54 @@
             }
         })
     }
+
+
+    addPincode.addEventListener("input", async () => {
+        if (addPincode.value.length !== 6) {
+            addPincodeError.classList.add("hidden");
+
+            return;
+        }
+
+        const res = await fetch(
+            `https://api.postalpincode.in/pincode/${addPincode.value}`
+        );
+        const data = await res.json();
+
+        if (data[0].Status === "Success") {
+            addCity.value = data[0].PostOffice[0].District;
+            addState.value = data[0].PostOffice[0].State;
+            addPincodeError.classList.add("hidden");
+
+        } else {
+            addCity.value = "";
+            addState.value = "";
+            addPincodeError.classList.remove("hidden");
+
+        }
+    });
+
+    editPincode.addEventListener("input", async () => {
+        if (editPincode.value.length !== 6) {
+            editPincodeError.classList.add("hidden");
+            return;
+        }
+
+        const res = await fetch(
+            `https://api.postalpincode.in/pincode/${editPincode.value}`
+        );
+        const data = await res.json();
+
+        if (data[0].Status === "Success") {
+            editCity.value = data[0].PostOffice[0].District;
+            editState.value = data[0].PostOffice[0].State;
+            editPincodeError.classList.add("hidden");
+
+        } else {
+            editCity.value = "";
+            editState.value = "";
+            editPincodeError.classList.remove("hidden");
+
+        }
+    });
 </script>

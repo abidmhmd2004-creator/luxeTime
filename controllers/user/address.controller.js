@@ -1,8 +1,8 @@
 import User from "../../models/user.model.js";
 import Address from "../../models/address.model.js";
+import asyncHandler from "../../utils/asyncHandler.js";
 
-export const getAddress = async (req, res) => {
-    try {
+export const getAddress = asyncHandler(async (req, res) => {
         const userId = req.session.user.id;
 
         const page = parseInt(req.query.page) || 1;
@@ -26,13 +26,11 @@ export const getAddress = async (req, res) => {
             totalPages
         });
 
-    } catch (error) {
-        next(error)
-    }
-}
+    
+})
 
-    export const addAddress = async (req, res) => {
-        try {
+    export const addAddress = asyncHandler(async (req, res) => {
+       
             const { fullName, phone, streetAddress, city, state, pincode, addressType } = req.body;
 
             const isDefault = req.body.isDefault === "on";
@@ -48,13 +46,9 @@ export const getAddress = async (req, res) => {
                 isDefault
             });
 
-        } catch (err) {
-            console.error(err);
-            res.status(500).send("failed to submit")
-        }
 
         res.redirect("/address");
-    }
+    })
 
     export const editAddress = async (req, res) => {
         const { id } = req.params;
@@ -71,8 +65,8 @@ export const getAddress = async (req, res) => {
     }
 
 
-    export const deleteAddress = async (req, res) => {
-        try {
+    export const deleteAddress = asyncHandler(async (req, res) => {
+       
             const { id } = req.params;
 
             await Address.findOneAndDelete({
@@ -80,7 +74,5 @@ export const getAddress = async (req, res) => {
                 userId: req.session.user.id
             });
             return res.json({ success: true });
-        } catch (err) {
-            next(err)
-        }
-    }
+        
+    })

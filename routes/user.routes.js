@@ -41,8 +41,6 @@ router.get("/auth/google/callback", passport.authenticate("google", { failureRed
             name: req.user.name,
             email: req.user.email
         }
-        console.log("callbackHit");
-
         res.redirect("/home")
     })
 
@@ -50,7 +48,7 @@ router.get("/forgot-password",loadForgotPass);
 router.post("/forgot-password", postForgotPass)
 
 router.get("/reset-password", getResetPassword);
-router.post("/reset-password", postResetPassword);
+router.patch("/reset-password", postResetPassword);
 
 router.get("/profile", requireAuth,getProfile);
 
@@ -58,19 +56,19 @@ router.get("/edit-profile",requireAuth,loadEditProfile);
 router.post("/edit-profile", postEditProfile);
 
 router.get("/change-password", requireAuth,getChangePassword);
-router.post("/change-Password", postChangePassword);
+router.patch("/change-Password", postChangePassword);
 
 router.get("/change-email",requireAuth,loadChangeEmail);
-router.post("/change-email",postChangeEmail);
+router.patch("/change-email",postChangeEmail);
 
 router.get("/address",requireAuth,getAddress);
 router.post("/add-address",addAddress);
-router.post("/edit-address/:id",editAddress);
+router.patch("/edit-address/:id",editAddress);
 
 router.delete("/delete-address/:id",deleteAddress);
 
 router.post("/upload-photo",requireAuth,upload.single("profileImage"),uploadProfileImage);
-router.post("/delete-photo",requireAuth,deleteProfileImage)
+router.delete("/delete-photo",requireAuth,deleteProfileImage)
 
 
 router.get("/logout", logout);

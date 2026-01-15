@@ -2,10 +2,11 @@ import Otp from "../../models/otp.model.js";
 import User from "../../models/user.model.js";
 import crypto from "crypto";
 import { createAndSendOtp } from "../../utils/otp.util.js";
+import asyncHandler from "../../utils/asyncHandler.js";
 
 
-export const verifyOtp = async (req, res) => {
-    try {
+export const verifyOtp =asyncHandler( async (req, res) => {
+   
         const { otp } = req.body;
         if (!req.session.otp) {
             return res.send("Session expired");
@@ -18,7 +19,7 @@ export const verifyOtp = async (req, res) => {
         const otpRecord = await Otp.findOne({ userId, otp: hashedOtp });
 
         if (!otpRecord) {
-            req.flash("error", "Invalid OTP or Expired");
+            req.flash("error", "Invalid OTP");
             return res.redirect("/verify-otp");
         }
         if (otpRecord.otp !== hashedOtp) {
@@ -26,10 +27,11 @@ export const verifyOtp = async (req, res) => {
             return res.redirect("/verify-otp");
         }
 
-        // if (otpRecord.expiresAt < new Date()) {
-        //     req.flash("error", "OTP expired");
-        //     return res.redirect("/verify-otp");
-        // }
+        if (otpRecord.expiresAt < new Date()) {
+            await Otp.deleteMany({ userId }); // clean up
+            req.flash("error", "OTP expired");
+            return res.redirect("/verify-otp");
+        }
 
         if (purpose === "signup") {
             await User.findByIdAndUpdate(userId, {
@@ -70,10 +72,8 @@ export const verifyOtp = async (req, res) => {
 
 
         res.redirect("/login");
-    } catch (err) {
-        next(err)
-    }
-};
+   
+});
 
 
 

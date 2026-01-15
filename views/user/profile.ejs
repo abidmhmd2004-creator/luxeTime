@@ -47,7 +47,7 @@
 
                         <div id="deleteButtonContainer">
                             <% if (user.profileImage?.url) { %>
-                                <form action="/delete-photo" method="POST">
+                                <form action="/delete-photo/?_method=DELETE" method="POST">
                                     <button type="submit" id="deletePictureButton"
                                         class="text-xs text-red-400 hover:text-red-300 transition flex items-center space-x-1 mt-1">
                                         <span class="material-symbols-outlined text-sm">delete</span>

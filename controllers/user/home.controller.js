@@ -1,10 +1,11 @@
 
-export const showhomePage=async(req,res)=>{
-    try{
+
+import asyncHandler from "../../utils/asyncHandler.js";
+
+export const showhomePage=asyncHandler(async(req,res)=>{
+    
         const user=req.session.user;
         return res.render("user/home");
-    }catch(err){
-        next(err)
-    }
-}
+    
+})
 
