@@ -30,6 +30,7 @@ export const getCustomers =asyncHandler(async(req,res)=>{
             filter.isBlocked=true;
         }
 
+
         const totalUsers=await User.countDocuments(filter);
 
         const totalPages=Math.ceil(totalUsers/limit);
@@ -70,7 +71,8 @@ export const toggleCustomerStatus =asyncHandler( async (req,res)=>{
 // console.log(req.cookies)
 //         res.clearCookie("luxetime.sid")
         await user.save();
-        console.log("blocked")
+
+        // console.log("blocked") 
 
         if(user.isBlocked){
             const session=mongoose.connection.collection("user_sessions");

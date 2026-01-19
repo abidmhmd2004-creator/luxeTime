@@ -1,0 +1,199 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<%- include('../partials/adminSidebar') %>
+
+<main class="flex-1 p-3 overflow-y-auto bg-[#0d0f0d] min-h-screen text-gray-200">
+    
+    <div class="max-w-[1200px] mx-auto mb-5">
+        <h2 class="text-2xl font-extrabold text-white tracking-tight">Create New Product</h2>
+        <a href="/admin/products" class="text-[12px] justify-end mr-8 uppercase font-bold text-gray-500 hover:text-[#4ade80] transition flex items-center mb-2 tracking-widest">
+            <i class="fa-solid fa-arrow-left mr-2"></i> Back to Products
+        </a>
+    </div>
+
+    <div class="max-w-[1200px] mx-auto grid grid-cols-12 gap-4">
+        
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+            
+            <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-4 shadow-xl">
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
+                        <i class="fa-solid fa-circle-info text-xs"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Basic Information</h3>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Product Name <span class="text-red-500">*</span></label>
+                        <input type="text" placeholder="e.g. Rolex Submariner Date" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none transition">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Brand <span class="text-red-500">*</span></label>
+                            <select class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white appearance-none outline-none cursor-pointer">
+                                <option>Select Brand</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Category <span class="text-red-500">*</span></label>
+                            <select class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white appearance-none outline-none cursor-pointer">
+                                <option>Select Category</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Description</label>
+                        <div class="bg-[#141a14] border border-white/10 rounded-lg overflow-hidden">
+                            <div class="flex items-center space-x-4 px-4 py-2 border-b border-white/5 text-gray-500">
+                                <button type="button" class="hover:text-white transition"><i class="fa-solid fa-bold text-xs"></i></button>
+                                <button type="button" class="hover:text-white transition"><i class="fa-solid fa-italic text-xs"></i></button>
+                                <button type="button" class="hover:text-white transition"><i class="fa-solid fa-list-ul text-xs"></i></button>
+                            </div>
+                            <textarea rows="3" placeholder="Detailed product description..." class="w-full bg-transparent border-none px-4 py-3 text-sm text-white focus:ring-0 outline-none resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-3 shadow-xl">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
+                        <i class="fa-solid fa-palette text-xs"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Style Variants</h3>
+                </div>
+
+                <div id="variantContainer" class="space-y-2">
+                    <div class="variant-card bg-black/40 rounded-xl p-5 border border-white/5 relative">
+                        <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
+                            <h4 class="text-[9px] uppercase font-bold text-[#4ade80] tracking-[0.2em]">Variant Configuration</h4>
+                            <button type="button" onclick="removeVariant(this)" class="text-red-500/50 hover:text-red-500 transition text-[9px] font-bold uppercase flex items-center">
+                                <i class="fa-solid fa-trash-can mr-2"></i> Remove
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-12 gap-3">
+                            <div class="col-span-12 md:col-span-7 grid grid-cols-2 gap-3">
+                                <div class="col-span-2">
+                                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold tracking-widest">Color Name</label>
+                                    <input type="text" placeholder="e.g. Midnight Black" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#4ade80]/50 transition">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold tracking-widest">Stock</label>
+                                    <input type="number" placeholder="0" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold tracking-widest">Base Price (₹)</label>
+                                    <input type="number" placeholder="0.00" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold tracking-widest">Offer (%)</label>
+                                    <input type="number" placeholder="0" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none transition">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold tracking-widest">Final Price</label>
+                                    <input type="number" readonly class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-[#4ade80] font-bold outline-none cursor-not-allowed" value="0.00">
+                                </div>
+                            </div>
+
+                            <div class="col-span-12 md:col-span-5">
+                                <label class="block text-[9px] text-gray-500 mb-2 uppercase font-bold tracking-widest">Media (4 Required)</label>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <div onclick="triggerUpload(this)" class="col-span-2 aspect-square rounded-lg bg-[#141a14] border-2 border-dashed border-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-[#4ade80]/30 transition group">
+                                        <i class="fa-solid fa-image text-gray-600 group-hover:text-[#4ade80] text-sm mb-1"></i>
+                                        <span class="text-[7px] text-gray-500 uppercase font-bold">Main</span>
+                                    </div>
+                                    <div class="col-span-2 grid grid-cols-2 grid-rows-2 gap-2">
+                                        <div onclick="triggerUpload(this)" class="aspect-square rounded-md bg-[#141a14] border border-dashed border-white/5 flex items-center justify-center cursor-pointer hover:border-[#4ade80]/30 transition"><i class="fa-solid fa-plus text-gray-700 text-[10px]"></i></div>
+                                        <div onclick="triggerUpload(this)" class="aspect-square rounded-md bg-[#141a14] border border-dashed border-white/5 flex items-center justify-center cursor-pointer hover:border-[#4ade80]/30 transition"><i class="fa-solid fa-plus text-gray-700 text-[10px]"></i></div>
+                                        <div onclick="triggerUpload(this)" class="aspect-square rounded-md bg-[#141a14] border border-dashed border-white/5 flex items-center justify-center cursor-pointer hover:border-[#4ade80]/30 transition"><i class="fa-solid fa-plus text-gray-700 text-[10px]"></i></div>
+                                    </div>
+                                </div>
+                                <input type="file" class="hidden" accept="image/*" multiple>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" onclick="addNewVariant()" class="w-full mt-4 py-4 rounded-xl border border-dashed border-white/10 text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 hover:bg-[#4ade80]/5 transition flex items-center justify-center text-[10px] font-bold uppercase tracking-widest">
+                    <i class="fa-solid fa-plus mr-2"></i> Add Another Style Variant
+                </button>
+            </div>
+        </div>
+
+        <div class="col-span-12 lg:col-span-4 space-y-6">
+            <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
+                <div class="flex items-center space-x-3 mb-5">
+                    <div class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
+                        <i class="fa-solid fa-sliders text-xs"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Specifications</h3>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Case Size (mm)</label>
+                        <input type="text" placeholder="e.g. 41" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Strap Type</label>
+                        <input type="text" placeholder="Leather / Steel" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Movement</label>
+                        <input type="text" placeholder="Automatic" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none transition">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-5">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Visibility Status</span>
+                    <label class="relative inline-flex items-center cursor-pointer scale-90">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:bg-[#4ade80] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-[500px] mx-auto flex justify-center items-center space-x-4 py-5">
+        <button type="button" class="text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-[0.2em] transition">
+            Discard changes
+        </button>
+        <button type="button" class="bg-[#4ade80] text-black px-12 py-3 rounded-full text-[10px] font-extrabold uppercase shadow-[0_5px_20px_rgba(74,222,128,0.15)] hover:scale-105 transition-all">
+            Publish Product
+        </button>
+    </div>
+</main>
+
+<script>
+    function addNewVariant() {
+        const container = document.getElementById('variantContainer');
+        const firstCard = container.querySelector('.variant-card');
+        const newCard = firstCard.cloneNode(true);
+        newCard.querySelectorAll('input').forEach(input => {
+            if(input.readOnly) input.value = '0.00';
+            else input.value = '';
+        });
+        container.appendChild(newCard);
+    }
+
+    function removeVariant(button) {
+        const cards = document.querySelectorAll('.variant-card');
+        if (cards.length > 1) {
+            button.closest('.variant-card').remove();
+        } else {
+            alert("At least one variant is required.");
+        }
+    }
+
+    function triggerUpload(el) {
+        el.closest('.grid').parentElement.querySelector('input[type="file"]').click();
+    }
+</script>

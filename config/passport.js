@@ -16,14 +16,6 @@ async (accessToken,refreshToken,profile,done)=>{
         if(existingUser){
             return done(null,existingUser);
         }
-        // else{
-        //     const newUser=new User({
-        //         name:profile.displayName,
-        //         email:profile.emails[0].value,
-        //         googleId:profile.id,
-        //     })
-        //     done(null,newUser)
-        // }
 
         const email=profile.emails?.[0]?.value;
 

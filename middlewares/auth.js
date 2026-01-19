@@ -29,5 +29,7 @@ export const requireOtpSession =async (req,res,next)=>{
     if(!req.session.otp){
         return res.redirect("/signup");
     }
+    // console.log(req.session.otp);
+    
     next();
 }

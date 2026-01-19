@@ -11,7 +11,6 @@ export const getAddress = asyncHandler(async (req, res) => {
 
         const totalAddresses = await Address.countDocuments({ userId });
 
-        console.log(totalAddresses);
 
         const address = await Address.find({ userId })
             .sort({ createdat: -1 })
@@ -76,3 +75,5 @@ export const getAddress = asyncHandler(async (req, res) => {
             return res.json({ success: true });
         
     })
+
+    

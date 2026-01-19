@@ -30,7 +30,8 @@ export const postEditProfile =asyncHandler( async (req, res) => {
 
         await User.findByIdAndUpdate(req.session.user.id, {
             name,
-            phone
+            phone,
+            dob
         });
         req.session.user.name = name;
         res.redirect("/profile")
@@ -71,7 +72,12 @@ export const postChangePassword = async (req, res) => {
 
     await User.findByIdAndUpdate(user._id, { password: hashed });
 
-    res.redirect("/profile");
+     req.session.destroy(()=>{
+
+        res.clearCookie("luxetime.user.sid");
+        return res.redirect("/login")
+    
+    })
 }
 
 
@@ -135,7 +141,7 @@ export const uploadProfileImage =asyncHandler( async (req, res) => {
 export const deleteProfileImage =asyncHandler( async (req, res) => {
    
         const user = await User.findById(req.session.user.id);
-        console.log(user.publicId)
+        // console.log(user.publicId)
 
         if (!user || !user.profileImage?.publicId) {
             return res.redirect("/profile")

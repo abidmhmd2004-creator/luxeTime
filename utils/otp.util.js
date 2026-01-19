@@ -62,6 +62,8 @@ const sendOtpMail = async (email, otp, purpose) => {
         });
 
         console.log("otp sented");
+        console.log(otp);
+        
         return true;
     } catch (err) {
         console.log(err);

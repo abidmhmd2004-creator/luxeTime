@@ -46,7 +46,7 @@ export const postSignup = async (req, res) => {
 
 
         const existingUser = await User.findOne({ email });
-        console.log(existingUser);
+        // console.log(existingUser);
 
 
         if (existingUser && existingUser.isVerified) {
@@ -131,7 +131,7 @@ export const postLogin =asyncHandler( async (req, res) => {
 
 
         if (!user) {
-            req.flash("error", "Invalid  email or password");
+            req.flash("error", "User not found");
             return res.redirect("/login");
         }
 
@@ -167,7 +167,7 @@ export const postLogin =asyncHandler( async (req, res) => {
             name: user.name,
             email: user.email
         };
-        console.log(req.session.user.id);
+        // console.log(req.session.user.id);
        return  res.redirect("/home");
 
     
