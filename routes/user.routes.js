@@ -10,12 +10,14 @@ import { resentOtp } from "../controllers/user/otp.controller.js";
 import { loadForgotPass } from "../controllers/user/auth.controller.js"
 import { postLogin } from "../controllers/user/auth.controller.js";
 import { redirectIfAuthenticated, requireOtpSession } from "../middlewares/auth.js";
-import upload from "../middlewares/upload.middleware.js"
 import passport from "passport";
 import { requireAuth } from "../middlewares/auth.js";
 import { deleteProfileImage, getChangePassword, getProfile, loadChangeEmail, loadEditProfile, postChangeEmail, postChangePassword, postEditProfile, uploadProfileImage } from "../controllers/user/profile.controller.js";
 import { addAddress, deleteAddress, editAddress, getAddress } from "../controllers/user/address.controller.js";
+import createUploader from "../middlewares/upload.middleware.js";
 
+
+const uploadProfile =createUploader("profile");
 
 
 const router = express.Router();
@@ -67,7 +69,7 @@ router.patch("/edit-address/:id",editAddress);
 
 router.delete("/delete-address/:id",deleteAddress);
 
-router.post("/upload-photo",requireAuth,upload.single("profileImage"),uploadProfileImage);
+router.post("/upload-photo",requireAuth,uploadProfile.single("profileImage"),uploadProfileImage);
 router.delete("/delete-photo",requireAuth,deleteProfileImage)
 
 

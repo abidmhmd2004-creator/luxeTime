@@ -124,14 +124,16 @@ export const postChangeEmail = asyncHandler(async (req, res) => {
 
 
 export const uploadProfileImage =asyncHandler( async (req, res) => {
+
+    if(!req.file) return res.redirect("/profile");
     
         const imageUrl = req.file.path;
         const publicId = req.file.filename;
 
         await User.findByIdAndUpdate(req.session.user.id, {
             profileImage: {
-                url: imageUrl,
-                publicId: publicId,
+                url: req.file.path,
+                publicId: req.file.pathname,
             }
         });
         return res.redirect("/profile");

@@ -15,7 +15,11 @@ const variantSchema =new mongoose.Schema(
             type:Number,
             required:true
         },
-        VariantOfferPercentage:{
+        finalPrice:{
+            type:Number,
+            required:true
+        },
+        offerPercentage:{
             type:Number,
             min:0,
             max:90,

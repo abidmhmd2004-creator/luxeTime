@@ -7,34 +7,34 @@ const productSchema = new mongoose.Schema(
             required:true,
             trim:true
         },
-        brand:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Brand",
-            required:true
-        },
+        // brand:{
+        //     type:mongoose.Schema.Types.ObjectId,
+        //     ref:"Brand",
+        //     required:true
+        // },
         category:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"Category",
             required:true
         },
         description:{
-            type:true,
+            type:String,
             required:true
         },
         specifications:{
             caseSize:String,
             strapType:String,
-            moementType:String
+            movementType:String
         },
-        offerPercentage:{
-            type:Number,
-            min:0,
-            max:90,
-            default:0
-        },
+        // offerPercentage:{
+        //     type:Number,
+        //     min:0,
+        //     max:90,
+        //     default:0
+        // },
         isActive:{
             type:Boolean,
-            default:false
+            default:true
         },
         isDeleted:{
             type:Boolean,
@@ -43,4 +43,4 @@ const productSchema = new mongoose.Schema(
     },{timestamps:true}
 );
 
-export default mongoose.modelNames("Product",productSchema)
+export default mongoose.model("Product",productSchema)

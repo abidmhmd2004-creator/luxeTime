@@ -1,11 +1,145 @@
 import asyncHandler from "../../utils/asyncHandler.js";
+import Category from "../../models/category.model.js";
+import Product from "../../models/product.model.js";
+import Variant from "../../models/variant.model.js";
 
 
-export const getProductPage=asyncHandler(async(req,res)=>{
-    res.render("admin/products",{layout:"layouts/admin"});
+export const getProductPage = asyncHandler(async (req, res) => {
+    const products = await Product.find({isDeleted: false })
+        .populate("category", "name")
+        .lean();
+    for (let product of products) {
+        const variants = await Variant.find({
+            product: product._id,
+            isActive: true,
+        }).lean();
+        product.variants = variants;
+
+        product.bestOffer = 0;
+        product.minPrice = null;
+
+        if (variants.length > 0) {
+            product.bestOffer = Math.max(...variants.map(v => v.offerPercentage || 0));
+            product.minPrice = Math.min(
+                ...variants.map(v => v.finalPrice ?? v.basePrice)
+            );
+        }
+    }
+
+
+    res.render("admin/products", { layout: "layouts/admin", products })
+
 })
 
+export const getaddProducts = asyncHandler(async (req, res) => {
 
-export const addProducts =asyncHandler(async(req,res)=>{
-    res.render("admin/add-products",{layout:"layouts/admin"});
+    const categories = await Category.find({ isListed: true });
+
+    res.render("admin/add-products", { categories, layout: "layouts/admin" })
 })
+
+export const postAddProducts = asyncHandler(async (req, res) => {
+
+    const {
+        name,
+        brand,
+        category,
+        description,
+        caseSize,
+        strapType,
+        movementType,
+        isListed,
+        variants
+    } = req.body;
+
+    // console.log(variants);
+    
+
+
+    const product = await Product.create({
+        name,
+        brand,
+        category,
+        description,
+        specifications: {
+            caseSize,
+            strapType,
+            movementType
+        },
+        isActive: isListed === "on"
+    });
+
+    for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+
+        const basePrice = Number(v.basePrice);
+        const offer = Number(v.offerPercentage || 0);
+        const finalPrice = basePrice - (basePrice * offer / 100);
+
+        const files = req.files.filter(
+            file => file.fieldname === `variantImages_${i}`
+        );
+
+        if (files.length < 3) {
+            return res.status(400).json({
+                success: false,
+                message: `Variant ${i + 1} needs at least 3 images`
+            });
+        }
+        // console.log(req.body.variants);
+
+        await Variant.create({
+            product: product._id,
+            color: v.color,
+            stock: Number(v.stock || 0),
+            basePrice,
+            offerPercentage: offer,
+            finalPrice: Math.round(finalPrice),
+            images: files.map((file, idx) => ({
+                url: file.path,
+                isPrimary: idx === 0
+            }))
+        });
+    }
+
+    return res.status(201).json({
+        success: true,
+        message: "Product added successfully"
+    });
+});
+
+export const productDetails =asyncHandler(async(req,res)=>{
+    const {id} =req.params;
+
+    const product=await Product.findById(id);
+    if(!product){
+        return res.status(404).json({
+            success:false,
+            message:"Product not found"
+        });
+    }
+
+    const variants =await Variant.find({product:id});
+
+    res.json({
+        success:true,
+        product,
+        variants
+    })
+})
+
+export const geteditProduct=asyncHandler(async(req,res)=>{
+
+
+    const productId =req.params.id;
+
+    const product=await Product.findById(productId);
+
+    const categories=await Category.find({isListed:true});
+    const variants =await Variant.find({product:productId});
+
+    res.render("admin/edit-product",{product,categories,variants,layout:"layouts/admin"});
+
+})
+
+// export const postEditProduct

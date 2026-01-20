@@ -317,8 +317,8 @@
             const offerValue = document.getElementById("offerValue").value;
             const offerExpiry = document.getElementById("offerExpiry").value;
 
-            if (!name || !offerExpiry) {
-                return Swal.fire("Required", "Category name & expiry required", "warning");
+            if (!name) {
+                return Swal.fire("Required", "Category name ", "warning");
             }
 
             const url = id ? `/admin/categories/${id}` : "/admin/categories";

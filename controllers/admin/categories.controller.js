@@ -28,7 +28,8 @@ export const getCategoryAjax = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 5;
   const skip = (page - 1) * limit;
-//   const search = req.query.search || "";
+
+  const search = req.query.search || "";
 
 
   const filter = { isDeleted: false };
@@ -80,7 +81,7 @@ export const addCategory =asyncHandler(async(req,res)=>{
         return res.status(400).json({message:"Offer should be between 0 and 90"});
     }
 
-    if(offerValue > 0 && !offerExpiry){
+    if(offerValue > 1 && !offerExpiry){
         return res.status(400).json({message:"Offer expiry date needed when offer is applied"});
     } 
 
@@ -118,7 +119,11 @@ export const editCategory=asyncHandler(async(req,res)=>{
         return res.status(409).json({message:"Category already exists"});
     }
 
-    if(offerValue>0 && !offerExpiry){
+    if(offerValue < 0 || offerValue > 90){
+        return res.status(400).json({message:"Offer should be between 0 and 90"});
+    }
+
+    if(offerValue>1 && !offerExpiry){
         return res.status(400).json({message:"Offer expiry date required when offer is applied"})
     }
 
@@ -135,7 +140,7 @@ export const editCategory=asyncHandler(async(req,res)=>{
 
     return res.status(200).json({
         success:true,
-        message:"Category upadated successfully"});
+        message:"Category updated successfully"});
 })
 
 export const toggleCategory =asyncHandler(async(req,res)=>{
