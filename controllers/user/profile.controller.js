@@ -4,6 +4,8 @@ import { createAndSendOtp } from "../../utils/otp.util.js";
 import cloudinary from "../../config/cloudinary.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 
+
+
 export const getProfile = asyncHandler(async (req, res) => {
     
         const user = await User.findById(req.session.user.id).select("-password");
@@ -133,7 +135,7 @@ export const uploadProfileImage =asyncHandler( async (req, res) => {
         await User.findByIdAndUpdate(req.session.user.id, {
             profileImage: {
                 url: req.file.path,
-                publicId: req.file.pathname,
+                publicId: req.file.filename,
             }
         });
         return res.redirect("/profile");

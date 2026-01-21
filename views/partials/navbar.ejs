@@ -21,118 +21,76 @@
         },
     }
 </script>
-<header
-    class="sticky top-0 z-50  flex items-center justify-between border-b border-solid border-[#29382f] bg-[#111714]/90 backdrop-blur-md px-6 py-4 lg:px-10">
-    <div class="flex items-center gap-8">
-        <a class="flex items-center gap-4 text-white hover:text-primary transition-colors" href="#">
-            <div class="size-8 text-primary">
-                <span class="material-symbols-outlined !text-[32px]">watch</span>
-            </div>
-            <h2 class="text-white text-xl font-bold leading-tight tracking-tight">LUXE TIME</h2>
-        </a>
+<header class="sticky top-0 z-50 border-b border-solid border-[#29382f] bg-[#111714]/90 backdrop-blur-md px-4 py-2 lg:px-10">
+    <div class="grid grid-cols-2 lg:grid-cols-3 items-center w-full">
+        
+        <div class="flex items-center">
+            <a class="flex items-center gap-2 text-white hover:text-primary transition-colors" href="#">
+                <div class="w-12 h-12 overflow-hidden rounded-lg">
+                    <img src="/images/slogo.jpeg" alt="Luxe Time Logo" class="w-full h-full object-cover">
+                </div>
+                <h2 class="text-primary text-xl font-bold leading-tight tracking-tight uppercase">LUXE TIME</h2>
+            </a>
+        </div>
 
-        <nav class="hidden lg:flex items-center gap-9">
+        <nav class="hidden lg:flex items-center justify-center gap-10">
             <a class="text-white text-sm font-medium hover:text-primary transition-colors" href="/home">Home</a>
             <a class="text-white text-sm font-medium hover:text-primary transition-colors" href="#">Shop</a>
             <a class="text-white text-sm font-medium hover:text-primary transition-colors" href="#">About</a>
         </nav>
-    </div>
 
-    <div class="flex items-center gap-4 lg:gap-8">
-        <div class="flex gap-3">
-
-            <button
-                class="flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary hover:text-black transition-colors">
+        <div class="flex items-center justify-end gap-3 lg:gap-4">
+            <button class="flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary hover:text-black transition-colors">
                 <span class="material-symbols-outlined text-[20px]">favorite</span>
             </button>
 
-            <button
-                class="relative flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary  transition-colors">
+            <button class="relative flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary transition-colors">
                 <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-                <span
-                    class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-black">2</span>
+                <span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-black">2</span>
             </button>
 
-            <!-- Account + Dropdown -->
             <div class="relative">
-                <button onclick="toggleDropDown()"
-                    class="flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary hover:text-black transition-colors">
+                <button onclick="toggleDropDown()" class="flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary hover:text-black transition-colors">
                     <span class="material-symbols-outlined text-[20px]">account_circle</span>
                 </button>
 
-                <div id="userDropdown"
-                    class="hidden absolute right-0 top-full mt-4 w-[260px] origin-top-right z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div
-                        class="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#1c2e25] to-[#0f1a15] border border-primary/20 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.9)] backdrop-blur-xl">
-
-                        <div
-                            class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-transparent">
-                        </div>
-
-
+                <div id="userDropdown" class="hidden absolute right-0 top-full mt-4 w-[260px] origin-top-right z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#1c2e25] to-[#0f1a15] border border-primary/20 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.9)] backdrop-blur-xl">
+                        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-transparent"></div>
                         <div class="p-5 flex flex-col">
-
-
-                            <div class="p-5 flex flex-col">
-
-                                <h3 class="text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 font-display">
-                                    Welcome
-                                    <% if (user) { %>
-                                        , <%= user.name %>
-                                            <% } %>
-                                </h3>
-                            </div>
-
-                            <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mb-5">
-                            </div>
-
-                            <% if (!user) { %>
-                                <!-- NOT LOGGED IN -->
+                            <h3 class="text-[11px] font-bold uppercase tracking-[0.2em] text-white/40 font-display">
+                                Welcome <% if (typeof user !== 'undefined' && user) { %>, <%= user.name %><% } %>
+                            </h3>
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-4"></div>
+                            
+                            <% if (typeof user === 'undefined' || !user) { %>
                                 <div class="flex flex-col gap-3">
-                                    <button onclick="window.location.href='/login'"
-                                        class="relative flex w-full h-10 items-center justify-center rounded-lg bg-primary text-background-dark hover:bg-[#2fd16f] transition-all duration-200 shadow-[0_0_20px_rgba(54,226,123,0.25)]">
+                                    <button onclick="window.location.href='/login'" class="relative flex w-full h-10 items-center justify-center rounded-lg bg-primary text-background-dark hover:bg-[#2fd16f] transition-all duration-200 shadow-[0_0_20px_rgba(54,226,123,0.25)]">
                                         <span class="text-sm font-bold tracking-wide">Log In</span>
                                     </button>
-
-                                    <button onclick="window.location.href='/signup'"
-                                        class="flex w-full h-10 items-center justify-center rounded-lg border border-white/10 hover:border-primary/40 hover:bg-white/5 text-white transition-all duration-200">
+                                    <button onclick="window.location.href='/signup'" class="flex w-full h-10 items-center justify-center rounded-lg border border-white/10 hover:border-primary/40 hover:bg-white/5 text-white transition-all duration-200">
                                         <span class="text-sm font-semibold tracking-wide">Create Account</span>
                                     </button>
                                 </div>
-
-                                <% } else { %>
-                                    <!-- LOGGED IN -->
-                                    <div class="flex flex-col gap-3">
-                                        <button onclick="window.location.href='/profile'"
-                                            class="relative flex w-full h-10 items-center justify-center rounded-lg bg-primary text-background-dark hover:bg-[#2fd16f] transition-all duration-200 shadow-[0_0_20px_rgba(54,226,123,0.25)]">
-                                            <span class="text-sm font-bold tracking-wide">Account</span>
-                                        </button>
-
-                                        <button onclick="window.location.href='/logout'"
-                                            class="flex w-full h-10 items-center justify-center rounded-lg border border-red-500/40 hover:bg-red-500/10 text-red-400 transition-all duration-200">
-                                            <span class="text-sm font-semibold tracking-wide">Logout</span>
-                                        </button>
-                                    </div>
-                                    <% } %>
-
+                            <% } else { %>
+                                <div class="flex flex-col gap-3">
+                                    <button onclick="window.location.href='/profile'" class="relative flex w-full h-10 items-center justify-center rounded-lg bg-primary text-background-dark hover:bg-[#2fd16f] transition-all duration-200 shadow-[0_0_20px_rgba(54,226,123,0.25)]">
+                                        <span class="text-sm font-bold tracking-wide">Account</span>
+                                    </button>
+                                    <button onclick="window.location.href='/logout'" class="flex w-full h-10 items-center justify-center rounded-lg border border-red-500/40 hover:bg-red-500/10 text-red-400 transition-all duration-200">
+                                        <span class="text-sm font-semibold tracking-wide">Logout</span>
+                                    </button>
+                                </div>
+                            <% } %>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
 
+            <button class="lg:hidden flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary hover:text-black transition-colors">
+                <span class="material-symbols-outlined text-[20px]">menu</span>
+            </button>
         </div>
-    </div>
-    </div>
-
-    <button
-        class="lg:hidden flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary hover:text-black transition-colors">
-        <span class="material-symbols-outlined text-[20px]">menu</span>
-    </button>
-
-    </div>
     </div>
 </header>
 
@@ -140,4 +98,10 @@
     function toggleDropDown() {
         document.getElementById("userDropdown").classList.toggle("hidden");
     }
+
+  if (window.location.pathname.includes("shop")) {
+    document.getElementById("shopSearchBar").classList.remove("hidden");
+  }
+
+
 </script>

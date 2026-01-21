@@ -6,8 +6,8 @@ import Variant from "../../models/variant.model.js";
 
 export const getProductPage = asyncHandler(async (req, res) => {
     const products = await Product.find({isDeleted: false })
-        .populate("category", "name")
-        .lean();
+        // .populate("category", "name")
+        // .lean();
     for (let product of products) {
         const variants = await Variant.find({
             product: product._id,
@@ -142,4 +142,80 @@ export const geteditProduct=asyncHandler(async(req,res)=>{
 
 })
 
-// export const postEditProduct
+export const postEditProduct =asyncHandler(async(req,res)=>{
+    const {id}=req.params;
+
+    const {name,category,description,caseSize,strapType,movementType,isListed,variants }=req.body;
+    // console.log(name);
+   
+
+    await Product.findByIdAndUpdate(id,{
+        name,
+        category,
+        description,
+        specifications:{
+            caseSize,
+            strapType,
+            movementType
+        },
+        isActive:isListed==="on"
+    })
+
+    for(let i=0;i<variants.length;i++){
+        const v=variants[i];
+
+        const basePrice =Number(v.basePrice);
+        const offer=Number(v.offerPercentage||0);
+        const finalPrice=basePrice-(basePrice*offer/100);
+
+        const files=req.files.filter(file=>file.fieldname===`variantImages_${i}`);
+
+       let keptImages =req.body[`existingImages_${i}`]||[];
+
+       if(!Array.isArray(keptImages)){
+        keptImages=[keptImages];
+       }
+        
+       const oldImages=keptImages.map(url=>({
+        url,
+        isPrimary:false
+       }))
+       const newImages=files.map(file=>({
+        url:file.path,
+        isPrimary:false
+       }))
+        
+       let finalImages=[...oldImages,...newImages];
+
+        finalImages = finalImages.map((img, index) => ({
+            ...img,
+            isPrimary: index === 0
+        }));
+
+        if(v._id){
+            await Variant.findByIdAndUpdate(v._id,{
+                color:v.color,
+                stock:Number(v.stock),
+                basePrice,
+                offerPercentage:offer,
+                finalPrice:Math.round(finalPrice),
+                images:finalImages
+            });
+        }else{
+            await Variant.create({
+                product:id,
+                color:v.color,
+                stock:Number(v.stock),
+                basePrice,
+                offerPercentage:offer,
+                finalPrice:Math.round(finalPrice),
+                images:finalImages
+            })
+        }
+    }
+
+    res.json({
+        success:true,
+        message:"Product updated successfully"
+    })
+})

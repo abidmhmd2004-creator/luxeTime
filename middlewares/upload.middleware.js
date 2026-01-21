@@ -8,7 +8,10 @@ const storage = new CloudinaryStorage ({
     cloudinary,
     params:{
         folder:`luxe-time/${folderName}`,
-        allowed_formats :["jpg","png","jpeg"]
+        allowed_formats :["jpg","png","jpeg"],
+        transformation: [
+        { width: 400, height: 400, crop: "fill", quality: "auto" }
+      ]
     }
 });
 

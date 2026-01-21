@@ -15,9 +15,10 @@ import { requireAuth } from "../middlewares/auth.js";
 import { deleteProfileImage, getChangePassword, getProfile, loadChangeEmail, loadEditProfile, postChangeEmail, postChangePassword, postEditProfile, uploadProfileImage } from "../controllers/user/profile.controller.js";
 import { addAddress, deleteAddress, editAddress, getAddress } from "../controllers/user/address.controller.js";
 import createUploader from "../middlewares/upload.middleware.js";
+import { getProducts } from "../controllers/user/shop.controller.js";
 
 
-const uploadProfile =createUploader("profile");
+// const uploadProfile =createUploader("profile");
 
 
 const router = express.Router();
@@ -69,8 +70,11 @@ router.patch("/edit-address/:id",editAddress);
 
 router.delete("/delete-address/:id",deleteAddress);
 
-router.post("/upload-photo",requireAuth,uploadProfile.single("profileImage"),uploadProfileImage);
+router.post("/upload-photo",requireAuth,createUploader("profiles").single("profileImage"),uploadProfileImage);
 router.delete("/delete-photo",requireAuth,deleteProfileImage)
+
+
+router.get("/shop",getProducts);
 
 
 router.get("/logout", logout);
