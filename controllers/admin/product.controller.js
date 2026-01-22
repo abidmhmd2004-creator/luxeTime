@@ -5,9 +5,9 @@ import Variant from "../../models/variant.model.js";
 
 
 export const getProductPage = asyncHandler(async (req, res) => {
-    const products = await Product.find({isDeleted: false })
-        // .populate("category", "name")
-        // .lean();
+    const products = await Product.find({ isDeleted: false})
+    // .populate("category", "name")
+    // .lean();
     for (let product of products) {
         const variants = await Variant.find({
             product: product._id,
@@ -53,7 +53,7 @@ export const postAddProducts = asyncHandler(async (req, res) => {
     } = req.body;
 
     // console.log(variants);
-    
+
 
 
     const product = await Product.create({
@@ -108,114 +108,143 @@ export const postAddProducts = asyncHandler(async (req, res) => {
     });
 });
 
-export const productDetails =asyncHandler(async(req,res)=>{
-    const {id} =req.params;
+export const productDetails = asyncHandler(async (req, res) => {
+    const { id } = req.params;
 
-    const product=await Product.findById(id);
-    if(!product){
+    const product = await Product.findById(id);
+    if (!product) {
         return res.status(404).json({
-            success:false,
-            message:"Product not found"
+            success: false,
+            message: "Product not found"
         });
     }
 
-    const variants =await Variant.find({product:id});
+    const variants = await Variant.find({ product: id });
 
     res.json({
-        success:true,
+        success: true,
         product,
         variants
     })
 })
 
-export const geteditProduct=asyncHandler(async(req,res)=>{
+export const geteditProduct = asyncHandler(async (req, res) => {
 
 
-    const productId =req.params.id;
+    const productId = req.params.id;
 
-    const product=await Product.findById(productId);
+    const product = await Product.findById(productId);
 
-    const categories=await Category.find({isListed:true});
-    const variants =await Variant.find({product:productId});
+    const categories = await Category.find({ isListed: true });
+    const variants = await Variant.find({ product: productId });
 
-    res.render("admin/edit-product",{product,categories,variants,layout:"layouts/admin"});
+    res.render("admin/edit-product", { product, categories, variants, layout: "layouts/admin" });
 
 })
 
-export const postEditProduct =asyncHandler(async(req,res)=>{
-    const {id}=req.params;
+export const postEditProduct = asyncHandler(async (req, res) => {
+    const { id } = req.params;
 
-    const {name,category,description,caseSize,strapType,movementType,isListed,variants }=req.body;
+    const { name, category, description, caseSize, strapType, movementType, isListed, variants } = req.body;
     // console.log(name);
-   
 
-    await Product.findByIdAndUpdate(id,{
+    console.log(req.body)
+
+
+    await Product.findByIdAndUpdate(id, {
         name,
         category,
         description,
-        specifications:{
+        specifications: {
             caseSize,
             strapType,
             movementType
         },
-        isActive:isListed==="on"
+        isActive: isListed === "on"
     })
 
-    for(let i=0;i<variants.length;i++){
-        const v=variants[i];
+    const submittedVariantIds = variants
+    .map(v => v._id)
+    .flat()               
+    .filter(Boolean);     
+    
+    const uniqueVariantIds = [...new Set(submittedVariantIds)];
 
-        const basePrice =Number(v.basePrice);
-        const offer=Number(v.offerPercentage||0);
-        const finalPrice=basePrice-(basePrice*offer/100);
 
-        const files=req.files.filter(file=>file.fieldname===`variantImages_${i}`);
 
-       let keptImages =req.body[`existingImages_${i}`]||[];
+    await Variant.deleteMany({
+        product: id,
+        _id: { $nin: submittedVariantIds }
+    });
 
-       if(!Array.isArray(keptImages)){
-        keptImages=[keptImages];
-       }
+
+    for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+
+        const basePrice = Number.isFinite(Number(v.basePrice))
+    ? Number(v.basePrice)
+    : 0;
+
+const offer = Number.isFinite(Number(v.offerPercentage))
+    ? Number(v.offerPercentage)
+    : 0;
+
+const stock = Number.isFinite(Number(v.stock))
+    ? Number(v.stock)
+    : 0;
+        const finalPrice = basePrice - (basePrice * offer / 100);
+
         
-       const oldImages=keptImages.map(url=>({
-        url,
-        isPrimary:false
-       }))
-       const newImages=files.map(file=>({
-        url:file.path,
-        isPrimary:false
-       }))
-        
-       let finalImages=[...oldImages,...newImages];
+
+        const files = req.files.filter(file => file.fieldname === `variantImages_${i}`);
+
+        let keptImages = req.body[`existingImages_${i}`] || [];
+
+        if (!Array.isArray(keptImages)) {
+            keptImages = [keptImages];
+        }
+
+        const oldImages = keptImages.map(url => ({
+            url,
+            isPrimary: false
+        }))
+        const newImages = files.map(file => ({
+            url: file.path,
+            isPrimary: false
+        }))
+
+        let finalImages = [...oldImages, ...newImages];
 
         finalImages = finalImages.map((img, index) => ({
             ...img,
             isPrimary: index === 0
         }));
 
-        if(v._id){
-            await Variant.findByIdAndUpdate(v._id,{
-                color:v.color,
-                stock:Number(v.stock),
+        if (v._id) {
+            await Variant.findByIdAndUpdate(v._id, {
+                color: v.color,
+                stock,
                 basePrice,
-                offerPercentage:offer,
-                finalPrice:Math.round(finalPrice),
-                images:finalImages
+                offerPercentage: offer,
+                finalPrice: Math.round(finalPrice),
+                images: finalImages
             });
-        }else{
+        } else {
             await Variant.create({
-                product:id,
-                color:v.color,
-                stock:Number(v.stock),
+                product: id,
+                color: v.color,
+                stock,
                 basePrice,
-                offerPercentage:offer,
-                finalPrice:Math.round(finalPrice),
-                images:finalImages
+                offerPercentage: offer,
+                finalPrice: Math.round(finalPrice),
+                images: finalImages
             })
         }
+        console.log(variants)
     }
 
     res.json({
-        success:true,
-        message:"Product updated successfully"
+        success: true,
+        message: "Product updated successfully"
     })
 })

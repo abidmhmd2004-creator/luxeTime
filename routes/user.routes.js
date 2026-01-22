@@ -15,7 +15,7 @@ import { requireAuth } from "../middlewares/auth.js";
 import { deleteProfileImage, getChangePassword, getProfile, loadChangeEmail, loadEditProfile, postChangeEmail, postChangePassword, postEditProfile, uploadProfileImage } from "../controllers/user/profile.controller.js";
 import { addAddress, deleteAddress, editAddress, getAddress } from "../controllers/user/address.controller.js";
 import createUploader from "../middlewares/upload.middleware.js";
-import { getProducts } from "../controllers/user/shop.controller.js";
+import { getProducts, productDetails } from "../controllers/user/shop.controller.js";
 
 
 // const uploadProfile =createUploader("profile");
@@ -76,7 +76,11 @@ router.delete("/delete-photo",requireAuth,deleteProfileImage)
 
 router.get("/shop",getProducts);
 
+router.get("/product-details",productDetails)
+router.get("/product/:id",productDetails)
+
 
 router.get("/logout", logout);
+
 
 export default router;

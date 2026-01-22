@@ -4,13 +4,12 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <%- include('../partials/adminSidebar') %>
-
 <main class="flex-1 p-3 overflow-y-auto bg-[#0d0f0d] min-h-screen text-gray-200">
     <form id="editProductForm">
         <input type="hidden" id="productId" value="<%= product._id %>">
 
         <div class="max-w-[1200px] mx-auto mb-5">
-            <h2 class="text-2xl font-extrabold text-white tracking-tight">Edit Product: <%= product.name %></h2>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Edit Product:</h2>
             <a href="/admin/products" class="text-[12px] justify-end mr-8 uppercase font-bold text-gray-500 hover:text-[#4ade80] transition flex items-center mb-2 tracking-widest">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Back to Products
             </a>
@@ -35,16 +34,18 @@
                             <div>
                                 <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Brand *</label>
                                 <select name="brand" required class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                                    <option value="Rolex" <%= product.brand === 'Rolex' ? 'selected' : '' %>>Rolex</option>
-                                    <option value="Omega" <%= product.brand === 'Omega' ? 'selected' : '' %>>Omega</option>
-                                    <option value="Tissot" <%= product.brand === 'Tissot' ? 'selected' : '' %>>Tissot</option>
+                                    <option value="Rolex" <%=product.brand==='Rolex' ? 'selected' : '' %>>Rolex</option>
+                                    <option value="Omega" <%=product.brand==='Omega' ? 'selected' : '' %>>Omega</option>
+                                    <option value="Tissot" <%=product.brand==='Tissot' ? 'selected' : '' %>>Tissot</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Category *</label>
                                 <select name="category" required class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                                    <% categories.forEach(cat => { %>
-                                        <option value="<%= cat._id %>" <%= String(product.category._id) === String(cat._id) ? 'selected' : '' %>><%= cat.name %></option>
+                                    <% categories.forEach(cat=> { %>
+                                        <option value="<%= cat._id %>" <%=String(product.category._id)===String(cat._id) ? 'selected' : '' %>>
+                                            <%= cat.name %>
+                                        </option>
                                     <% }) %>
                                 </select>
                             </div>
@@ -65,8 +66,10 @@
                     </div>
 
                     <div id="variantContainer" class="space-y-4">
-                        <% variants.forEach((variant, index) => { %>
+                        <% variants.forEach((variant, index)=> { %>
                             <div class="variant-card bg-black/40 rounded-xl p-5 border border-white/5 relative">
+                                <input type="hidden" name="variants[<%= index %>][_id]" value="<%= variant._id %>">
+                                
                                 <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
                                     <h4 class="text-[9px] uppercase font-bold text-[#4ade80] tracking-[0.2em]">Variant Configuration</h4>
                                     <button type="button" onclick="removeVariant(this)" class="text-red-500/50 hover:text-red-500 text-[9px] font-bold uppercase">
@@ -76,7 +79,6 @@
 
                                 <div class="grid grid-cols-12 gap-3">
                                     <div class="col-span-12 md:col-span-7 grid grid-cols-2 gap-3">
-                                        <input type="hidden" name="variants[0][_id]" value="<%= variant._id %>">
                                         <div class="col-span-2">
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Color Name</label>
                                             <input type="text" name="variants[<%= index %>][color]" value="<%= variant.color %>" required class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
@@ -107,7 +109,7 @@
                                                 <span class="text-[7px] text-gray-500 uppercase font-bold">Add Image</span>
                                             </div>
                                             <div class="imagePreviewGrid grid grid-cols-2 gap-2">
-                                                <% variant.images.forEach(img => { %>
+                                                <% variant.images.forEach(img=> { %>
                                                     <div class="relative aspect-square rounded-lg overflow-hidden border border-white/10 group">
                                                         <img src="<%= img.url %>" class="w-full h-full object-cover">
                                                         <button type="button" class="absolute top-1 right-1 bg-red-600 p-1 rounded-full text-[8px]" onclick="removeImage(this)">
@@ -152,11 +154,9 @@
                 <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
                     <h3 class="text-sm font-bold text-white uppercase mb-5">Product Visibility</h3>
                     <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-[10px] text-white font-bold uppercase tracking-tight">List Product</p>
-                        </div>
+                        <p class="text-[10px] text-white font-bold uppercase tracking-tight">List Product</p>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="isListed" class="sr-only peer" <%= product.isActive ? 'checked' : '' %>>
+                            <input type="checkbox" name="isListed" class="sr-only peer" <%=product.isActive ? 'checked' : '' %>>
                             <div class="w-11 h-6 bg-white/5 rounded-full peer peer-checked:bg-[#4ade80] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-500 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:bg-black"></div>
                         </label>
                     </div>
@@ -173,140 +173,170 @@
 </main>
 
 <script>
-
-
-document.querySelectorAll('.variant-card').forEach(card => {
-    card.images = [];
-    card.querySelectorAll('.imagePreviewGrid img').forEach(img => {
-        // Store existing URLs as strings
-        card.images.push(img.src); 
+    // Initialize image arrays for existing variants
+    document.querySelectorAll('.variant-card').forEach(card => {
+        card.images = [];
+        card.querySelectorAll('.imagePreviewGrid img').forEach(img => {
+            card.images.push(img.src);
+        });
     });
-});
 
-// --- REUSE YOUR LOGIC FROM ADD PRODUCT ---
-function triggerUpload(btn) {
-    btn.closest('.variant-card').querySelector('.imagePicker').click();
-}
+    function triggerUpload(btn) {
+        btn.closest('.variant-card').querySelector('.imagePicker').click();
+    }
 
-document.addEventListener('change', function(e) {
-    if (e.target.classList.contains('imagePicker')) {
-        const file = e.target.files[0];
-        if (!file) return;
-        const card = e.target.closest('.variant-card');
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            Swal.fire({
-                title: 'Crop Image',
-                width: '400px',
-                html: `<img id="cropperTarget" src="${event.target.result}" style="max-width: 100%; display: block;">`,
-                background: '#1A1D1A',
-                confirmButtonColor: '#4ade80',
-                willOpen: () => {
-                    window.cropper = new Cropper(document.getElementById('cropperTarget'), { aspectRatio: 1, viewMode: 1 });
+    // Image Upload & Cropping Logic
+    document.addEventListener('change', function (e) {
+        if (e.target.classList.contains('imagePicker')) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const card = e.target.closest('.variant-card');
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                Swal.fire({
+                    title: 'Crop Image',
+                    width: '400px',
+                    html: `<img id="cropperTarget" src="${event.target.result}" style="max-width: 100%; display: block;">`,
+                    background: '#1A1D1A',
+                    confirmButtonColor: '#4ade80',
+                    willOpen: () => {
+                        window.cropper = new Cropper(document.getElementById('cropperTarget'), { aspectRatio: 1, viewMode: 1 });
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.cropper.getCroppedCanvas({ width: 600, height: 600 }).toBlob((blob) => {
+                            if (!card.images) card.images = [];
+                            card.images.push(blob);
+                            const previewGrid = card.querySelector('.imagePreviewGrid');
+                            const div = document.createElement("div");
+                            div.className = "relative aspect-square rounded-lg overflow-hidden border border-white/10 group";
+                            div.innerHTML = `<img src="${URL.createObjectURL(blob)}" class="w-full h-full object-cover">
+                                            <button type="button" class="absolute top-1 right-1 bg-red-600 p-1 rounded-full text-[8px]" onclick="removeImage(this)">
+                                                <i class="fa-solid fa-xmark text-white"></i>
+                                            </button>`;
+                            previewGrid.appendChild(div);
+                        }, 'image/jpeg');
+                    }
+                    window.cropper.destroy();
+                });
+            };
+            reader.readAsDataURL(file);
+            e.target.value = "";
+        }
+    });
+
+    function removeImage(btn) {
+        const card = btn.closest('.variant-card');
+        const previewItem = btn.closest('.relative');
+        const previewGrid = card.querySelector('.imagePreviewGrid');
+        const index = Array.from(previewGrid.children).indexOf(previewItem);
+        
+        if (card.images && index > -1) {
+            card.images.splice(index, 1);
+        }
+        previewItem.remove();
+    }
+
+    // Dynamic Pricing Logic
+    document.getElementById('variantContainer').addEventListener('input', function (e) {
+        if (e.target.classList.contains('base-price-input') || e.target.classList.contains('offer-input')) {
+            const card = e.target.closest('.variant-card');
+            const base = parseFloat(card.querySelector('.base-price-input').value) || 0;
+            const off = parseFloat(card.querySelector('.offer-input').value) || 0;
+            const final = base - (base * (off / 100));
+            card.querySelector('.final-price-display').value = `₹ ${final.toFixed(2)}`;
+        }
+    });
+
+    // VARIANT MANAGEMENT
+    function addNewVariant() {
+        const container = document.getElementById("variantContainer");
+        const cards = container.querySelectorAll(".variant-card");
+        const index = cards.length;
+        
+        // Clone the first card
+        const clone = cards[0].cloneNode(true);
+        
+        // Reset inputs and specific data
+        clone.images = []; // Important: new array for new variant
+        clone.querySelector(".imagePreviewGrid").innerHTML = "";
+        
+        // Remove existing variant ID hidden input if it exists (since this is a NEW variant)
+        const idInput = clone.querySelector('input[name*="[_id]"]');
+        if (idInput) idInput.remove();
+
+        // Clear values
+        clone.querySelectorAll("input").forEach(input => {
+            if (input.type !== "hidden" && !input.classList.contains('final-price-display')) {
+                input.value = input.classList.contains("offer-input") ? "0" : "";
+            }
+            if (input.classList.contains('final-price-display')) input.value = "₹ 0.00";
+        });
+
+        container.appendChild(clone);
+        reindexVariants();
+    }
+
+    function removeVariant(btn) {
+        const container = document.getElementById("variantContainer");
+        const card = btn.closest('.variant-card');
+        
+        if (container.querySelectorAll(".variant-card").length <= 1) {
+            Swal.fire("Error", "At least one variant is required", "warning");
+            return;
+        }
+
+        card.remove(); // This removes the actual DOM element
+        reindexVariants(); // Update name attributes for remaining cards
+    }
+
+    function reindexVariants() {
+        const cards = document.querySelectorAll(".variant-card");
+        cards.forEach((card, index) => {
+            card.querySelectorAll("input, select, textarea").forEach(input => {
+                if (input.name) {
+                    input.name = input.name.replace(/variants\[\d+\]/, `variants[${index}]`);
                 }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.cropper.getCroppedCanvas({ width: 600, height: 400 }).toBlob((blob) => {
-                        if (!card.images) card.images = [];
-                        card.images.push(blob);
-                        const previewGrid = card.querySelector('.imagePreviewGrid');
-                        const div = document.createElement("div");
-                        div.className = "relative aspect-square rounded-lg overflow-hidden border border-white/10 group";
-                        div.innerHTML = `<img src="${URL.createObjectURL(blob)}" class="w-full h-full object-cover">
-                                        <button type="button" class="absolute top-1 right-1 bg-red-600 p-1 rounded-full text-[8px]" onclick="removeImage(this)">
-                                            <i class="fa-solid fa-xmark text-white"></i>
-                                        </button>`;
-                        previewGrid.appendChild(div);
-                    }, 'image/jpeg');
-                }
-                window.cropper.destroy();
             });
-        };
-        reader.readAsDataURL(file);
-        e.target.value = ""; 
+        });
     }
-});
 
-function removeImage(btn) {
-    const card = btn.closest('.variant-card');
-    const previewItem = btn.closest('.relative');
-    const index = Array.from(previewItem.parentElement.children).indexOf(previewItem);
-    card.images.splice(index, 1);
-    previewItem.remove();
-}
+    // FORM SUBMISSION
+    document.getElementById("editProductForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('productId').value;
+        const formData = new FormData(e.target);
+        const cards = document.querySelectorAll('.variant-card');
 
-// PRICING LOGIC
-document.getElementById('variantContainer').addEventListener('input', function(e) {
-    if (e.target.classList.contains('base-price-input') || e.target.classList.contains('offer-input')) {
-        const card = e.target.closest('.variant-card');
-        const base = parseFloat(card.querySelector('.base-price-input').value) || 0;
-        const off = parseFloat(card.querySelector('.offer-input').value) || 0;
-        const final = base - (base * (off / 100));
-        card.querySelector('.final-price-display').value = `₹ ${final.toFixed(2)}`;
-    }
-});
+        cards.forEach((card, i) => {
+            if (card.images) {
+                card.images.forEach(img => {
+                    if (img instanceof Blob) {
+                        formData.append(`variantImages_${i}`, img, `new_${i}.jpg`);
+                    } else {
+                        formData.append(`existingImages_${i}`, img);
+                    }
+                });
+            }
+        });
 
-function addNewVariant() {
-    const container = document.getElementById("variantContainer");
-    const cards = container.querySelectorAll(".variant-card");
-    const index = cards.length;
-    const clone = cards[0].cloneNode(true);
-    clone.querySelectorAll("input").forEach(input => {
-        if (input.name) input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
-        if (input.type !== "hidden") input.value = input.classList.contains("offer-input") ? "0" : "";
-    });
-    clone.querySelector(".imagePreviewGrid").innerHTML = "";
-    clone.images = [];
-    container.appendChild(clone);
-}
+        Swal.fire({
+            title: "Updating product...",
+            text: "Please wait",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
 
-function removeVariant(btn) {
-    if (document.querySelectorAll('.variant-card').length > 1) btn.closest('.variant-card').remove();
-}
-
-// --- SUBMISSION ---
-document.getElementById("editProductForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('productId').value;
-    const formData = new FormData(e.target);
-    const cards = document.querySelectorAll('.variant-card');
-
-    cards.forEach((card, i) => {
-        if (card.images) {
-            card.images.forEach(img => {
-                if (img instanceof Blob) {
-                    formData.append(`variantImages_${i}`, img, `new_${i}.jpg`);
-                } else {
-                    // This is an existing image URL
-                    formData.append(`existingImages_${i}`, img);
-                }
-            });
+        try {
+            const res = await fetch(`/admin/edit-product/${id}`, { method: "POST", body: formData });
+            const data = await res.json();
+            if (data.success) {
+                Swal.fire("Updated", data.message, "success").then(() => window.location.href = "/admin/products");
+            } else {
+                Swal.fire("Error", data.message, "error");
+            }
+        } catch (err) {
+            Swal.fire("Error", "Server error", "error");
         }
     });
-    Swal.fire({
-        title: "Updating product...",
-        text: "Please wait, do not refresh the page",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
-
-
-    try {
-        const res = await fetch(`/admin/edit-product/${id}`, { method: "POST", body: formData });
-        const data = await res.json();
-        if (data.success) {
-            Swal.fire("Updated", data.message, "success").then(() => window.location.href = "/admin/products");
-        } else {
-            Swal.fire("Error", data.message, "error");
-        }
-    } catch (err) {
-        Swal.fire("Error", "Server error", "error");
-    }
-});
-
-
-
 </script>
