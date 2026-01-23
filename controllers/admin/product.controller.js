@@ -5,7 +5,26 @@ import Variant from "../../models/variant.model.js";
 
 
 export const getProductPage = asyncHandler(async (req, res) => {
-    const products = await Product.find({ isDeleted: false})
+
+    const page = (req.query.page) || 1;
+    const limit = 8;
+    const skip = (page - 1) * limit;
+
+    const { search } = req.query;
+    const filter = {
+        isDeleted: false,
+    }
+    if (typeof search === "string" && search.trim() !== "") {
+        filter.name = { $regex: search.trim(), $options: "i" };
+    }
+
+
+
+    const products = await Product.find(filter)
+        .populate("category", "name")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
     // .populate("category", "name")
     // .lean();
     for (let product of products) {
@@ -26,8 +45,12 @@ export const getProductPage = asyncHandler(async (req, res) => {
         }
     }
 
+    const totalProducts = await Product.countDocuments(filter);
 
-    res.render("admin/products", { layout: "layouts/admin", products })
+    const totalPages = Math.ceil(totalProducts / limit)
+
+
+    res.render("admin/products", { layout: "layouts/admin", products, currentPage: Number(page), totalPages, search })
 
 })
 
@@ -54,7 +77,50 @@ export const postAddProducts = asyncHandler(async (req, res) => {
 
     // console.log(variants);
 
+    if(!name || !name.trim()){
+        return res.status(400).json({
+            success:false,
+            message:"Product name is required"
+        })
+    }
+    if(!variants.color || !variants.color.trim()){
+        return res.status(400).json({
+            success:false,
+            message:"Variant color is required"
+        })
+    }
 
+    const existing = await Product.findOne({
+        name: name.trim(),
+        isDeleted: false
+    })
+
+    if (existing) {
+        return res.status(400).json({
+            success: false,
+            message: "Prodct already exists"
+        })
+    }
+      for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+     const files = req.files.filter(
+            file => file.fieldname === `variantImages_${i}`
+        );
+
+        if (files.length < 3) {
+            return res.status(400).json({
+                success: false,
+                message: `Variant ${i + 1} needs at least 3 images`
+            });
+        }
+          if (files.length > 5) {
+            return res.status(400).json({
+                success: false,
+                message: `Variant ${i + 1} needs at maximum 5 images`
+            });
+        }
+    }
+      
 
     const product = await Product.create({
         name,
@@ -69,24 +135,23 @@ export const postAddProducts = asyncHandler(async (req, res) => {
         isActive: isListed === "on"
     });
 
+
+
+
     for (let i = 0; i < variants.length; i++) {
         const v = variants[i];
-
-        const basePrice = Number(v.basePrice);
-        const offer = Number(v.offerPercentage || 0);
-        const finalPrice = basePrice - (basePrice * offer / 100);
 
         const files = req.files.filter(
             file => file.fieldname === `variantImages_${i}`
         );
+        const basePrice = Number(v.basePrice);
+        const offer = Number(v.offerPercentage || 0);
 
-        if (files.length < 3) {
-            return res.status(400).json({
-                success: false,
-                message: `Variant ${i + 1} needs at least 3 images`
-            });
-        }
+        const finalPrice = basePrice - (basePrice * offer / 100);
+
+       
         // console.log(req.body.variants);
+    
 
         await Variant.create({
             product: product._id,
@@ -121,6 +186,7 @@ export const productDetails = asyncHandler(async (req, res) => {
 
     const variants = await Variant.find({ product: id });
 
+
     res.json({
         success: true,
         product,
@@ -148,7 +214,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
     const { name, category, description, caseSize, strapType, movementType, isListed, variants } = req.body;
     // console.log(name);
 
-    console.log(req.body)
+    // console.log(variants);
 
 
     await Product.findByIdAndUpdate(id, {
@@ -164,11 +230,11 @@ export const postEditProduct = asyncHandler(async (req, res) => {
     })
 
     const submittedVariantIds = variants
-    .map(v => v._id)
-    .flat()               
-    .filter(Boolean);     
-    
-    const uniqueVariantIds = [...new Set(submittedVariantIds)];
+        .map(v => v._id)
+        .flat()
+        .filter(Boolean);
+
+    // const uniqueVariantIds = [...new Set(submittedVariantIds)];
 
 
 
@@ -181,20 +247,13 @@ export const postEditProduct = asyncHandler(async (req, res) => {
     for (let i = 0; i < variants.length; i++) {
         const v = variants[i];
 
-        const basePrice = Number.isFinite(Number(v.basePrice))
-    ? Number(v.basePrice)
-    : 0;
+        const basePrice = Number(v.basePrice);
+        const offer = Number(v.offerPercentage || 0);
+        const stock = Number(v.stock || 0);
 
-const offer = Number.isFinite(Number(v.offerPercentage))
-    ? Number(v.offerPercentage)
-    : 0;
-
-const stock = Number.isFinite(Number(v.stock))
-    ? Number(v.stock)
-    : 0;
         const finalPrice = basePrice - (basePrice * offer / 100);
 
-        
+
 
         const files = req.files.filter(file => file.fieldname === `variantImages_${i}`);
 
@@ -240,11 +299,28 @@ const stock = Number.isFinite(Number(v.stock))
                 images: finalImages
             })
         }
-        console.log(variants)
+        // console.log(variants)
     }
 
     res.json({
         success: true,
         message: "Product updated successfully"
+    })
+})
+
+
+export const softDeleteProduct = asyncHandler(async (req, res) => {
+
+    console.log("getting controller")
+    const { id } = req.params;
+
+    await Product.findByIdAndUpdate(id, {
+        isDeleted: true,
+        isActive: false
+    })
+
+    res.json({
+        success: true,
+        message: "Product sft deleted"
     })
 })

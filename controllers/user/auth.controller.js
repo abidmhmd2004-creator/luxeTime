@@ -285,7 +285,7 @@ export const logout = (req, res) => {
     req.session.destroy(()=>{
 
         res.clearCookie("luxetime.user.sid");
-        return res.redirect("/")
+         res.json({ success: true });
     
     })
    

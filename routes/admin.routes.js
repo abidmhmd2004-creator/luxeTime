@@ -4,7 +4,7 @@ import { getDashboard } from "../controllers/admin/dashboard.controller.js";
 import { getCustomers, toggleCustomerStatus } from "../controllers/admin/customer.controller.js";
 import { adminAuth } from "../middlewares/adminAuth.js";
 import { addCategory, editCategory, getCategory, getCategoryAjax, toggleCategory } from "../controllers/admin/categories.controller.js";
-import { getaddProducts, geteditProduct, getProductPage, postAddProducts, postEditProduct, productDetails } from "../controllers/admin/product.controller.js";
+import { getaddProducts, geteditProduct, getProductPage, postAddProducts, postEditProduct, productDetails, softDeleteProduct } from "../controllers/admin/product.controller.js";
 import { uploadProfileImage } from "../controllers/user/profile.controller.js";
 import createUploader from "../middlewares/upload.middleware.js";
 
@@ -37,6 +37,9 @@ router.get("/products/:id",productDetails);
 
 router.get("/edit-product/:id",geteditProduct);
 router.post("/edit-product/:id",uploadProductImage.any(),postEditProduct)
+
+router.patch("/products/:id/delete",softDeleteProduct)
+
 
 router.get("/logout",adminLogout)
 

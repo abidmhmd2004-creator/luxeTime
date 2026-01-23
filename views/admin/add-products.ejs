@@ -31,7 +31,7 @@
                                 <label
                                     class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Product
                                     Name *</label>
-                                <input type="text" name="name" required
+                                <input type="text" name="name" 
                                     class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
                             </div>
                             <div class="grid grid-cols-2 gap-3">
@@ -102,13 +102,13 @@
                                         <div class="col-span-2">
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Color
                                                 Name</label>
-                                            <input type="text" name="variants[0][color]" required
+                                            <input type="text" name="variants[0][color]" 
                                                 class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                                         </div>
                                         <div>
                                             <label
                                                 class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Stock</label>
-                                            <input type="number" name="variants[0][stock]" required
+                                            <input type="number" name="variants[0][stock]" 
                                                 class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                                         </div>
                                         <div>
@@ -285,10 +285,10 @@
         document.getElementById('variantContainer').addEventListener('input', function (e) {
             if (e.target.classList.contains('base-price-input') || e.target.classList.contains('offer-input')) {
                 const card = e.target.closest('.variant-card');
-                const base = parseFloat(card.querySelector('.base-price-input').value) || 0;
-                const off = parseFloat(card.querySelector('.offer-input').value) || 0;
-                const final = base - (base * (off / 100));
-                card.querySelector('.final-price-display').value = `₹ ${final.toFixed(2)}`;
+                const base = parseInt(card.querySelector('.base-price-input').value) || 0;
+                const off = parseInt(card.querySelector('.offer-input').value) || 0;
+                const final = Math.round(base - (base * off / 100));
+                card.querySelector('.final-price-display').value = `₹ ${final}`;
             }
         });
 
@@ -324,19 +324,36 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const cards = document.querySelectorAll('.variant-card');
+             if (!validateVariantPrices()) return;
 
-            let valid = true;
-            cards.forEach((card, i) => {
-                if (!card.images || card.images.length < 3) valid = false;
-                if (card.images) {
-                    card.images.forEach(blob => {
-                        formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
-                    });
-                }
+
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+
+        // if (!card.images || card.images.length < 3) {
+        //     Swal.fire("Error", `Variant ${i + 1} needs at least 3 images`, "error");
+        //     return;
+        // }
+
+        // if (card.images.length > 5) {
+        //     Swal.fire("Error", `Variant ${i + 1} can have maximum 5 images`, "error");
+        //     return;
+        // }
+
+        card.images.forEach(blob => {
+            formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
+        });
+    }
+
+            // if (!valid) return Swal.fire("Error", "Each variant needs at least 3 images", "error");
+
+
+            Swal.fire({
+                title: "Adding product...",
+                text: "Please wait",
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
             });
-
-            if (!valid) return Swal.fire("Error", "Each variant needs at least 3 images", "error");
-
             try {
                 const res = await fetch("/admin/add-products", { method: "POST", body: formData });
                 const data = await res.json();
@@ -349,4 +366,35 @@
                 Swal.fire("Error", "Server error", "error");
             }
         });
+        function validateVariantPrices() {
+    const cards = document.querySelectorAll('.variant-card');
+
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+
+        const base = parseInt(card.querySelector('.base-price-input').value) || 0;
+        const offer = parseInt(card.querySelector('.offer-input').value) || 0;
+        const final = Math.round(base - (base * offer / 100));
+
+        if (base <= 0) {
+            Swal.fire("Error", `Variant ${i + 1}: Base price must be greater than 0`, "error");
+            return false;
+        }
+
+        if (offer < 0 || offer > 90) {
+            Swal.fire("Error", `Variant ${i + 1}: Offer must be between 0 and 90%`, "error");
+            return false;
+        }
+
+        if (final > base) {
+            Swal.fire(
+                "Error",
+                `Variant ${i + 1}: Final price must be less than base price`,
+                "error"
+            );
+            return false;
+        }
+    }
+    return true;
+}
     </script>

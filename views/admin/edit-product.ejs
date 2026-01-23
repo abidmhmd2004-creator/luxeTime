@@ -93,7 +93,7 @@
                                         </div>
                                         <div>
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer (%)</label>
-                                            <input type="number" name="variants[<%= index %>][offerPercentage]" value="<%= variant.variantOfferPercentage || 0 %>" class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
+                                            <input type="number" name="variants[<%= index %>][offerPercentage]" value="<%= variant.offerPercentage || 0 %>" class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                                         </div>
                                         <div>
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Final Price</label>
@@ -243,12 +243,12 @@
             const card = e.target.closest('.variant-card');
             const base = parseFloat(card.querySelector('.base-price-input').value) || 0;
             const off = parseFloat(card.querySelector('.offer-input').value) || 0;
-            const final = base - (base * (off / 100));
-            card.querySelector('.final-price-display').value = `₹ ${final.toFixed(2)}`;
+            const final =Math.round( base - (base * (off / 100)));
+            card.querySelector('.final-price-display').value = `₹ ${final}`;
         }
     });
 
-    // VARIANT MANAGEMENT
+   
     function addNewVariant() {
         const container = document.getElementById("variantContainer");
         const cards = container.querySelectorAll(".variant-card");
@@ -257,11 +257,9 @@
         // Clone the first card
         const clone = cards[0].cloneNode(true);
         
-        // Reset inputs and specific data
-        clone.images = []; // Important: new array for new variant
+        clone.images = []; 
         clone.querySelector(".imagePreviewGrid").innerHTML = "";
         
-        // Remove existing variant ID hidden input if it exists (since this is a NEW variant)
         const idInput = clone.querySelector('input[name*="[_id]"]');
         if (idInput) idInput.remove();
 
@@ -286,8 +284,8 @@
             return;
         }
 
-        card.remove(); // This removes the actual DOM element
-        reindexVariants(); // Update name attributes for remaining cards
+        card.remove(); 
+        reindexVariants(); 
     }
 
     function reindexVariants() {

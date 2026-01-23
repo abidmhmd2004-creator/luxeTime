@@ -80,7 +80,8 @@ router.get("/product-details",productDetails)
 router.get("/product/:id",productDetails)
 
 
-router.get("/logout", logout);
+
+router.post("/logout", logout);
 
 
 export default router;

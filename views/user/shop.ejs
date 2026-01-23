@@ -1,56 +1,55 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0a0a0a;
+        color: #ffffff;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0a0a;
-            color: #ffffff;
-        }
+    .accent-green {
+        color: #4ade80;
+    }
 
-        .accent-green {
-            color: #4ade80;
-        }
+    .bg-accent-green {
+        background-color: #4ade80;
+    }
 
-        .bg-accent-green {
-            background-color: #4ade80;
-        }
+    .card-bg {
+        background-color: #161b18;
+    }
 
-        .card-bg {
-            background-color: #161b18;
-        }
+    .filter-section-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
+    }
 
-        .filter-section-title {
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-        }
+    input[type="radio"] {
+        accent-color: #4ade80;
+    }
 
-        input[type="radio"] {
-            accent-color: #4ade80;
-        }
+    .product-card {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid transparent;
+    }
 
-        .product-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid transparent;
-        }
+    .product-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(74, 222, 128, 0.3);
+        box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.7);
+    }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(74, 222, 128, 0.3);
-            box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.7);
-        }
+    .img-container img {
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        .img-container img {
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .product-card:hover .img-container img {
-            transform: scale(1.15);
-        }
-    </style>
+    .product-card:hover .img-container img {
+        transform: scale(1.15);
+    }
+</style>
 </head>
 
 <body>
@@ -92,11 +91,11 @@
                         <p class="filter-section-title">Categories</p>
                         <div class="space-y-2 text-sm text-gray-400">
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="category" value="" onchange="this.form.submit()" <%=!query.category
-                                    ? 'checked' : '' %>> All Category
+                                <input type="radio" name="category" value="" onchange="this.form.submit()"
+                                    <%=!query.category ? 'checked' : '' %>> All Category
                             </label>
                             <% categories.forEach(cat=> { %>
-                                
+
                                 <label class="flex items-center gap-2">
                                     <input type="radio" name="category" value="<%= cat._id %>"
                                         onchange="this.form.submit()" <%=query.category==cat._id ? "checked" : "" %>>
@@ -129,7 +128,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-6">
+                    <!-- <div class="mb-6">
                         <p class="filter-section-title">Brands</p>
                         <div class="space-y-2 text-sm text-gray-400">
                             <label class="flex items-center gap-2 cursor-pointer">
@@ -145,7 +144,7 @@
                                     <%=query.brand==='Casio' ? 'checked' : '' %>> Casio
                             </label>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="mb-6">
                         <p class="filter-section-title">Sort By</p>
@@ -168,25 +167,24 @@
             </aside>
 
             <section class="flex-1">
-                <div class="mb-6 text-xs text-gray-400">Showing <%= products.length %> products</div>
-<div class="mb-6 text-xs text-gray-400 text-center">
-        <% if (products.length > 0) { %>
-            Showing <%= products.length %> products
-        <% } else { %>
-            No products match your criteria
-        <% } %>
-    </div>
+                <div class="mb-6 text-xs text-gray-400 text-center">
+                    <% if (products.length> 0) { %>
+                        Showing <%= products.length %> products
+                            <% } else { %>
+                                No products match your criteria
+                                <% } %>
+                </div>
 
-    
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <% products.forEach(product=> {
                         const v = product.variant;
                         const image = v?.images?.[0]?.url || "/images/placeholder.png";
                         const base = v?.basePrice || 0;
                         const offer = v?.offerPercentage || 0;
-                        const finalPrice = base - (base * offer / 100);
+                        const finalPrice =Math.round(base - (base * offer / 100));
                         %>
-                        
+
                         <div class="product-card card-bg rounded-xl p-4 flex flex-col relative overflow-hidden">
                             <div class="img-container bg-zinc-900 rounded-lg overflow-hidden mb-4 aspect-square">
                                 <img src="<%= image %>" alt="<%= product.name %>" class="w-full h-full object-cover">
@@ -238,52 +236,115 @@
                         <% }) %>
                 </div>
 
-                 <div class="p-6 flex items-center justify-center  bg-black/20">
+                <div class="p-6 flex items-center justify-center  bg-black/20">
 
-                <nav id="paginationNav" class="flex items-center gap-3 justify-center">
+                    <nav id="paginationNav" class="flex items-center gap-3 justify-center">
 
-                    <% if (currentPage> 1) { %>
-                        <a href="/user/shop?page=<%= currentPage - 1 %>"
-                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
-                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                        </a>
-                        <% } else { %>
-                            <span
-                                class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed">
+                        <% if (currentPage> 1) { %>
+                            <a href="/shop?page=<%= currentPage - 1 %>"
+                                class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
                                 <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                            </span>
-                            <% } %>
-
-                                <div class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
+                            </a>
+                            <% } else { %>
+                                <span
+                                    class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed">
+                                    <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                                </span>
+                                <% } %>
 
                                     <div
-                                        class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]">
-                                        <%= currentPage %>
+                                        class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
+
+                                        <div
+                                            class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]">
+                                            <%= currentPage %>
+                                        </div>
+
+                                        <% if (currentPage < totalPages) { %>
+                                            <a href="/shop?page=<%= totalPages %>"
+                                                class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
+                                                <%= totalPages %>
+                                            </a>
+                                            <% } %>
+
                                     </div>
 
                                     <% if (currentPage < totalPages) { %>
-                                        <a href="/user/shop?page=<%= totalPages %>"
-                                            class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
-                                            <%= totalPages %>
-                                        </a>
-                                        <% } %>
-
-                                </div>
-
-                                <% if (currentPage < totalPages) { %>
-                                    <a href="/user/shop?page=<%= currentPage + 1 %>"
-                                        class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
-                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                    </a>
-                                    <% } else { %>
-                                        <span
-                                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed">
+                                        <a href="/shop?page=<%= currentPage + 1 %>"
+                                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
                                             <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                        </span>
-                                        <% } %>
+                                        </a>
+                                        <% } else { %>
+                                            <span
+                                                class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed">
+                                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                            </span>
+                                            <% } %>
 
-                </nav>
-            </div>
+                    </nav>
+                </div>
             </section>
         </main>
     </form>
+    <footer class="border-t border-[#29382f] bg-[#0d120f] pt-16 pb-8">
+        <div class="mx-auto max-w-[1440px] px-4 md:px-10">
+            <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5 mb-16">
+                <div class="lg:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="material-symbols-outlined text-primary text-[28px]">watch</span>
+                        <h2 class="text-2xl font-bold text-white">LUXE TIME</h2>
+                    </div>
+                    <p class="max-w-xs text-gray-400">
+                        The destination for premium timepieces. We believe a watch is more than just a tool to tell
+                        time;
+                        it's a statement of legacy and style.
+                    </p>
+                    <div class="mt-6 flex gap-4">
+                        <a class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors"
+                            href="#">
+                            <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
+                                <path
+                                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z">
+                                </path>
+                            </svg>
+                        </a>
+                        <a class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors"
+                            href="#">
+                            <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z">
+                                </path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="mb-6 font-bold text-white">Shop</h4>
+                    <ul class="flex flex-col gap-4 text-sm text-gray-400">
+                        <li><a class="hover:text-primary transition-colors" href="#">Men's Watches</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Women's Watches</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Kids Watches</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mb-6 font-bold text-white">Support</h4>
+                    <ul class="flex flex-col gap-4 text-sm text-gray-400">
+                        <li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Order Status</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Shipping &amp; Returns</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Watch Care</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="mb-6 font-bold text-white">Company</h4>
+                    <ul class="flex flex-col gap-4 text-sm text-gray-400">
+                        <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Stores</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </footer>
