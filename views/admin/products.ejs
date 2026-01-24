@@ -45,6 +45,8 @@
                         <th class="px-6 py-4 font-semibold text-center">Total Stock</th>
                         <th class="px-6 py-4 font-semibold text-center">Status</th>
                         <th class="px-6 py-4 font-semibold text-right">Actions</th>
+
+
                     </tr>
                 </thead>
 
@@ -54,7 +56,6 @@
                             const variant = product.variants?.[0];
                             const imageUrl = variant?.images?.[0]?.url || "/images/placeholder.png";
 
-                            // Calculate total stock across all variants
                             const totalStock = product.variants.reduce((acc, curr) => acc + (curr.stock || 0), 0);
                             const variantCount = product.variants.length;
                             %>
@@ -121,6 +122,7 @@
                                             </span>
                                             <% } %>
                                 </td>
+                                
 
                                 <td class="px-5 py-4 text-right space-x-2 text-gray-500">
                                     <button onclick="showProductDetails('<%= product._id %>')"

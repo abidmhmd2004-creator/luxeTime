@@ -81,7 +81,7 @@
                                     <div class="col-span-12 md:col-span-7 grid grid-cols-2 gap-3">
                                         <div class="col-span-2">
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Color Name</label>
-                                            <input type="text" name="variants[<%= index %>][color]" value="<%= variant.color %>" required class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
+                                            <input type="text" name="variants[<%= index %>][color]" value="<%= variant.color %>" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                                         </div>
                                         <div>
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Stock</label>
@@ -305,6 +305,7 @@
         const id = document.getElementById('productId').value;
         const formData = new FormData(e.target);
         const cards = document.querySelectorAll('.variant-card');
+        if (!validateVariantPrices()) return;
 
         cards.forEach((card, i) => {
             if (card.images) {
@@ -337,4 +338,35 @@
             Swal.fire("Error", "Server error", "error");
         }
     });
+     function validateVariantPrices() {
+    const cards = document.querySelectorAll('.variant-card');
+
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+
+        const base = parseInt(card.querySelector('.base-price-input').value) || 0;
+        const offer = parseInt(card.querySelector('.offer-input').value) || 0;
+        const final = Math.round(base - (base * offer / 100));
+
+        if (base <= 0) {
+            Swal.fire("Error", `Variant ${i + 1}: Base price must be greater than 0`, "error");
+            return false;
+        }
+
+        if (offer < 0 || offer > 90) {
+            Swal.fire("Error", `Variant ${i + 1}: Offer must be between 0 and 90%`, "error");
+            return false;
+        }
+
+        if (final > base) {
+            Swal.fire(
+                "Error",
+                `Variant ${i + 1}: Final price must be less than base price`,
+                "error"
+            );
+            return false;
+        }
+    }
+    return true;
+}
 </script>

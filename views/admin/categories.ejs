@@ -110,6 +110,10 @@
                                             <%= category.isListed ? 'right-0.5' : 'left-0.5' %>">
                                             </span>
                                         </button>
+                                        <button onclick="deleteProduct('<%= category._id %>')"
+                                        class="hover:text-red-500 transition">
+                                        <i class="fa-solid fa-trash text-[12px]"></i>
+                                    </button>
 
                                     </td>
                                 </tr>
@@ -474,19 +478,29 @@
 </tr>`;
             });
         }
+         async function deleteProduct(categoryId) {
+            const result = await Swal.fire({
+                title: "Are you sure?",
+                text: "This category will be hidden",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                confirmButtonText: "Yes, delete"
+            });
+
+            if (!result.isConfirmed) return;
+
+            const res = await fetch(`/admin/category/${categoryId}/delete`, {
+                method: "PATCH"
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                Swal.fire("Deleted!", "Category hidden", "success")
+                    .then(() => location.reload());
+            }
+        }
 
 
-        // function renderAjaxPagination(totalPages, search) {
-        // //   serverPagination.innerHTML = "";
-
-        //   for (let i = 1; i <= totalPages; i++) {
-        //     serverPagination.innerHTML += `
-        //       <button
-        //         onclick="loadCategories(${i}, '${search}')"
-        //         class="px-3 py-1 rounded
-        //         ${i === currentPage ? 'bg-[#4ade80] text-black' : 'text-gray-400'}">
-        //         ${i}
-        //       </button>`;
-        //   }
-        // }
     </script>

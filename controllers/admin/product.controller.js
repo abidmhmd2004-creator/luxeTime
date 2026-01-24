@@ -7,7 +7,7 @@ import Variant from "../../models/variant.model.js";
 export const getProductPage = asyncHandler(async (req, res) => {
 
     const page = (req.query.page) || 1;
-    const limit = 8;
+    const limit = 5;
     const skip = (page - 1) * limit;
 
     const { search } = req.query;
@@ -17,8 +17,8 @@ export const getProductPage = asyncHandler(async (req, res) => {
     if (typeof search === "string" && search.trim() !== "") {
         filter.name = { $regex: search.trim(), $options: "i" };
     }
-
-
+    let sum=0
+    let total=0
 
     const products = await Product.find(filter)
         .populate("category", "name")
@@ -27,11 +27,14 @@ export const getProductPage = asyncHandler(async (req, res) => {
         .limit(limit)
     // .populate("category", "name")
     // .lean();
+
     for (let product of products) {
         const variants = await Variant.find({
             product: product._id,
             isActive: true,
         }).lean();
+        
+
         product.variants = variants;
 
         product.bestOffer = 0;
@@ -43,14 +46,16 @@ export const getProductPage = asyncHandler(async (req, res) => {
                 ...variants.map(v => v.finalPrice ?? v.basePrice)
             );
         }
+
     }
+
 
     const totalProducts = await Product.countDocuments(filter);
 
     const totalPages = Math.ceil(totalProducts / limit)
 
 
-    res.render("admin/products", { layout: "layouts/admin", products, currentPage: Number(page), totalPages, search })
+    res.render("admin/products", { layout: "layouts/admin", products, currentPage: Number(page), totalPages, search})
 
 })
 
@@ -77,17 +82,17 @@ export const postAddProducts = asyncHandler(async (req, res) => {
 
     // console.log(variants);
 
-    if(!name || !name.trim()){
+    if (!name || !name.trim()) {
         return res.status(400).json({
-            success:false,
-            message:"Product name is required"
+            success: false,
+            message: "Product name is required"
         })
     }
-    if(!variants.color || !variants.color.trim()){
+     if (!variants || typeof variants !== "object") {
         return res.status(400).json({
-            success:false,
-            message:"Variant color is required"
-        })
+            success: false,
+            message: "At least one variant is required"
+        });
     }
 
     const existing = await Product.findOne({
@@ -101,9 +106,9 @@ export const postAddProducts = asyncHandler(async (req, res) => {
             message: "Prodct already exists"
         })
     }
-      for (let i = 0; i < variants.length; i++) {
+    for (let i = 0; i < variants.length; i++) {
         const v = variants[i];
-     const files = req.files.filter(
+        const files = req.files.filter(
             file => file.fieldname === `variantImages_${i}`
         );
 
@@ -113,14 +118,35 @@ export const postAddProducts = asyncHandler(async (req, res) => {
                 message: `Variant ${i + 1} needs at least 3 images`
             });
         }
-          if (files.length > 5) {
+        if (files.length > 4) {
             return res.status(400).json({
                 success: false,
                 message: `Variant ${i + 1} needs at maximum 5 images`
             });
         }
     }
-      
+
+    const colorSet =new Set();
+
+    for(const v of variants){
+        const color=v.color.trim().toLowerCase();
+
+        if(!color){
+            return res.status(400).json({
+                success:false,
+                message:"Variant color is required"
+            })
+        }
+
+        if(colorSet.has(color)){
+            return res.status(400).json({
+                success:false,
+                message:"Duplicate variant color :${v.color}"
+            })
+        }
+        colorSet.add(color)
+    }
+
 
     const product = await Product.create({
         name,
@@ -149,9 +175,9 @@ export const postAddProducts = asyncHandler(async (req, res) => {
 
         const finalPrice = basePrice - (basePrice * offer / 100);
 
-       
+
         // console.log(req.body.variants);
-    
+
 
         await Variant.create({
             product: product._id,
@@ -217,6 +243,19 @@ export const postEditProduct = asyncHandler(async (req, res) => {
     // console.log(variants);
 
 
+    if(!name || !name.trim()){
+        return res.status(400).json({
+            success:false,
+            message:"Product name is required"
+        })
+    }
+    if(!variants || typeof variants !== "object"){
+        return res.status(400).json({
+            success:false,
+            message:"At least on variant is required"
+        })
+    }
+
     await Product.findByIdAndUpdate(id, {
         name,
         category,
@@ -234,9 +273,6 @@ export const postEditProduct = asyncHandler(async (req, res) => {
         .flat()
         .filter(Boolean);
 
-    // const uniqueVariantIds = [...new Set(submittedVariantIds)];
-
-
 
     await Variant.deleteMany({
         product: id,
@@ -247,6 +283,12 @@ export const postEditProduct = asyncHandler(async (req, res) => {
     for (let i = 0; i < variants.length; i++) {
         const v = variants[i];
 
+        if(!v.color || !v.color.trim()){
+            return res.status(400).json({
+                success:false,
+                message:`Color is required for varinat ${i+1}`
+            })
+        }
         const basePrice = Number(v.basePrice);
         const offer = Number(v.offerPercentage || 0);
         const stock = Number(v.stock || 0);
@@ -261,6 +303,19 @@ export const postEditProduct = asyncHandler(async (req, res) => {
 
         if (!Array.isArray(keptImages)) {
             keptImages = [keptImages];
+        }
+
+        if(keptImages.length <3 && files.length <3){
+            return res.status(400).json({
+                success:false,
+                message:`At least 3 images required for varinat ${i+1}`
+            })
+        }
+         if(keptImages.length+ files.length >4){
+            return res.status(400).json({
+                success:false,
+                message:`Maximum 4 images for varinat ${i+1}`
+            })
         }
 
         const oldImages = keptImages.map(url => ({
@@ -311,16 +366,16 @@ export const postEditProduct = asyncHandler(async (req, res) => {
 
 export const softDeleteProduct = asyncHandler(async (req, res) => {
 
-    console.log("getting controller")
+    // console.log("getting controller")
     const { id } = req.params;
 
     await Product.findByIdAndUpdate(id, {
         isDeleted: true,
-        isActive: false
+        isListed: false
     })
 
     res.json({
         success: true,
-        message: "Product sft deleted"
+        message: "Category soft deleted"
     })
 })

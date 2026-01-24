@@ -25,16 +25,21 @@ const router = express.Router();
 
 router.get("/home", showhomePage);
 
+//signup
 router.get("/signup", redirectIfAuthenticated, showSignup);
 router.post("/signup", postSignup);
 
+
+//otp verify
 router.get("/verify-otp",requireOtpSession ,showVerifyOtp);
 router.post("/verify-otp", verifyOtp);
 
+//resent-otp
 router.post("/resend-otp", resentOtp);
 router.get("/login",redirectIfAuthenticated, showLogin);
 router.post("/login", postLogin);
 
+//goggle auth
 router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/signup" }),
@@ -47,40 +52,53 @@ router.get("/auth/google/callback", passport.authenticate("google", { failureRed
         res.redirect("/home")
     })
 
+//forgot password
 router.get("/forgot-password",loadForgotPass);
 router.post("/forgot-password", postForgotPass)
 
+//reset-password
 router.get("/reset-password", getResetPassword);
 router.patch("/reset-password", postResetPassword);
 
+
+//profile
 router.get("/profile", requireAuth,getProfile);
 
+
+//edit profile
 router.get("/edit-profile",requireAuth,loadEditProfile);
 router.post("/edit-profile", postEditProfile);
 
+
+//change password
 router.get("/change-password", requireAuth,getChangePassword);
 router.patch("/change-Password", postChangePassword);
 
+
+//change email
 router.get("/change-email",requireAuth,loadChangeEmail);
 router.patch("/change-email",postChangeEmail);
 
+
+//address
 router.get("/address",requireAuth,getAddress);
 router.post("/add-address",addAddress);
 router.patch("/edit-address/:id",editAddress);
-
 router.delete("/delete-address/:id",deleteAddress);
 
+//profile photo
 router.post("/upload-photo",requireAuth,createUploader("profiles").single("profileImage"),uploadProfileImage);
 router.delete("/delete-photo",requireAuth,deleteProfileImage)
 
-
+//shop page
 router.get("/shop",getProducts);
 
+//product details
 router.get("/product-details",productDetails)
 router.get("/product/:id",productDetails)
 
 
-
+//logout
 router.post("/logout", logout);
 
 

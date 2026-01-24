@@ -6,7 +6,7 @@
 <%- include('../partials/adminSidebar') %>
 
     <main class="flex-1 p-3 overflow-y-auto bg-[#0d0f0d] min-h-screen text-gray-200">
-        <form id="addProductForm">
+        <form id="addProductForm" method="POST" action="/admin/add-products">
             <div class="max-w-[1200px] mx-auto mb-5">
                 <h2 class="text-2xl font-extrabold text-white tracking-tight">Create New Product</h2>
                 <a href="/admin/products"
@@ -330,22 +330,12 @@
             for (let i = 0; i < cards.length; i++) {
                 const card = cards[i];
 
-        // if (!card.images || card.images.length < 3) {
-        //     Swal.fire("Error", `Variant ${i + 1} needs at least 3 images`, "error");
-        //     return;
-        // }
-
-        // if (card.images.length > 5) {
-        //     Swal.fire("Error", `Variant ${i + 1} can have maximum 5 images`, "error");
-        //     return;
-        // }
 
         card.images.forEach(blob => {
             formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
         });
     }
 
-            // if (!valid) return Swal.fire("Error", "Each variant needs at least 3 images", "error");
 
 
             Swal.fire({

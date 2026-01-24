@@ -14,7 +14,7 @@ export const getProducts = asyncHandler(async (req, res) => {
         page = 1
     } = req.query;
 
-    const limit = 8;
+    const limit = 4;
     const skip = (page - 1) * limit;
 
 
