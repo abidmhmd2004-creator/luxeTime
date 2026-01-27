@@ -1,0 +1,295 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Luxe Time</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: black;
+        color: #ffffff;
+        /* Adjusted zoom: increased by 1px from previous version */
+        font-size: 14px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #050605;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #1a1d1b;
+        border-radius: 10px;
+    }
+
+    .glass-panel {
+        background: #181e18;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .step-active {
+        color: #22c55e;
+    }
+
+    .step-line {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .step-line-active {
+        background: #22c55e;
+    }
+</style>
+</head>
+
+<body class="antialiased min-h-screen">
+
+    <main class="max-w-[1100px] mx-auto px-6 py-6">
+
+        <div class="flex items-center justify-center gap-2 mb-8">
+            <div class="flex items-center gap-2 step-active">
+                <span
+                    class="w-5 h-5 rounded-full border border-[#22c55e] flex items-center justify-center text-[10px] font-bold">1</span>
+                <span class="text-[11px] font-black uppercase tracking-widest">Cart</span>
+            </div>
+            <div class="w-10 h-[1px] step-line-active"></div>
+            <div class="flex items-center gap-2 step-active">
+                <span
+                    class="w-5 h-5 rounded-full bg-[#22c55e] text-black flex items-center justify-center text-[10px] font-bold">2</span>
+                <span class="text-[11px] font-black uppercase tracking-widest">Checkout</span>
+            </div>
+            <div class="w-10 h-[1px] step-line"></div>
+            <div class="flex items-center gap-2 text-zinc-600">
+                <span
+                    class="w-5 h-5 rounded-full border border-zinc-800 flex items-center justify-center text-[10px] font-bold">3</span>
+                <span class="text-[11px] font-black uppercase tracking-widest">Payment</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+            <div class="lg:col-span-8 space-y-4">
+
+                <div class="glass-panel rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span
+                            class="w-7 h-7 rounded-full bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center text-[11px] font-bold">1</span>
+                        <h2 class="text-lg font-black tracking-tighter uppercase">Delivery Address</h2>
+                    </div>
+
+                    <div class="bg-[#121513] border border-[#22c55e]/30 rounded-xl p-4 relative group">
+                        <div class="absolute top-4 right-5">
+                            <span
+                                class="bg-[#22c55e] text-black text-[9px] font-black px-1.5 py-0.5 rounded-sm uppercase">HOME</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <input type="radio" checked class="mt-1 accent-[#22c55e] w-4 h-4">
+                            <div>
+                                <h4 class="font-bold text-white mb-0.5 text-sm">John Doe</h4>
+                                <p class="text-zinc-500 text-xs leading-relaxed max-w-sm">
+                                    123 Luxury Avenue, Skyline Tower, Unit 4B<br>New York, NY 10001
+                                </p>
+                                <p class="text-zinc-400 text-[10px] mt-2 font-bold">Mobile: +1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="toggleModal(true)"
+                        class="mt-4 flex items-center gap-2 text-[#22c55e] text-[10px] font-black uppercase tracking-widest hover:opacity-80 transition-all">
+                        <i class="fa-solid fa-plus"></i> Add New Address
+                    </button>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-5">
+                        <span
+                            class="w-7 h-7 rounded-full bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center text-[11px] font-bold">2</span>
+                        <h2 class="text-lg font-black tracking-tighter uppercase">Payment Method</h2>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label
+                            class="flex items-center justify-between p-4 bg-[#121513] border border-[#22c55e]/40 rounded-xl cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-credit-card text-[#22c55e] text-sm"></i>
+                                <span class="text-xs font-bold">Razorpay (Cards/UPI/Netbanking)</span>
+                            </div>
+                            <input type="radio" name="pay" checked class="accent-[#22c55e] w-4 h-4">
+                        </label>
+
+                        <label
+                            class="flex items-center justify-between p-4 bg-[#121513] border border-white/5 rounded-xl cursor-pointer hover:border-white/10">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-wallet text-zinc-500 text-sm"></i>
+                                <span class="text-xs font-bold text-zinc-400">Wallet</span>
+                            </div>
+                            <input type="radio" name="pay" class="accent-[#22c55e] w-4 h-4">
+                        </label>
+
+                        <label
+                            class="flex items-center justify-between p-4 bg-[#121513] border border-white/5 rounded-xl cursor-pointer hover:border-white/10">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-truck-fast text-zinc-500 text-sm"></i>
+                                <span class="text-xs font-bold text-zinc-400">Cash on Delivery Available</span>
+                            </div>
+                            <input type="radio" name="pay" class="accent-[#22c55e] w-4 h-4">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4">
+                <div class="glass-panel rounded-2xl p-6 sticky top-10">
+                    <h3 class="text-base font-black tracking-tighter uppercase mb-6">Order Summary</h3>
+
+                    <div class="space-y-4 mb-5">
+                        <div class="flex gap-3">
+                            <div class="w-12 h-12 bg-black rounded-lg border border-white/5 p-1 flex-shrink-0">
+                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100"
+                                    class="w-full h-full object-cover rounded">
+                            </div>
+                            <div class="flex-1">
+                                <h5 class="text-[11px] font-bold">Chronos Silver Elite</h5>
+                                <p class="text-[10px] text-zinc-500 font-bold uppercase mt-0.5">Qty: 1</p>
+                            </div>
+                            <span class="text-[11px] font-bold text-[#22c55e]">₹2,450</span>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <div class="w-12 h-12 bg-black rounded-lg border border-white/5 p-1 flex-shrink-0">
+                                <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=100"
+                                    class="w-full h-full object-cover rounded">
+                            </div>
+                            <div class="flex-1">
+                                <h5 class="text-[11px] font-bold">Royal Oak Gold</h5>
+                                <p class="text-[10px] text-zinc-500 font-bold uppercase mt-0.5">Qty: 1</p>
+                            </div>
+                            <span class="text-[11px] font-bold text-[#22c55e]">₹8,900</span>
+                        </div>
+                    </div>
+
+                    <div class="relative mb-4">
+                        <input type="text" placeholder="Coupon code"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs focus:outline-none focus:border-[#22c55e]/30">
+                        <button
+                            class="absolute right-1.5 top-1.5 bg-[#22c55e] text-black text-[9px] font-black px-3 py-1.5 rounded-md uppercase">Apply</button>
+                    </div>
+
+                    <div class="space-y-3 border-t border-white/5 pt-4 text-[11px] font-bold">
+                        <div class="flex justify-between text-zinc-500"><span>Subtotal</span> <span
+                                class="text-white">₹11,350</span></div>
+                        <div class="flex justify-between text-zinc-500"><span>Shipping</span> <span
+                                class="text-[#22c55e]">Free</span></div>
+                        <div class="flex justify-between text-lg font-black border-t border-white/5 pt-3">
+                            <span class="text-xs">Total</span>
+                            <span class="text-[#22c55e]">₹12,485</span>
+                        </div>
+                    </div>
+
+                    <button
+                        class="w-full bg-[#22c55e] text-black py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest mt-5 hover:brightness-110 shadow-lg shadow-[#22c55e]/10 transition-all">
+                        Place Order <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="addressModal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
+        <div class="glass-panel w-full max-w-lg rounded-2xl p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300"
+            id="modalContent">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-black uppercase tracking-tighter">New Address Details</h3>
+                <button onclick="toggleModal(false)" class="text-zinc-500 hover:text-white"><i
+                        class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
+
+            <form class="space-y-4">
+                <div>
+                    <label class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">Full
+                        Name</label>
+                    <input type="text" placeholder="Enter your full name"
+                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 transition-all">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">Mobile
+                            Number</label>
+                        <input type="text" placeholder="+91-000-000-0000"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 transition-all">
+                    </div>
+                    <div>
+                        <label
+                            class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">Pincode</label>
+                        <input type="text" placeholder="ZIP Code"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">Address
+                        Line</label>
+                    <input type="text" placeholder="House No, Street"
+                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 transition-all">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label
+                            class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">City</label>
+                        <input type="text" placeholder="City"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none">
+                    </div>
+                    <div>
+                        <label
+                            class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">State</label>
+                        <select
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none text-zinc-400">
+                            <option>Select State</option>
+                            <option>New York</option>
+                            <option>California</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="toggleModal(false)"
+                        class="flex-1 border border-white/10 py-3 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-white/5 transition-all">Cancel</button>
+                    <button type="button"
+                        class="flex-1 bg-[#22c55e] text-black py-3 rounded-lg text-[9px] font-black uppercase tracking-widest hover:brightness-110 transition-all">Save
+                        Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal(show) {
+            const modal = document.getElementById('addressModal');
+            const content = document.getElementById('modalContent');
+            if (show) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 300);
+            }
+        }
+    </script>

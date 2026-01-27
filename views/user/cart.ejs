@@ -1,0 +1,227 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#4ade80",
+                    "bg-main": "#0d0f0d",
+                    "card-inner": "#181e18",
+                }
+            }
+        }
+    }
+</script>
+<style>
+    body {
+        background-color: #0d0f0d;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        zoom: 0.9;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            zoom: 1;
+        }
+    }
+
+    .item-card {
+        background: #181e18;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .summary-card {
+        background: #181e18;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+<main class="max-w-[1200px] mx-auto px-4 py-8">
+    <nav class="text-[12px] text-gray-600 uppercase tracking-widest mb-4">
+        Home / Shop / <span class="text-gray-300">Cart</span>
+    </nav>
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+        <div>
+            <h1 class="text-4xl font-bold tracking-tight">Your Cart
+                <span class="text-sm font-medium text-gray-500 ml-2">(<%= cart ? cart.items.length : 0 %> Items)</span>
+            </h1>
+        </div>
+        <button
+            class="bg-white/5 hover:bg-white/10 text-white text-[12px] font-bold px-4 py-2 rounded-full flex items-center gap-2 transition uppercase tracking-widest border border-white/5">
+            <a href="/shop"> <i class="fa-solid fa-arrow-left"></i> Continue Shopping</a>
+        </button>
+    </div>
+
+    <% if (cart && cart.items.length> 0) { %>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <div class="lg:col-span-8 space-y-4">
+                <% cart.items.forEach(item=> { %>
+                    <div class="item-card rounded-2xl p-5 flex flex-col sm:flex-row items-center gap-6 relative">
+                        <div
+                            class="w-24 h-24 bg-black/40 rounded-2xl overflow-hidden flex items-center justify-center border border-white/5 shrink-0">
+                            <img src="<%= item.variant.images[0].url %>" class="w-16 h-16 object-contain"
+                                alt="<%= item.product.name %>">
+                        </div>
+
+                        <div class="flex-1 text-center sm:text-left">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-bold text-gray-100">
+                                    <%= item.product.name %>
+                                </h3>
+                                <button class="text-gray-600 hover:text-red-500 transition sm:hidden">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                            <p class="text-[9px] text-gray-500 uppercase tracking-widest mb-4">
+                                Strap: <%= item.product.specifications.strapType %>
+                            </p>
+
+                            <div class="flex items-center justify-center sm:justify-start gap-6">
+                                <span class="text-lg font-bold">₹<%= item.variant.finalPrice.toLocaleString("en-IN") %>
+                                </span>
+                                <div class="flex items-center bg-black/40 border border-white/5 rounded-lg">
+                                    <button onclick="updateQty('<%= item.variant._id %>', -1)"
+                                        class="px-3 py-1 text-gray-500 hover:text-white">-</button>
+                                    <span class="px-3 text-sm font-bold border-x border-white/5">
+                                        <%= item.quantity %>
+                                    </span>
+                                    <button onclick="updateQty('<%= item.variant._id %>', 1)"
+                                        class="px-3 py-1 text-gray-500 hover:text-white">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hidden sm:flex flex-col items-end justify-between self-stretch">
+                            <button onclick="removeFromCart('<%= item.variant._id %>')"
+                                class="text-gray-700 hover:text-red-500 transition">
+                                <i class="fa-solid fa-trash-can text-base"></i>
+                            </button>
+                            <div class="text-right">
+                                <p class="text-[9px] text-gray-500 uppercase font-black">Subtotal</p>
+                                <p class="text-primary font-bold text-xl">₹<%= (item.variant.finalPrice *
+                                        item.quantity).toLocaleString("en-IN") %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+
+            <div class="lg:col-span-4 sticky top-8">
+                <div class="summary-card rounded-[2rem] p-8">
+                    <h2 class="text-xl font-bold mb-6">Order Summary</h2>
+
+                    <div class="space-y-4 text-[12px] text-gray-400">
+                        <div class="flex justify-between">
+                            <span>Subtotal</span>
+                            <span class="text-white font-bold">₹<%= summary.subtotal.toLocaleString("en-IN") %></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Shipping estimate</span>
+                            <span class="text-primary font-bold">
+                                <%= summary.shipping===0 ? "Free" : `₹${summary.shipping}` %>
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Tax estimate (10%)</span>
+                            <span class="text-white font-bold">₹<%= summary.tax.toLocaleString("en-IN") %></span>
+                        </div>
+                        <div class="flex justify-between text-primary font-bold border-t border-white/5 pt-4 mt-4">
+                            <span>Discount</span>
+                            <span>-₹<%= summary.discount.toLocaleString("en-IN") %></span>
+                        </div>
+                    </div>
+
+                    <div class="my-8 flex justify-between items-end">
+                        <div>
+                            <p class="text-[11px] font-bold uppercase">Total Amount</p>
+                            <p class="text-[9px] text-gray-500 uppercase tracking-widest">Including all taxes</p>
+                        </div>
+                        <p class="text-2xl font-black text-primary">₹<%= summary.total.toLocaleString("en-IN") %>
+                        </p>
+                    </div>
+
+                    <button onclick="window.location.href='/checkout'"
+                        class="w-full bg-primary hover:bg-green-400 text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 transition text-sm shadow-[0_10px_20px_rgba(74,222,128,0.15)] uppercase">
+                        Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <% } else { %>
+            <div class="flex flex-col items-center justify-center py-24 text-center">
+                <i class="fa-solid fa-cart-shopping text-6xl text-gray-800 mb-6"></i>
+                <h2 class="text-2xl font-bold text-gray-200 mb-2">Your cart is empty</h2>
+                <p class="text-base text-gray-500 mb-8">Looks like you haven’t added anything yet</p>
+                <a href="/shop"
+                    class="px-8 py-3 bg-primary text-black font-bold rounded-xl hover:bg-green-400 transition transform hover:scale-105 shadow-lg">
+                    Start Shopping
+                </a>
+            </div>
+            <% } %>
+</main>
+
+
+<script>
+    function removeFromCart(variantId) {
+        Swal.fire({
+            title: "Remove item?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Remove"
+        })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/cart/remove/${variantId}`, {
+                        method: "DELETE"
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Item Removed",
+                                    timer: 1200,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    location.reload()
+                                });
+                            }
+                        });
+                }
+            });
+    }
+
+    async function updateQty(variantId, change) {
+        try {
+            const res = await axios.post("/cart/update-qty", {
+                variantId: variantId,
+                change: change
+            })
+
+            if (res.data.success) {
+                location.reload();
+            } else {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Oops!",
+                    text: res.data.message || "Action not allowed"
+                });
+            }
+        } catch (err) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops!",
+                text: err.response.data?.message || "Something went wrong.Try again."
+            })
+        }
+    }
+</script>

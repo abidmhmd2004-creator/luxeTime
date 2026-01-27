@@ -14,7 +14,7 @@ export const getProducts = asyncHandler(async (req, res) => {
         page = 1
     } = req.query;
 
-    const limit = 4;
+    const limit = 8;
     const skip = (page - 1) * limit;
 
 
@@ -44,7 +44,7 @@ export const getProducts = asyncHandler(async (req, res) => {
         const variantfilter = {
             product: product._id,
             isActive: true,
-            stock: { $gt: 0 }
+            
         }
 
         if (price) {
@@ -107,15 +107,17 @@ export const productDetails = asyncHandler(async (req, res) => {
     })
         .populate("category")
         .lean()
+        // console.log(product)
 
 
-    if (!product.category || !product.category.isListed) {
-        return res.redirect("/shop");
-    }
+    // if (!product || !product.isListed) {
+    //     return res.redirect("/shop");
+    // }
 
     const variants = await Variant.find({
         product: product._id,
-        isActive: true
+        isActive: true,
+        isDeleted: false
     })
         .sort({ createdAt: -1 })
         .lean()

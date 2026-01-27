@@ -16,6 +16,8 @@ import { deleteProfileImage, getChangePassword, getProfile, loadChangeEmail, loa
 import { addAddress, deleteAddress, editAddress, getAddress } from "../controllers/user/address.controller.js";
 import createUploader from "../middlewares/upload.middleware.js";
 import { getProducts, productDetails } from "../controllers/user/shop.controller.js";
+import { addToCart, getCart, removeFromCart, updateQty } from "../controllers/user/cart.controller.js";
+import { getCheckoutPage } from "../controllers/user/checkout.controller.js";
 
 
 // const uploadProfile =createUploader("profile");
@@ -97,6 +99,13 @@ router.get("/shop",getProducts);
 router.get("/product-details",productDetails)
 router.get("/product/:id",productDetails)
 
+//cart
+router.get("/cart",requireAuth,getCart);
+router.post("/cart/add",requireAuth,addToCart);
+router.delete("/cart/remove/:variantId",removeFromCart)
+router.post("/cart/update-qty",updateQty)
+
+router.get("/checkout",getCheckoutPage);
 
 //logout
 router.post("/logout", logout);
