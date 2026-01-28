@@ -16,7 +16,7 @@ export const getCart = asyncHandler(async (req, res) => {
             subtotal += item.variant.finalPrice * item.quantity
         })
     }
-    const taxRate = 0.10;
+    const taxRate = 0.18;
     const tax = Math.round(subtotal * taxRate);
     const shipping = 0;
     const discount = 0;
@@ -63,11 +63,11 @@ export const addToCart = asyncHandler(async (req, res) => {
         })
     }
     if (quantity > MAX_QTY) {
-  return res.json({
-    success: false,
-    message: `Maximum ${MAX_QTY} units allowed`
-  });
-}
+        return res.json({
+            success: false,
+            message: `Maximum ${MAX_QTY} units allowed`
+        });
+    }
 
 
     if (variant.stock < quantity) {
@@ -97,11 +97,11 @@ export const addToCart = asyncHandler(async (req, res) => {
         if (itemIndex > -1) {
             const newQty = cart.items[itemIndex].quantity + quantity;
             if (newQty > MAX_QTY) {
-  return res.json({
-    success: false,
-    message: `You can only buy ${MAX_QTY} units`
-  });
-}
+                return res.json({
+                    success: false,
+                    message: `You can only buy ${MAX_QTY} units`
+                });
+            }
 
 
             if (newQty > variant.stock) {
@@ -185,11 +185,11 @@ export const updateQty = asyncHandler(async (req, res) => {
         })
     }
     if (newQty > MAX_QTY) {
-  return res.json({
-    success: false,
-    message: `You can only buy ${MAX_QTY} units`
-  });
-}
+        return res.json({
+            success: false,
+            message: `You can only buy ${MAX_QTY} units`
+        });
+    }
 
 
     if (newQty > variant.stock) {

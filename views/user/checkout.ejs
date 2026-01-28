@@ -1,11 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | Luxe Time</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
@@ -13,7 +5,6 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         background-color: black;
         color: #ffffff;
-        /* Adjusted zoom: increased by 1px from previous version */
         font-size: 14px;
     }
 
@@ -35,6 +26,25 @@
         border: 1px solid rgba(255, 255, 255, 0.03);
     }
 
+    .selection-active {
+        border-color: #20703d !important;
+
+    }
+
+    .border-default {
+        border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* MODAL ERROR TEXT */
+    .error-text {
+        color: #ef4444;
+        font-size: 8px;
+        font-weight: 400;
+        margin-top: 4px;
+        display: block;
+        text-transform: none;
+    }
+
     .step-active {
         color: #22c55e;
     }
@@ -47,13 +57,10 @@
         background: #22c55e;
     }
 </style>
-</head>
 
 <body class="antialiased min-h-screen">
-
     <main class="max-w-[1100px] mx-auto px-6 py-6">
-
-        <div class="flex items-center justify-center gap-2 mb-8">
+        <div class="flex items-center justify-center gap-2 mb-4">
             <div class="flex items-center gap-2 step-active">
                 <span
                     class="w-5 h-5 rounded-full border border-[#22c55e] flex items-center justify-center text-[10px] font-bold">1</span>
@@ -71,12 +78,18 @@
                     class="w-5 h-5 rounded-full border border-zinc-800 flex items-center justify-center text-[10px] font-bold">3</span>
                 <span class="text-[11px] font-black uppercase tracking-widest">Payment</span>
             </div>
+
+        </div>
+        <div class="mb-4 flex justify-end">
+            <a href="/cart"
+                class="inline-flex items-center  text-zinc-500 hover:text-[#22c55e] transition-colors group">
+                <i class="fa-solid fa-arrow-left-long text-[10px] group-hover:-translate-x-1 transition-transform"></i>
+                <span class="text-[10px] font-black uppercase tracking-[0.2em]">Return to Cart</span>
+            </a>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-
             <div class="lg:col-span-8 space-y-4">
-
                 <div class="glass-panel rounded-2xl p-5">
                     <div class="flex items-center gap-3 mb-4">
                         <span
@@ -84,27 +97,42 @@
                         <h2 class="text-lg font-black tracking-tighter uppercase">Delivery Address</h2>
                     </div>
 
-                    <div class="bg-[#121513] border border-[#22c55e]/30 rounded-xl p-4 relative group">
-                        <div class="absolute top-4 right-5">
-                            <span
-                                class="bg-[#22c55e] text-black text-[9px] font-black px-1.5 py-0.5 rounded-sm uppercase">HOME</span>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <input type="radio" checked class="mt-1 accent-[#22c55e] w-4 h-4">
-                            <div>
-                                <h4 class="font-bold text-white mb-0.5 text-sm">John Doe</h4>
-                                <p class="text-zinc-500 text-xs leading-relaxed max-w-sm">
-                                    123 Luxury Avenue, Skyline Tower, Unit 4B<br>New York, NY 10001
-                                </p>
-                                <p class="text-zinc-400 text-[10px] mt-2 font-bold">Mobile: +1 (555) 123-4567</p>
-                            </div>
-                        </div>
+                    <div class="space-y-3" id="addressContainer">
+                        <% if (addresses && addresses.length> 0) { %>
+                            <% addresses.forEach((addr, index)=> { %>
+                                <div
+                                    class="bg-[#121513] border transition-all duration-300 address-card <%= index === 0 ? 'selection-active' : 'border-default' %> rounded-xl p-4 relative">
+                                    <div class="absolute top-4 right-5">
+                                        <span
+                                            class="bg-[#22c55e] text-black text-[9px] font-black px-1.5 py-0.5 rounded-sm uppercase">
+                                            <%= addr.addressType %>
+                                        </span>
+                                    </div>
+                                    <label class="flex items-start gap-3 cursor-pointer">
+                                        <input type="radio" name="selectedAddress" value="<%= addr._id %>" <%=index===0
+                                            ? 'checked' : '' %>
+                                        onchange="handleSelection(this, '.address-card')"
+                                        class="mt-1 accent-[#22c55e] w-4 h-4">
+                                        <div>
+                                            <h4 class="font-bold text-white mb-0.5 text-sm">
+                                                <%= addr.fullName %>
+                                            </h4>
+                                            <p class="text-zinc-500 text-xs leading-relaxed">
+                                                <%= addr.streetAddress %>, <%= addr.city %>, <%= addr.state %> - <%=
+                                                                addr.pincode %>
+                                            </p>
+                                            <p class="text-zinc-400 text-[10px] mt-2 font-bold">Mobile: <%= addr.phone
+                                                    %>
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <% }) %>
+                                    <% } %>
                     </div>
-
                     <button onclick="toggleModal(true)"
-                        class="mt-4 flex items-center gap-2 text-[#22c55e] text-[10px] font-black uppercase tracking-widest hover:opacity-80 transition-all">
-                        <i class="fa-solid fa-plus"></i> Add New Address
-                    </button>
+                        class="mt-4 text-[#22c55e] text-[10px] font-black uppercase tracking-widest hover:opacity-80">+
+                        Add New Address</button>
                 </div>
 
                 <div class="glass-panel rounded-2xl p-5">
@@ -114,65 +142,67 @@
                         <h2 class="text-lg font-black tracking-tighter uppercase">Payment Method</h2>
                     </div>
 
-                    <div class="space-y-3">
+                    <div class="space-y-3" id="paymentContainer">
                         <label
-                            class="flex items-center justify-between p-4 bg-[#121513] border border-[#22c55e]/40 rounded-xl cursor-pointer">
+                            class="payment-card flex items-center justify-between p-4 bg-[#121513] border selection-active rounded-xl cursor-pointer transition-all">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-credit-card text-[#22c55e] text-sm"></i>
                                 <span class="text-xs font-bold">Razorpay (Cards/UPI/Netbanking)</span>
                             </div>
-                            <input type="radio" name="pay" checked class="accent-[#22c55e] w-4 h-4">
+                            <input type="radio" name="paymentMethod" value="Razorpay" checked
+                                onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
                         </label>
 
                         <label
-                            class="flex items-center justify-between p-4 bg-[#121513] border border-white/5 rounded-xl cursor-pointer hover:border-white/10">
+                            class="payment-card flex items-center justify-between p-4 bg-[#121513] border border-default rounded-xl cursor-pointer transition-all">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-wallet text-zinc-500 text-sm"></i>
-                                <span class="text-xs font-bold text-zinc-400">Wallet</span>
+                                <span class="text-xs font-bold">Wallet</span>
                             </div>
-                            <input type="radio" name="pay" class="accent-[#22c55e] w-4 h-4">
+                            <input type="radio" name="paymentMethod" value="Wallet"
+                                onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
                         </label>
 
                         <label
-                            class="flex items-center justify-between p-4 bg-[#121513] border border-white/5 rounded-xl cursor-pointer hover:border-white/10">
+                            class="payment-card flex items-center justify-between p-4 bg-[#121513] border border-default rounded-xl cursor-pointer transition-all">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-truck-fast text-zinc-500 text-sm"></i>
-                                <span class="text-xs font-bold text-zinc-400">Cash on Delivery Available</span>
+                                <span class="text-xs font-bold">Cash on Delivery</span>
                             </div>
-                            <input type="radio" name="pay" class="accent-[#22c55e] w-4 h-4">
+                            <input type="radio" name="paymentMethod" value="COD"
+                                onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
                         </label>
                     </div>
                 </div>
             </div>
-
             <div class="lg:col-span-4">
-                <div class="glass-panel rounded-2xl p-6 sticky top-10">
+                <div class="glass-panel rounded-2xl p-4 sticky top-6">
                     <h3 class="text-base font-black tracking-tighter uppercase mb-6">Order Summary</h3>
 
-                    <div class="space-y-4 mb-5">
-                        <div class="flex gap-3">
-                            <div class="w-12 h-12 bg-black rounded-lg border border-white/5 p-1 flex-shrink-0">
-                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100"
-                                    class="w-full h-full object-cover rounded">
+                    <div class="space-y-4 mb-5 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+                        <% let subtotal=0; let totalDiscount=0; cart.items.forEach(item=> {
+                            let itemBaseTotal = item.variant.basePrice * item.quantity;
+                            let itemOfferTotal = item.variant.finalPrice * item.quantity;
+                            subtotal += itemBaseTotal;
+                            totalDiscount += (itemBaseTotal - itemOfferTotal);
+                            %>
+                            <div class="flex gap-3">
+                                <div class="w-12 h-12 bg-black rounded-lg border border-white/5 p-1 flex-shrink-0">
+                                    <img src="<%= item.variant.images[0].url %>"
+                                        class="w-full h-full object-cover rounded">
+                                </div>
+                                <div class="flex-1">
+                                    <h5 class="text-[11px] font-bold">
+                                        <%= item.product.name %>
+                                    </h5>
+                                    <p class="text-[10px] text-zinc-500 font-bold uppercase mt-0.5">Qty: <%=
+                                            item.quantity %> | <%= item.variant.color %>
+                                    </p>
+                                </div>
+                                <span class="text-[11px] font-bold text-[#22c55e]">₹<%= itemOfferTotal.toLocaleString()
+                                        %></span>
                             </div>
-                            <div class="flex-1">
-                                <h5 class="text-[11px] font-bold">Chronos Silver Elite</h5>
-                                <p class="text-[10px] text-zinc-500 font-bold uppercase mt-0.5">Qty: 1</p>
-                            </div>
-                            <span class="text-[11px] font-bold text-[#22c55e]">₹2,450</span>
-                        </div>
-
-                        <div class="flex gap-3">
-                            <div class="w-12 h-12 bg-black rounded-lg border border-white/5 p-1 flex-shrink-0">
-                                <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?w=100"
-                                    class="w-full h-full object-cover rounded">
-                            </div>
-                            <div class="flex-1">
-                                <h5 class="text-[11px] font-bold">Royal Oak Gold</h5>
-                                <p class="text-[10px] text-zinc-500 font-bold uppercase mt-0.5">Qty: 1</p>
-                            </div>
-                            <span class="text-[11px] font-bold text-[#22c55e]">₹8,900</span>
-                        </div>
+                            <% }) %>
                     </div>
 
                     <div class="relative mb-4">
@@ -182,21 +212,36 @@
                             class="absolute right-1.5 top-1.5 bg-[#22c55e] text-black text-[9px] font-black px-3 py-1.5 rounded-md uppercase">Apply</button>
                     </div>
 
-                    <div class="space-y-3 border-t border-white/5 pt-4 text-[11px] font-bold">
-                        <div class="flex justify-between text-zinc-500"><span>Subtotal</span> <span
-                                class="text-white">₹11,350</span></div>
-                        <div class="flex justify-between text-zinc-500"><span>Shipping</span> <span
-                                class="text-[#22c55e]">Free</span></div>
-                        <div class="flex justify-between text-lg font-black border-t border-white/5 pt-3">
-                            <span class="text-xs">Total</span>
-                            <span class="text-[#22c55e]">₹12,485</span>
-                        </div>
-                    </div>
+                    <% let tax=Math.round((subtotal - totalDiscount) * 0.18); let finalTotal=(subtotal - totalDiscount)
+                        + tax; %>
 
-                    <button
-                        class="w-full bg-[#22c55e] text-black py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest mt-5 hover:brightness-110 shadow-lg shadow-[#22c55e]/10 transition-all">
-                        Place Order <i class="fa-solid fa-arrow-right ml-1"></i>
-                    </button>
+                        <div class="space-y-3 border-t border-white/5 pt-4 text-[11px] font-bold">
+                            <div class="flex justify-between text-zinc-500">
+                                <span>Subtotal</span>
+                                <span class="text-white">₹<%= subtotal.toLocaleString() %></span>
+                            </div>
+                            <div class="flex justify-between text-zinc-500">
+                                <span>Discount</span>
+                                <span class="text-red-500">- ₹<%= totalDiscount.toLocaleString() %></span>
+                            </div>
+                            <div class="flex justify-between text-zinc-500">
+                                <span>Tax (18% GST)</span>
+                                <span class="text-white">₹<%= tax.toLocaleString() %></span>
+                            </div>
+                            <div class="flex justify-between text-zinc-500">
+                                <span>Shipping</span>
+                                <span class="text-[#22c55e]">Free</span>
+                            </div>
+                            <div class="flex justify-between text-lg font-black border-t border-white/5 pt-3">
+                                <span class="text-xs uppercase">Total</span>
+                                <span class="text-[#22c55e]">₹<%= finalTotal.toLocaleString() %></span>
+                            </div>
+                        </div>
+
+                        <button id="placeOrderBtn" 
+                            class="w-full bg-[#22c55e] text-black py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest mt-5 hover:brightness-110 shadow-lg shadow-[#22c55e]/10 transition-all">
+                            Place Order <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
                 </div>
             </div>
         </div>
@@ -206,90 +251,244 @@
         class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
         <div class="glass-panel w-full max-w-lg rounded-2xl p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300"
             id="modalContent">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-black uppercase tracking-tighter">New Address Details</h3>
-                <button onclick="toggleModal(false)" class="text-zinc-500 hover:text-white"><i
-                        class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
-
-            <form class="space-y-4">
+            <h3 class="text-lg font-black uppercase mb-6">New Address Details</h3>
+            <form id="addAddressForm" class="space-y-4">
                 <div>
-                    <label class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">Full
-                        Name</label>
-                    <input type="text" placeholder="Enter your full name"
-                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 transition-all">
+                    <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Full Name</label>
+                    <input type="text" name="fullName"
+                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                    <p id="err-fullName" class="error-text hidden"></p>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">Mobile
-                            Number</label>
-                        <input type="text" placeholder="+91-000-000-0000"
-                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 transition-all">
+                        <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Mobile Number</label>
+                        <input type="tel" name="phone"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                        <p id="err-phone" class="error-text hidden"></p>
                     </div>
                     <div>
-                        <label
-                            class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">Pincode</label>
-                        <input type="text" placeholder="ZIP Code"
-                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 transition-all">
+                        <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Pincode</label>
+                        <input type="text" name="pincode"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                        <p id="err-pincode" class="error-text hidden"></p>
                     </div>
                 </div>
-
                 <div>
-                    <label class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">Address
-                        Line</label>
-                    <input type="text" placeholder="House No, Street"
-                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 transition-all">
+                    <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Street Address</label>
+                    <input type="text" name="streetAddress"
+                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                    <p id="err-streetAddress" class="error-text hidden"></p>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label
-                            class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">City</label>
-                        <input type="text" placeholder="City"
-                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none">
+                        <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">City</label>
+                        <input type="text" name="city"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                        <p id="err-city" class="error-text hidden"></p>
                     </div>
                     <div>
-                        <label
-                            class="text-[9px] font-black text-zinc-500 uppercase tracking-widest block mb-1">State</label>
-                        <select
-                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none text-zinc-400">
-                            <option>Select State</option>
-                            <option>New York</option>
-                            <option>California</option>
-                        </select>
+                        <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">State</label>
+                        <input type="text" name="state"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                        <p id="err-state" class="error-text hidden"></p>
                     </div>
                 </div>
-
-                <div class="flex gap-3 pt-2">
+                <div class="flex gap-3 pt-4">
                     <button type="button" onclick="toggleModal(false)"
-                        class="flex-1 border border-white/10 py-3 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-white/5 transition-all">Cancel</button>
-                    <button type="button"
-                        class="flex-1 bg-[#22c55e] text-black py-3 rounded-lg text-[9px] font-black uppercase tracking-widest hover:brightness-110 transition-all">Save
+                        class="flex-1 border border-white/10 py-3 rounded-lg text-[9px] font-black uppercase text-white">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 bg-[#22c55e] text-black py-3 rounded-lg text-[9px] font-black uppercase">Save
                         Address</button>
                 </div>
             </form>
         </div>
     </div>
-
     <script>
+        function handleSelection(input, cardClass) {
+            const container = input.closest('.space-y-3');
+            const cards = container.querySelectorAll(cardClass);
+
+            cards.forEach(card => {
+                card.classList.remove('selection-active');
+                card.classList.add('border-default');
+            });
+
+            const selectedCard = input.closest(cardClass);
+            selectedCard.classList.add('selection-active');
+            selectedCard.classList.remove('border-default');
+        }
+
         function toggleModal(show) {
             const modal = document.getElementById('addressModal');
             const content = document.getElementById('modalContent');
             if (show) {
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
-                setTimeout(() => {
-                    content.classList.remove('scale-95', 'opacity-0');
-                    content.classList.add('scale-100', 'opacity-100');
-                }, 10);
+                setTimeout(() => content.classList.add('scale-100', 'opacity-100'), 10);
             } else {
                 content.classList.remove('scale-100', 'opacity-100');
-                content.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('flex');
-                }, 300);
+                setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
             }
         }
+
+        // VALIDATION & SUBMISSION
+        document.getElementById('addAddressForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.error-text').forEach(p => p.classList.add('hidden'));
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            let isValid = true;
+
+            const showError = (field, msg) => {
+                const p = document.getElementById(`err-${field}`);
+                p.innerText = msg;
+                p.classList.remove('hidden');
+                isValid = false;
+            };
+
+            if (!data.fullName.trim()) showError('fullName', 'Name is required');
+            if (!/^\d{10}$/.test(data.phone)) showError('phone', '10-digit phone required');
+            if (!/^\d{6}$/.test(data.pincode)) showError('pincode', '6-digit pincode required');
+            if (!data.streetAddress.trim()) showError('streetAddress', 'Address required');
+            if (!data.city.trim()) showError('city', 'City required');
+            if (!data.state.trim()) showError('state', 'State required');
+
+            if (!isValid) return;
+
+            try {
+                const response = await fetch('/address-checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.redirected) {
+                    Swal.fire({ 
+                        icon: 'success',
+                        title: 'Success',
+                        background: '#181e18', 
+                        color: '#fff', 
+                        timer: 1500, 
+                        showConfirmButton: false 
+                    })
+                        .then(() => window.location.href = response.url);
+                    return;
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    location.reload();
+                } else {
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'Error', 
+                        text: result.message, 
+                        background: '#181e18', 
+                        color: '#fff' 
+                    });
+                }
+            } catch (err) {
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Error', 
+                    text: 'Server error', 
+                    background: '#181e18', 
+                    color: '#fff' 
+                });
+            }
+        });
+        document.getElementById("placeOrderBtn").addEventListener("click", async function () {
+
+  const selectedAddress = document.querySelector(
+    'input[name="selectedAddress"]:checked'
+  );
+
+  if (!selectedAddress) {
+    return Swal.fire({
+      icon: "warning",
+      title: "Address Required",
+      text: "Please select a delivery address",
+      background: "#181e18",
+      color: "#fff",
+      confirmButtonColor: "#22c55e"
+    });
+  }
+
+  const selectedPayment = document.querySelector(
+    'input[name="paymentMethod"]:checked'
+  );
+
+  if (!selectedPayment) {
+    return Swal.fire({
+      icon: "warning",
+      title: "Payment Method Required",
+      text: "Please select a payment method",
+      background: "#181e18",
+      color: "#fff",
+      confirmButtonColor: "#22c55e"
+    });
+  }
+
+  const addressId = selectedAddress.value;
+  const paymentMethod = selectedPayment.value;
+
+  this.disabled = true;
+  this.innerText = "Processing...";
+
+  try {
+    const response = await fetch("/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        addressId,
+        paymentMethod
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      this.disabled = false;
+      this.innerText = "Place Order";
+
+      return Swal.fire({
+        icon: "error",
+        title: "Checkout Failed",
+        text: result.message,
+        background: "#181e18",
+        color: "#fff",
+        confirmButtonColor: "#22c55e"
+      });
+    }
+
+    Swal.fire({
+      icon: "success",
+      title: "Order Placed",
+      text: "Redirecting...",
+      timer: 1500,
+      showConfirmButton: false,
+      background: "#181e18",
+      color: "#fff"
+    }).then(() => {
+      window.location.href = result.redirectUrl;
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    this.disabled = false;
+    this.innerText = "Place Order";
+
+    Swal.fire({
+      icon: "error",
+      title: "Server Error",
+      text: "Please try again later",
+      background: "#181e18",
+      color: "#fff"
+    });
+  }
+});
     </script>

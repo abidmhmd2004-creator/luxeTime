@@ -168,7 +168,7 @@
 
             <div class="bg-white/5 border border-white/10 rounded-xl p-4 mb-6">
                 <div class="flex items-center gap-2 text-[10px] font-bold mb-3 uppercase tracking-wider">
-                    <span class="material-symbols-rounded text-primary text-sm">verified</span> Product Highlights
+                    <span class="material-symbols-rounded text-primary text-sm">verified</span> Technical Specifications
                 </div>
                 <div class="grid grid-cols-2 gap-y-2 text-[10px] text-gray-400">
                     <div class="flex items-center gap-2">
@@ -213,14 +213,18 @@
         <div class="flex gap-8 border-b border-white/5 mb-6 overflow-x-auto pb-3">
             <button
                 class="text-primary font-bold text-[10px] uppercase tracking-widest border-b border-primary pb-3">Specifications</button>
-            <button
-                class="text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:text-white pb-3">Description</button>
+            <!-- <button
+                class="text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:text-white pb-3">Description</button> -->
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="md:col-span-2">
-                <h2 class="text-sm font-bold mb-4">Technical Specifications</h2>
+                <h2 class="text-sm font-bold mb-4">Product Highlights</h2>
                 <div class="space-y-px rounded overflow-hidden border border-white/5">
+                    <div class="grid grid-cols-2 bg-white/5 p-3"><span class="text-gray-500 text-[10px]">
+                            Category</span><span class="text-white text-[10px]">
+                            <%= product.category?.name || "N/A" %>
+                        </span></div>
                     <div class="grid grid-cols-2 bg-white/5 p-3"><span class="text-gray-500 text-[10px]">Case
                             Diameter</span><span class="text-white text-[10px]">
                             <%= product.specifications.caseSize %>

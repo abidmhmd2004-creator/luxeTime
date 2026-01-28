@@ -44,7 +44,7 @@ export const getProducts = asyncHandler(async (req, res) => {
         const variantfilter = {
             product: product._id,
             isActive: true,
-            
+
         }
 
         if (price) {
@@ -56,9 +56,9 @@ export const getProducts = asyncHandler(async (req, res) => {
         }
 
         const variant = await Variant.findOne(variantfilter)
-        .sort({finalPrice:1})
-        .lean()
-        
+            .sort({ finalPrice: 1 })
+            .lean()
+
 
         if (!variant) continue;
 
@@ -68,15 +68,15 @@ export const getProducts = asyncHandler(async (req, res) => {
         finalProducts.push(product);
 
     }
-     if (sort === "new") {
-            finalProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        }
-        if (sort === "pricelow") {
-            finalProducts.sort((a, b) => a.variant.basePrice - b.variant.basePrice)
-        }
-        if (sort === "pricehigh") {
-            finalProducts.sort((a, b) => b.variant.basePrice - a.variant.basePrice)
-        }
+    if (sort === "new") {
+        finalProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    }
+    if (sort === "pricelow") {
+        finalProducts.sort((a, b) => a.variant.basePrice - b.variant.basePrice)
+    }
+    if (sort === "pricehigh") {
+        finalProducts.sort((a, b) => b.variant.basePrice - a.variant.basePrice)
+    }
 
 
 
@@ -105,14 +105,15 @@ export const productDetails = asyncHandler(async (req, res) => {
         _id: id,
         isActive: true
     })
-        .populate("category")
-        .lean()
-        // console.log(product)
+        .populate({
+            path: "category",
+            select:"name",
+            match: { isListed: true }
+        });
 
-
-    // if (!product || !product.isListed) {
-    //     return res.redirect("/shop");
-    // }
+    if (!product || !product.category) {
+        return res.redirect("/shop");
+    }
 
     const variants = await Variant.find({
         product: product._id,
