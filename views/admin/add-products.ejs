@@ -31,7 +31,7 @@
                                 <label
                                     class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Product
                                     Name *</label>
-                                <input type="text" name="name" 
+                                <input type="text" name="name"
                                     class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
                             </div>
                             <div class="grid grid-cols-2 gap-3">
@@ -102,13 +102,13 @@
                                         <div class="col-span-2">
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Color
                                                 Name</label>
-                                            <input type="text" name="variants[0][color]" 
+                                            <input type="text" name="variants[0][color]"
                                                 class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                                         </div>
                                         <div>
                                             <label
                                                 class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Stock</label>
-                                            <input type="number" name="variants[0][stock]" 
+                                            <input type="number" name="variants[0][stock]"
                                                 class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                                         </div>
                                         <div>
@@ -124,6 +124,17 @@
                                                 class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
                                                 value="0">
                                         </div>
+                                        <!-- <div>
+                                            <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
+                                                Expiry </label>
+                                                <div class="relative">
+                                                <input type="date" id="offerExpiry" name="offerExpiry"
+                                                    class="offerExpiry  w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white/60 outline-none">
+                                    
+                                                <i
+                                                    class="fa-solid fa-calendar-days  absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
+                                                </div>
+                                        </div> -->
                                         <div>
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Final
                                                 Price</label>
@@ -324,17 +335,17 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const cards = document.querySelectorAll('.variant-card');
-             if (!validateVariantPrices()) return;
+            if (!validateVariantPrices()) return;
 
 
             for (let i = 0; i < cards.length; i++) {
                 const card = cards[i];
 
 
-        card.images.forEach(blob => {
-            formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
-        });
-    }
+                card.images.forEach(blob => {
+                    formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
+                });
+            }
 
 
 
@@ -357,34 +368,34 @@
             }
         });
         function validateVariantPrices() {
-    const cards = document.querySelectorAll('.variant-card');
+            const cards = document.querySelectorAll('.variant-card');
 
-    for (let i = 0; i < cards.length; i++) {
-        const card = cards[i];
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
 
-        const base = parseInt(card.querySelector('.base-price-input').value) || 0;
-        const offer = parseInt(card.querySelector('.offer-input').value) || 0;
-        const final = Math.round(base - (base * offer / 100));
+                const base = parseInt(card.querySelector('.base-price-input').value) || 0;
+                const offer = parseInt(card.querySelector('.offer-input').value) || 0;
+                const final = Math.round(base - (base * offer / 100));
 
-        if (base <= 0) {
-            Swal.fire("Error", `Variant ${i + 1}: Base price must be greater than 0`, "error");
-            return false;
+                if (base <= 0) {
+                    Swal.fire("Error", `Variant ${i + 1}: Base price must be greater than 0`, "error");
+                    return false;
+                }
+
+                if (offer < 0 || offer > 90) {
+                    Swal.fire("Error", `Variant ${i + 1}: Offer must be between 0 and 90%`, "error");
+                    return false;
+                }
+
+                if (final > base) {
+                    Swal.fire(
+                        "Error",
+                        `Variant ${i + 1}: Final price must be less than base price`,
+                        "error"
+                    );
+                    return false;
+                }
+            }
+            return true;
         }
-
-        if (offer < 0 || offer > 90) {
-            Swal.fire("Error", `Variant ${i + 1}: Offer must be between 0 and 90%`, "error");
-            return false;
-        }
-
-        if (final > base) {
-            Swal.fire(
-                "Error",
-                `Variant ${i + 1}: Final price must be less than base price`,
-                "error"
-            );
-            return false;
-        }
-    }
-    return true;
-}
     </script>

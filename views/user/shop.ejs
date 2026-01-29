@@ -222,7 +222,7 @@
                                             class="p-1.5 text-xs text-gray-400 hover:text-white transition-colors">
                                             <i class="fa-regular fa-heart"></i>
                                         </button>
-                                        <button type="button"
+                                        <button type="button" onclick="addToCart('<%= product._id %>','<%= v._id %>')"
                                             class="p-1.5 text-xs bg-zinc-800 rounded-md text-red-400 hover:bg-zinc-700 transition-colors">
                                             <i class="fa-solid fa-cart-plus"></i>
                                         </button>
@@ -349,3 +349,73 @@
 
         </div>
     </footer>
+
+    <script>
+  async function addToCart(productId, variantId) {
+    if (!variantId) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Unavailable",
+        text: "This product variant is not available",
+        background: "#161b18",
+        color: "#fff",
+        confirmButtonColor: "#4ade80"
+      });
+    }
+
+    try {
+      const res = await fetch("/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          productId,
+          variantId,
+          quantity: 1
+        })
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        return Swal.fire({
+          icon: "warning",
+          title: "Cannot add to cart",
+          text: data.message || "Something went wrong",
+          background: "#161b18",
+          color: "#fff",
+          confirmButtonColor: "#4ade80"
+        });
+      }
+      const cartCounte1 =document.getElementById("cartCount");
+
+      if(cartCounte1){
+        cartCounte1.innerText=data.cartCount;
+        cartCounte1.style.display="flex"
+      }
+
+      Swal.fire({
+        // toast: true,
+        // position: "top-end",
+        icon: "success",
+        title: "Added to cart",
+        showConfirmButton: false,
+        timer: 1400,
+        timerProgressBar: true,
+        background: "#161b18",
+        color: "#fff"
+      });
+
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Please try again later",
+        background: "#161b18",
+        color: "#fff",
+        confirmButtonColor: "#4ade80"
+      });
+    }
+  }
+</script>

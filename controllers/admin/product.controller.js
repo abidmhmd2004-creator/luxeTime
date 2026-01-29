@@ -315,8 +315,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
         const offer = Number(v.offerPercentage || 0);
         const stock = Number(v.stock || 0);
 
-        const finalPrice = basePrice - (basePrice * offer / 100);
-
+        const finalPrice =Math.round(basePrice - (basePrice * offer / 100));
 
 
         const files = req.files.filter(file => file.fieldname === `variantImages_${i}`);
@@ -396,7 +395,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
                 stock,
                 basePrice,
                 offerPercentage: offer,
-                finalPrice: Math.round(finalPrice),
+                finalPrice,
                 images: finalImages
             })
         // console.log(variants)

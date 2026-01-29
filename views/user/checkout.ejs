@@ -22,7 +22,7 @@
     }
 
     .glass-panel {
-        background: #181e18;
+        background: #121513;
         border: 1px solid rgba(255, 255, 255, 0.03);
     }
 
@@ -238,7 +238,7 @@
                             </div>
                         </div>
 
-                        <button id="placeOrderBtn" 
+                        <button id="placeOrderBtn"
                             class="w-full bg-[#22c55e] text-black py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest mt-5 hover:brightness-110 shadow-lg shadow-[#22c55e]/10 transition-all">
                             Place Order <i class="fa-solid fa-arrow-right ml-1"></i>
                         </button>
@@ -364,13 +364,13 @@
                 });
 
                 if (response.redirected) {
-                    Swal.fire({ 
+                    Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        background: '#181e18', 
-                        color: '#fff', 
-                        timer: 1500, 
-                        showConfirmButton: false 
+                        background: '#181e18',
+                        color: '#fff',
+                        timer: 1500,
+                        showConfirmButton: false
                     })
                         .then(() => window.location.href = response.url);
                     return;
@@ -380,115 +380,115 @@
                 if (result.success) {
                     location.reload();
                 } else {
-                    Swal.fire({ 
-                        icon: 'error', 
-                        title: 'Error', 
-                        text: result.message, 
-                        background: '#181e18', 
-                        color: '#fff' 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message,
+                        background: '#181e18',
+                        color: '#fff'
                     });
                 }
             } catch (err) {
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'Error', 
-                    text: 'Server error', 
-                    background: '#181e18', 
-                    color: '#fff' 
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Server error',
+                    background: '#181e18',
+                    color: '#fff'
                 });
             }
         });
         document.getElementById("placeOrderBtn").addEventListener("click", async function () {
 
-  const selectedAddress = document.querySelector(
-    'input[name="selectedAddress"]:checked'
-  );
+            const selectedAddress = document.querySelector(
+                'input[name="selectedAddress"]:checked'
+            );
 
-  if (!selectedAddress) {
-    return Swal.fire({
-      icon: "warning",
-      title: "Address Required",
-      text: "Please select a delivery address",
-      background: "#181e18",
-      color: "#fff",
-      confirmButtonColor: "#22c55e"
-    });
-  }
+            if (!selectedAddress) {
+                return Swal.fire({
+                    icon: "warning",
+                    title: "Address Required",
+                    text: "Please select a delivery address",
+                    background: "#181e18",
+                    color: "#fff",
+                    confirmButtonColor: "#22c55e"
+                });
+            }
 
-  const selectedPayment = document.querySelector(
-    'input[name="paymentMethod"]:checked'
-  );
+            const selectedPayment = document.querySelector(
+                'input[name="paymentMethod"]:checked'
+            );
 
-  if (!selectedPayment) {
-    return Swal.fire({
-      icon: "warning",
-      title: "Payment Method Required",
-      text: "Please select a payment method",
-      background: "#181e18",
-      color: "#fff",
-      confirmButtonColor: "#22c55e"
-    });
-  }
+            if (!selectedPayment) {
+                return Swal.fire({
+                    icon: "warning",
+                    title: "Payment Method Required",
+                    text: "Please select a payment method",
+                    background: "#181e18",
+                    color: "#fff",
+                    confirmButtonColor: "#22c55e"
+                });
+            }
 
-  const addressId = selectedAddress.value;
-  const paymentMethod = selectedPayment.value;
+            const addressId = selectedAddress.value;
+            const paymentMethod = selectedPayment.value;
 
-  this.disabled = true;
-  this.innerText = "Processing...";
+            this.disabled = true;
+            this.innerText = "Processing...";
 
-  try {
-    const response = await fetch("/checkout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        addressId,
-        paymentMethod
-      })
-    });
+            try {
+                const response = await fetch("/checkout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        addressId,
+                        paymentMethod
+                    })
+                });
 
-    const result = await response.json();
+                const result = await response.json();
 
-    if (!result.success) {
-      this.disabled = false;
-      this.innerText = "Place Order";
+                if (!result.success) {
+                    this.disabled = false;
+                    this.innerText = "Place Order";
 
-      return Swal.fire({
-        icon: "error",
-        title: "Checkout Failed",
-        text: result.message,
-        background: "#181e18",
-        color: "#fff",
-        confirmButtonColor: "#22c55e"
-      });
-    }
+                    return Swal.fire({
+                        icon: "error",
+                        title: "Checkout Failed",
+                        text: result.message,
+                        background: "#181e18",
+                        color: "#fff",
+                        confirmButtonColor: "#22c55e"
+                    });
+                }
 
-    Swal.fire({
-      icon: "success",
-      title: "Order Placed",
-      text: "Redirecting...",
-      timer: 1500,
-      showConfirmButton: false,
-      background: "#181e18",
-      color: "#fff"
-    }).then(() => {
-      window.location.href = result.redirectUrl;
-    });
+                Swal.fire({
+                    icon: "success",
+                    title: "Order Placed",
+                    text: "Redirecting...",
+                    timer: 1500,
+                    showConfirmButton: false,
+                    background: "#181e18",
+                    color: "#fff"
+                }).then(() => {
+                    window.location.href = result.redirectUrl;
+                });
 
-  } catch (error) {
-    console.error(error);
+            } catch (error) {
+                console.error(error);
 
-    this.disabled = false;
-    this.innerText = "Place Order";
+                this.disabled = false;
+                this.innerText = "Place Order";
 
-    Swal.fire({
-      icon: "error",
-      title: "Server Error",
-      text: "Please try again later",
-      background: "#181e18",
-      color: "#fff"
-    });
-  }
-});
+                Swal.fire({
+                    icon: "error",
+                    title: "Server Error",
+                    text: "Please try again later",
+                    background: "#181e18",
+                    color: "#fff"
+                });
+            }
+        });
     </script>

@@ -33,11 +33,11 @@
             </a>
         </div>
 
-        <nav class="hidden lg:flex items-center justify-center gap-10">
-            <a class="text-white text-sm font-medium hover:text-primary transition-colors" href="/home">Home</a>
-            <a class="text-white text-sm font-medium hover:text-primary transition-colors" href="/shop">Shop</a>
-            <a class="text-white text-sm font-medium hover:text-primary transition-colors" href="#">About</a>
-        </nav>
+        <div class="hidden md:flex gap-8 text-[12px] font-bold uppercase tracking-widest text-zinc-400 flex justify-center">
+            <a href="/" class="hover:text-white transition">Home</a>
+            <a href="/shop" class="hover:text-white transition">Shop</a>
+            <a href="/about" class="hover:text-white transition">About</a>
+        </div>
 
         <div class="flex items-center justify-end gap-3 lg:gap-4">
             <button class="flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary hover:text-black transition-colors">
@@ -46,7 +46,7 @@
 
             <button onclick="window.location.href='/cart'" class="relative flex items-center justify-center rounded-full bg-[#29382f] p-2 text-white hover:bg-primary transition-colors">
                 <span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-                <span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-black">2</span>
+                <span id="cartCount" class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-black" style="display: none;">0</span>
             </button>
 
             <div class="relative">

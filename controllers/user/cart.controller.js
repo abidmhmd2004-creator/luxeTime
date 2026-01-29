@@ -5,16 +5,49 @@ import Product from "../../models/product.model.js"
 
 export const getCart = asyncHandler(async (req, res) => {
     const cart = await Cart.findOne({ user: req.session.user.id })
-        .populate("items.product")
+        .populate({
+            path: "items.product",
+            populate: { path: "category" }
+        })
         .populate("items.variant");
 
+
     let subtotal = 0;
+    let removedItems = false;
+
 
     if (cart && cart.items.length > 0) {
-        cart.items = cart.items.filter(item => item.variant);
-        cart.items.forEach(item => {
-            subtotal += item.variant.finalPrice * item.quantity
-        })
+        cart.items = cart.items.filter(item => {
+            const product = item.product;
+            const variant = item.variant;
+            const category = product?.category;
+
+
+
+            if (!product || !variant || !category) {
+                removedItems = true;
+                return false;
+            }
+            if (category.isDeleted || !category.isListed) {
+                removedItems = true;
+                return false;
+            }
+            if (!product.isActive || product.isDeleted) {
+                removedItems = true;
+                return false;
+            }
+            if (!variant.isActive || variant.stock <= 0) {
+                removedItems = true;
+                return false
+            }
+            subtotal += variant.finalPrice * item.quantity;
+            return true;
+        });
+
+        if (removedItems) {
+            await cart.save();
+        }
+
     }
     const taxRate = 0.18;
     const tax = Math.round(subtotal * taxRate);
@@ -36,9 +69,17 @@ export const getCart = asyncHandler(async (req, res) => {
 })
 
 export const addToCart = asyncHandler(async (req, res) => {
-    const userId = req.session.user.id;
+    const userId = req.session?.user?.id;
     const { productId, variantId, quantity = 1 } = req.body;
     const variant = await Variant.findById(variantId);
+
+
+    if (!userId) {
+        return res.status(404).json({
+            success: false,
+            message: "Please login first"
+        })
+    }
 
     const product = await Product.findById(productId);
     const MAX_QTY = 10;
@@ -121,9 +162,12 @@ export const addToCart = asyncHandler(async (req, res) => {
     }
     await cart.save();
 
+    const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+
     res.json({
         success: true,
-        message: "Added to cart"
+        message: "Added to cart",
+        cartCount: totalItems
     })
 
 })

@@ -122,7 +122,7 @@
                 <span class="text-2xl font-bold text-primary">₹<%= defaultVariant.finalPrice.toLocaleString() %></span>
                 <% if(defaultVariant.offerPercentage> 0) { %>
                     <span class="text-sm text-gray-500 line-through">₹<%= defaultVariant.basePrice.toLocaleString() %>
-                            </span>
+                    </span>
                     <span class="bg-red-500/10 text-red-500 text-[9px] font-bold px-1.5 py-0.5 rounded">
                         <%= defaultVariant.offerPercentage %>% OFF
                     </span>
@@ -267,7 +267,7 @@
                     </h3>
                     <div class="flex justify-between items-center">
                         <span class="text-primary font-bold text-xs">₹<%= rec.variant.finalPrice.toLocaleString() %>
-                                </span>
+                        </span>
                         <a href="/product/<%= rec._id %>"
                             class="text-[9px] text-gray-500 uppercase font-bold border-b border-primary/30">View</a>
                     </div>
@@ -354,16 +354,16 @@
     });
 
     // Quantity Control
-  function changeQty(variantId, val, stock) {
-    const qtySpan = document.getElementById(`quantity-val-${variantId}`);
+    function changeQty(variantId, val, stock) {
+        const qtySpan = document.getElementById(`quantity-val-${variantId}`);
 
-    let current = parseInt(qtySpan.innerText);
-    let next = current + val;
+        let current = parseInt(qtySpan.innerText);
+        let next = current + val;
 
-    if (next >= 1 && next <= stock) {
-      qtySpan.innerText = next;
+        if (next >= 1 && next <= stock) {
+            qtySpan.innerText = next;
+        }
     }
-  }
 
 
     function addToCart(productId, variantId) {
@@ -388,6 +388,13 @@
                         showConfirmButton: false,
                         timer: 1500
                     })
+
+                    const cartCounte1 = document.getElementById("cartCount");
+
+                    if (cartCounte1) {
+                        cartCounte1.innerText = data.cartCount;
+                        cartCounte1.style.display = "flex"
+                    }
                 } else {
                     Swal.fire({
                         icon: "warning",
