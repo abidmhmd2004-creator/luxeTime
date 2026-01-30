@@ -23,7 +23,9 @@ const orderSchema = new mongoose.Schema(
                 },
                 quantity: Number,
                 price: Number,
-                returnReason: String
+                returnReason: String,
+                returnRequestedAt: Date
+
             }
         ],
         shippingAddress: {
@@ -51,6 +53,7 @@ const orderSchema = new mongoose.Schema(
             default: "PLACED"
         },
         returnReason: String,
+        returnRequestedAt: Date,
         subtotal: Number,
         discount: Number,
         tax: Number,

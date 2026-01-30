@@ -18,7 +18,7 @@ import createUploader from "../middlewares/upload.middleware.js";
 import { getProducts, productDetails } from "../controllers/user/shop.controller.js";
 import { addToCart, getCart, removeFromCart, updateQty } from "../controllers/user/cart.controller.js";
 import { addAddressCheckout, getCheckoutPage, placeOrder } from "../controllers/user/checkout.controller.js";
-import { cancelOrderItem, getOrderDetailsPage, getOrders } from "../controllers/user/order.controller.js";
+import { cancellFullOrder, cancelOrderItem, downloadInvoice, getOrderDetailsPage, getOrders, returnRequest } from "../controllers/user/order.controller.js";
 
 
 // const uploadProfile =createUploader("profile");
@@ -115,6 +115,12 @@ router.get("/order-success/:orderId",getOrders)
 
 router.get("/orderDetails/:orderId",getOrderDetailsPage)
 router.post("/orders/:orderId/cancel-item",cancelOrderItem)
+
+router.post("/orders/:orderId/cancel",cancellFullOrder);
+
+router.post("/orders/:orderId/return",returnRequest)
+
+router.get("/orders/:orderId/invoice",downloadInvoice)
 
 //logout
 router.post("/logout", logout);
