@@ -3,8 +3,28 @@ import PDFDocument from "pdfkit"
 import Order from "../../models/order.model.js";
 import Variant from "../../models/variant.model.js"
 
-
 export const getOrders = asyncHandler(async (req, res) => {
+  const userId = req.session.user.id;
+  const {search} =req.query;
+
+  let filter={user:userId};
+
+  if(search&&search.trim()!==""){
+    filter.orderId ={
+      $regex:search.trim(),
+      $options:"i"
+    }
+  }
+  const orders = await Order.find(filter)
+    .populate("items.product", "name")
+    .populate("items.variant", "color images")
+    .sort({createdAt:-1});
+
+  res.render("user/orders", { orders ,searchQuery:search||""})
+})
+
+
+export const getOrdersSucces = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
   const { orderId } = req.params;
 
@@ -207,35 +227,35 @@ export const downloadInvoice = async (req, res) => {
   const doc = new PDFDocument({ size: "A4", margin: 50 });
 
   res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition",`attachment; filename=invoice-${order._id}.pdf`);
+  res.setHeader("Content-Disposition", `attachment; filename=invoice-${order._id}.pdf`);
 
   doc.pipe(res);
 
   // LAYOUT CONSTANTS
-  
+
   const left = 50;
   const right = 545;
   let y = 50;
 
-    // HEADER
- 
+  // HEADER
+
   doc.font("Helvetica-Bold").fontSize(24).text("LUXE TIME", left, y);
 
   doc.font("Helvetica").fontSize(10).fillColor("#555")
-  .text("Premium Watch Store", left, y + 28);
+    .text("Premium Watch Store", left, y + 28);
 
   doc.font("Helvetica-Bold")
-     .fontSize(16)
-     .fillColor("#000")
-     .text("INVOICE", right - 120, y + 5);
+    .fontSize(16)
+    .fillColor("#000")
+    .text("INVOICE", right - 120, y + 5);
 
   y += 80;
 
-  
- 
+
+
   doc.font("Helvetica")
-     .fontSize(10)
-     .fillColor("#333");
+    .fontSize(10)
+    .fillColor("#333");
 
   doc.text(`Invoice No:`, left, y);
   doc.text(order._id.toString(), left + 90, y);
@@ -252,25 +272,25 @@ export const downloadInvoice = async (req, res) => {
 
   y += 70;
 
-  
+
   const a = order.shippingAddress || {};
 
   doc.font("Helvetica-Bold")
-     .fontSize(11)
-     .text("BILL TO", left, y);
+    .fontSize(11)
+    .text("BILL TO", left, y);
 
   y += 16;
 
   doc.font("Helvetica")
-     .fontSize(10)
-     .text(a.fullName || "-", left, y)
-     .text(a.streetAddress || "-", left, y + 14)
-     .text(`${a.city || "-"}, ${a.state || "-"} - ${a.pincode || "-"}`,left,y + 28)
-     .text(`Phone: ${a.phone || "-"}`, left, y + 42);
+    .fontSize(10)
+    .text(a.fullName || "-", left, y)
+    .text(a.streetAddress || "-", left, y + 14)
+    .text(`${a.city || "-"}, ${a.state || "-"} - ${a.pincode || "-"}`, left, y + 28)
+    .text(`Phone: ${a.phone || "-"}`, left, y + 42);
 
   y += 85;
 
-  
+
   doc.moveTo(left, y).lineTo(right, y).stroke();
   y += 12;
 
@@ -284,7 +304,7 @@ export const downloadInvoice = async (req, res) => {
   doc.moveTo(left, y).lineTo(right, y).stroke();
   y += 10;
 
-  
+
   doc.font("Helvetica").fontSize(10);
 
   order.items.forEach(item => {
@@ -334,14 +354,14 @@ export const downloadInvoice = async (req, res) => {
 
 
   doc.font("Helvetica")
-     .fontSize(9)
-     .fillColor("#666")
-     .text(
-       "Thank you for shopping with LUXE TIME.\nThis is a computer-generated invoice and does not require a signature.",
-       left,
-       y,
-       { width: right - left, align: "center" }
-     );
+    .fontSize(9)
+    .fillColor("#666")
+    .text(
+      "Thank you for shopping with LUXE TIME.\nThis is a computer-generated invoice and does not require a signature.",
+      left,
+      y,
+      { width: right - left, align: "center" }
+    );
 
   doc.end();
 };

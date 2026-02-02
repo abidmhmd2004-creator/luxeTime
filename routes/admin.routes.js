@@ -7,6 +7,7 @@ import { addCategory, editCategory, getCategory, getCategoryAjax, softDeleteCate
 import { getaddProducts, geteditProduct, getProductPage, postAddProducts, postEditProduct, productDetails, softDeleteProduct } from "../controllers/admin/product.controller.js";
 import { uploadProfileImage } from "../controllers/user/profile.controller.js";
 import createUploader from "../middlewares/upload.middleware.js";
+import { getOrderDetailsPage, getOrdersPage, updateReturnStatus } from "../controllers/admin/order.controller.js";
 
 const uploadProductImage=createUploader("products");
 
@@ -39,6 +40,10 @@ router.get("/products/:id",adminAuth,productDetails);
 router.get("/edit-product/:id",adminAuth,geteditProduct);
 router.post("/edit-product/:id",uploadProductImage.any(),postEditProduct)
 router.patch("/products/:id/delete",softDeleteProduct)
+
+router.get("/orders",getOrdersPage)
+router.get("/orders/:orderId",getOrderDetailsPage)
+router.patch("/orders/return-update",updateReturnStatus)
 
 //logout
 router.get("/logout",adminLogout)

@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema(
                 variant: { type: mongoose.Schema.ObjectId, ref: "Variant" },
                 itemStatus: {
                     type: String,
-                    enum: ["ACTIVE", "CANCELLED", "RETURN_REQUESTED", "RETURNED"],
+                    enum: ["ACTIVE", "CANCELLED", "RETURN_REQUESTED", "RETURNED","RETURN_REJECTED"],
                     default: "ACTIVE"
                 },
                 quantity: Number,

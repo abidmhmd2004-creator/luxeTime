@@ -148,7 +148,7 @@
                         </p>
                     </div>
 
-                    <button onclick="window.location.href='/checkout'"
+                    <button id="proceedCheckoutBtn"
                         class="w-full bg-primary hover:bg-green-400 text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 transition text-sm shadow-[0_10px_20px_rgba(74,222,128,0.15)] uppercase">
                         Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
                     </button>
@@ -224,4 +224,40 @@
             })
         }
     }
+    document.getElementById("proceedCheckoutBtn").addEventListener("click", async () => {
+    try {
+        const res = await fetch("/checkout", {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            return Swal.fire({
+                icon: "error",
+                title: "Cart Update Required",
+                text: data.message,
+                background: "#181e18",
+                color: "#fff",
+                confirmButtonColor: "#22c55e"
+            });
+        }
+
+        // ✅ Redirect only if valid
+        window.location.href = data.redirectUrl;
+
+    } catch (err) {
+        Swal.fire({
+            icon: "error",
+            title: "Server Error",
+            text: "Please try again",
+            background: "#181e18",
+            color: "#fff"
+        });
+    }
+});
+
 </script>
