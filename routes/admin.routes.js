@@ -41,9 +41,9 @@ router.get("/edit-product/:id",adminAuth,geteditProduct);
 router.post("/edit-product/:id",uploadProductImage.any(),postEditProduct)
 router.patch("/products/:id/delete",softDeleteProduct)
 
-router.get("/orders",getOrdersPage)
+router.get("/orders",adminAuth,getOrdersPage)
 router.get("/orders/:orderId",getOrderDetailsPage)
-router.patch("/orders/return-update",updateReturnStatus)
+router.patch("/orders/return-update",adminAuth,updateReturnStatus)
 
 //logout
 router.get("/logout",adminLogout)

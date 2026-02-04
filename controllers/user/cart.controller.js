@@ -16,55 +16,55 @@ export const getCart = asyncHandler(async (req, res) => {
     let removedItems = false;
 
 
-    if (cart && cart.items.length > 0) {
-        cart.items = cart.items.filter(item => {
-            const product = item.product;
-            const variant = item.variant;
-            const category = product?.category;
+   let cartIssues = [];
 
+if (cart && cart.items.length > 0) {
+  for (const item of cart.items) {
+    const product = item.product;
+    const variant = item.variant;
+    const category = product?.category;
 
-
-            if (!product || !variant || !category) {
-                removedItems = true;
-                return false;
-            }
-            if (category.isDeleted || !category.isListed) {
-                removedItems = true;
-                return false;
-            }
-            if (!product.isActive || product.isDeleted) {
-                removedItems = true;
-                return false;
-            }
-            if (!variant.isActive || variant.stock <= 0) {
-                removedItems = true;
-                return false
-            }
-            subtotal += variant.finalPrice * item.quantity;
-            return true;
-        });
-
-        if (removedItems) {
-            await cart.save();
-        }
-
+    if (!product || !variant || !category) {
+      cartIssues.push("Some items are no longer available");
+      continue;
     }
+
+    if (!product.isActive || product.isDeleted) {
+      cartIssues.push(`${product.name} is unavailable`);
+      continue;
+    }
+
+    if (!variant.isActive) {
+      cartIssues.push(`Variant of ${product.name} is unavailable`);
+      continue;
+    }
+
+    if (variant.stock < item.quantity) {
+      cartIssues.push(
+        `Only ${variant.stock} left for ${product.name}`
+      );
+    }
+          subtotal += variant.finalPrice * item.quantity;
+ }
+  }
+
     const taxRate = 0.18;
     const tax = Math.round(subtotal * taxRate);
     const shipping = 0;
     const discount = 0;
 
-    const total = subtotal + tax - discount;
+    const total = subtotal + tax - discount; 
 
     res.render("user/cart", {
         cart,
+        cartIssues,
         summary: {
             subtotal,
             tax,
             shipping,
             discount,
             total
-        }
+        },
     });
 })
 

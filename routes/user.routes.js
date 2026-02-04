@@ -103,15 +103,15 @@ router.get("/product/:id",productDetails)
 
 //cart
 router.get("/cart",requireAuth,getCart);
-router.post("/cart/add",addToCart);
+router.post("/cart/add",requireAuth,addToCart);
 router.delete("/cart/remove/:variantId",removeFromCart)
-router.post("/cart/update-qty",updateQty)
+router.post("/cart/update-qty",requireAuth,updateQty)
 
-router.get("/checkout",getCheckoutPage);
-router.post("/address-checkout",addAddressCheckout)
-router.post("/checkout",placeOrder);
+router.get("/checkout",requireAuth,getCheckoutPage);
+router.post("/address-checkout",requireAuth,addAddressCheckout)
+router.post("/checkout",requireAuth,placeOrder);
 
-router.get("/orders",getOrders);
+router.get("/orders",requireAuth,getOrders);
 router.get("/order-success/:orderId",getOrdersSucces)
 
 router.get("/orderDetails/:orderId",getOrderDetailsPage)
@@ -119,7 +119,7 @@ router.post("/orders/:orderId/cancel-item",cancelOrderItem)
 
 router.post("/orders/:orderId/cancel",cancellFullOrder);
 
-router.post("/orders/:orderId/return",returnRequest)
+router.post("/orders/:orderId/return",requireAuth,returnRequest)
 
 router.get("/orders/:orderId/invoice",downloadInvoice)
 router.patch("/admin/orders/:orderId/status",updateOrderStatus );

@@ -115,7 +115,7 @@
                         <% orders.forEach(order => { %>
                             <tr class="hover:bg-white/[0.02] transition-colors whitespace-nowrap">
                                 <td class="pl-6 py-4 text-[#22c55e] text-[13px] font-bold">
-                                    #<%= order.orderId %>
+                                    <%= order.orderId %>
                                 </td>
 
                                 <td class="px-2 py-4">
@@ -226,10 +226,6 @@
                                         <h4 class="text-white font-semibold">No Orders Found</h4>
                                         <p class="text-xs text-gray-500">We couldn't find any orders matching your criteria.</p>
                                     </div>
-                                    <button onclick="window.location.href='/admin/orders'" 
-                                        class="mt-2 text-[10px] uppercase tracking-widest font-bold text-green-500 hover:text-green-400 transition-colors">
-                                        Reset All Filters
-                                    </button>
                                 </div>
                             </td>
                         </tr>

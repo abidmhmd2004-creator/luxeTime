@@ -1,54 +1,30 @@
 import asyncHandler from "../../utils/asyncHandler.js";
 import Cart from "../../models/cart.model.js";
 import Address from "../../models/address.model.js";
-import Product from "../../models/product.model.js"
+import Product from "../../models/product.model.js";
 import Variant from "../../models/variant.model.js";
 import Order from "../../models/order.model.js";
+import { validateCartForCheckout } from "../../helpers/cartValidate.js";
 
 export const getCheckoutPage = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({ user: req.session.user.id })
-    .populate("items.product")
-    .populate("items.variant");
+    .populate({
+    path: "items.product",
+    populate: { path: "category" }
+  })
+  .populate("items.variant");
 
-   if (!cart || cart.items.length === 0) {
-        return res.json({
-            success: false,
-            message: "Your cart is empty"
-        });
-    }
-     for (const item of cart.items) {
-        const product = item.product;
-        const variant = item.variant;
+  const result = validateCartForCheckout(cart);
 
-        if (!product || !product.isActive) {
-            return res.json({
-                success: false,
-                message: `${product?.name || "Product"} is no longer available`
-            });
-        }
-
-        if (!variant || !variant.isActive) {
-            return res.json({
-                success: false,
-                message: `Selected variant of ${product.name} is unavailable`
-            });
-        }
-
-        if (variant.stock < item.quantity) {
-            return res.json({
-                success: false,
-                message: `Only ${variant.stock} left for ${product.name}. Please update your cart`
-            });
-        }
-    }
-
-
+  if (!result.valid) {
+    return res.redirect("/cart");
+  }
   const addresses = await Address.find({ userId: req.session.user.id });
 
-   return res.json({
-        success: true,
-        redirectUrl: "/checkout"
-    });
+  res.render("user/checkout", {
+    cart,
+    addresses,
+  });
 });
 
 export const addAddressCheckout = asyncHandler(async (req, res) => {

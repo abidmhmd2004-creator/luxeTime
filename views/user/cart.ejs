@@ -43,7 +43,7 @@
 
 <main class="max-w-[1200px] mx-auto px-4 py-8">
     <nav class="text-[12px] text-gray-600 uppercase tracking-widest mb-4">
-        Home / Shop / <span class="text-gray-300">Cart</span>
+        <a href="/home">Home</a> / <a href="/shop"> Shop /</a> <span class="text-gray-300">Cart</span>
     </nav>
 
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
@@ -148,7 +148,7 @@
                         </p>
                     </div>
 
-                    <button id="proceedCheckoutBtn"
+                    <button onclick="window.location.href='/checkout'"
                         class="w-full bg-primary hover:bg-green-400 text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 transition text-sm shadow-[0_10px_20px_rgba(74,222,128,0.15)] uppercase">
                         Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
                     </button>
@@ -224,40 +224,17 @@
             })
         }
     }
-    document.getElementById("proceedCheckoutBtn").addEventListener("click", async () => {
-    try {
-        const res = await fetch("/checkout", {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        });
-
-        const data = await res.json();
-
-        if (!data.success) {
-            return Swal.fire({
-                icon: "error",
-                title: "Cart Update Required",
-                text: data.message,
-                background: "#181e18",
-                color: "#fff",
-                confirmButtonColor: "#22c55e"
-            });
-        }
-
-        // ✅ Redirect only if valid
-        window.location.href = data.redirectUrl;
-
-    } catch (err) {
-        Swal.fire({
-            icon: "error",
-            title: "Server Error",
-            text: "Please try again",
-            background: "#181e18",
-            color: "#fff"
-        });
-    }
-});
 
 </script>
+<% if (cartIssues && cartIssues.length > 0) { %>
+<script>
+  Swal.fire({
+    icon: "warning",
+    title: "Cart Needs Attention",
+    text: "<%= cartIssues[0] %>",
+    background: "#181e18",
+    color: "#fff",
+    confirmButtonColor: "#4ade80"
+  });
+</script>
+<% } %>
