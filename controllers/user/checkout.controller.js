@@ -4,15 +4,17 @@ import Address from "../../models/address.model.js";
 import Product from "../../models/product.model.js";
 import Variant from "../../models/variant.model.js";
 import Order from "../../models/order.model.js";
+import Razorpay from "razorpay";
 import { validateCartForCheckout } from "../../helpers/cartValidate.js";
+import razorpay from "../../config/razorpay.js";
 
 export const getCheckoutPage = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({ user: req.session.user.id })
     .populate({
-    path: "items.product",
-    populate: { path: "category" }
-  })
-  .populate("items.variant");
+      path: "items.product",
+      populate: { path: "category" },
+    })
+    .populate("items.variant");
 
   const result = validateCartForCheckout(cart);
 
@@ -92,6 +94,12 @@ export const placeOrder = asyncHandler(async (req, res) => {
     return res.status(400).json({
       success: false,
       message: "Please select a payment method",
+    });
+  }
+  if (!paymentMethod) {
+    return res.status(400).json({
+      success: false,
+      message: "payment method required",
     });
   }
 
@@ -195,22 +203,41 @@ export const placeOrder = asyncHandler(async (req, res) => {
     paymentStatus: paymentMethod === "COD" ? "PENDING" : "PENDING",
   });
 
-  for (const item of cart.items) {
-    await Variant.findByIdAndUpdate(item.variant._id, {
-      $inc: { stock: -item.quantity },
+  if (paymentMethod === "COD") {
+    for (const item of cart.items) {
+      await Variant.findByIdAndUpdate(item.variant._id, {
+        $inc: { stock: -item.quantity },
+      });
+    }
+
+    cart.items = [];
+    await cart.save();
+
+    return res.json({
+      success: true,
+      message: "Order placed successfully",
+      orderId: order._id,
+      redirectUrl: `/order-success/${order._id}`,
     });
   }
 
-  cart.items = [];
-  await cart.save();
+  if (paymentMethod === "RAZORPAY") {
+    const razorpayOrder = await razorpay.orders.create({
+      amount: totalAmount * 100,
+      currency: "INR",
+      receipt: order.orderId,
+    });
 
-  return res.json({
-    success: true,
-    message: "Order placed successfully",
-    orderId: order._id,
-    redirectUrl:
-      paymentMethod === "COD"
-        ? `/order-success/${order._id}`
-        : `/payment/${order._id}`,
-  });
+    order.razorpayOrderId = razorpayOrder.id;
+    await order.save();
+
+    return res.json({
+      success: true,
+      razorpay: true,
+      orderId: order._id, 
+      razorpayOrderId: razorpayOrder.id,
+      amount: totalAmount,
+      key: process.env.RAZORPAY_KEY_ID,
+    });
+  }
 });

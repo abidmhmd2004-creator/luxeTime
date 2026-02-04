@@ -1,328 +1,339 @@
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    .timeline-line {
+        width: 2px;
+        background: #1a1a1a;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 7px;
+        z-index: 0;
+    }
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
 
-        .timeline-line {
-            width: 2px;
-            background: #1a1a1a;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 7px;
-            z-index: 0;
-        }
+    ::-webkit-scrollbar-track {
+        background: #000;
+    }
 
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
+    ::-webkit-scrollbar-thumb {
+        background: #1a1a1a;
+        border-radius: 10px;
+    }
 
-        ::-webkit-scrollbar-track {
-            background: #000;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #1a1a1a;
-            border-radius: 10px;
-        }
-
-        /* Style for small action links */
-        .btn-action {
-            transition: all 0.2s ease;
-            letter-spacing: 0.05em;
-        }
-    </style>
+    /* Style for small action links */
+    .btn-action {
+        transition: all 0.2s ease;
+        letter-spacing: 0.05em;
+    }
+</style>
 
 
-    <%- include('../partials/adminSidebar') %>
+<%- include('../partials/adminSidebar') %>
 
-        <main class="flex-1 p-10 bg-[#050505]">
+    <main class="flex-1 p-10 bg-[#050505]">
 
-            <header class="flex justify-between items-start mb-8">
-                <div>
-                    <nav class="text-[10px] text-gray-600 flex items-center gap-2 mb-2">
-                        <span class="text-gray-400">Orders</span> / <span class="text-green-500 font-bold">#<%=
-                                order.orderId %></span>
-                    </nav>
-                    <h2 class="text-3xl font-bold text-white tracking-tight">Order Details</h2>
-                    <p class="text-sm text-gray-500">View order and manage returns.</p>
-                </div>
-                <a href="/admin/orders"
-                    class="bg-white/5 hover:bg-white/10 text-white text-[11px] font-bold py-2.5 px-6 rounded-xl border border-white/10 flex items-center gap-2 transition">
-                    <span>←</span> Back to Orders
-                </a>
-            </header>
-
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8 bg-[#1A1D1A] border border-white/5 rounded-3xl p-6">
-                <div class="space-y-1">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Order ID</p>
-                    <p class="text-white font-bold text-sm">
-                        <%= order.orderId %>
-                    </p>
-                </div>
-                <div class="space-y-1 border-l border-white/5 pl-4">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Order Date</p>
-                    <p class="text-white font-bold text-sm">
-                        <%= new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit' , month: 'short' ,
-                            year: 'numeric' }) %>
-                    </p>
-                </div>
-                <div class="space-y-1 border-l border-white/5 pl-4">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Order Status</p>
-                    <% let statusColor='bg-blue-500/10 text-blue-500' ; if (order.orderStatus==='DELIVERED' )
-                        statusColor='bg-emerald-500/10 text-emerald-500' ; if (order.orderStatus==='CANCELLED' )
-                        statusColor='bg-red-500/10 text-red-500' ; if (order.orderStatus==='RETURN_REQUESTED' )
-                        statusColor='bg-orange-500/10 text-orange-500' ; %>
-                        <span
-                            class="px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-widest <%= statusColor %>">
-                            <%= order.orderStatus %>
-                        </span>
-                </div>
-                <div class="space-y-1 border-l border-white/5 pl-4">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Total Items</p>
-                    <p class="text-white font-bold text-sm">
-                        <%= order.items.length %> Items
-                    </p>
-                </div>
-                <div class="space-y-1 border-l border-white/5 pl-4">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Total Amount</p>
-                    <p class="text-green-500 font-bold text-lg">₹ <%= order.totalAmount.toLocaleString('en-IN') %>
-                    </p>
-                </div>
+        <header class="flex justify-between items-start mb-8">
+            <div>
+                <nav class="text-[10px] text-gray-600 flex items-center gap-2 mb-2">
+                    <span class="text-gray-400">Orders</span> / <span class="text-green-500 font-bold">#<%=
+                            order.orderId %></span>
+                </nav>
+                <h2 class="text-3xl font-bold text-white tracking-tight">Order Details</h2>
+                <p class="text-sm text-gray-500">View order and manage returns.</p>
             </div>
+            <a href="/admin/orders"
+                class="bg-white/5 hover:bg-white/10 text-white text-[11px] font-bold py-2.5 px-6 rounded-xl border border-white/10 flex items-center gap-2 transition">
+                <span>←</span> Back to Orders
+            </a>
+        </header>
 
-            <div class="grid grid-cols-3 gap-8 ">
-                <div class="col-span-2 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8 bg-[#1A1D1A] border border-white/5 rounded-3xl p-6">
+            <div class="space-y-1">
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Order ID</p>
+                <p class="text-white font-bold text-sm">
+                    <%= order.orderId %>
+                </p>
+            </div>
+            <div class="space-y-1 border-l border-white/5 pl-4">
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Order Date</p>
+                <p class="text-white font-bold text-sm">
+                    <%= new Date(order.createdAt).toLocaleDateString('en-IN', { day: '2-digit' , month: 'short' ,
+                        year: 'numeric' }) %>
+                </p>
+            </div>
+            <div class="space-y-1 border-l border-white/5 pl-4">
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Order Status</p>
+                <% let statusColor='bg-blue-500/10 text-blue-500' ; if (order.orderStatus==='DELIVERED' )
+                    statusColor='bg-emerald-500/10 text-emerald-500' ; if (order.orderStatus==='CANCELLED' )
+                    statusColor='bg-red-500/10 text-red-500' ; if (order.orderStatus==='RETURN_REQUESTED' )
+                    statusColor='bg-orange-500/10 text-orange-500' ; %>
+                    <span class="px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-widest <%= statusColor %>">
+                        <%= order.orderStatus %>
+                    </span>
+            </div>
+            <div class="space-y-1 border-l border-white/5 pl-4">
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Total Items</p>
+                <p class="text-white font-bold text-sm">
+                    <%= order.items.length %> Items
+                </p>
+            </div>
+            <div class="space-y-1 border-l border-white/5 pl-4">
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Total Amount</p>
+                <p class="text-green-500 font-bold text-lg">₹ <%= order.totalAmount.toLocaleString('en-IN') %>
+                </p>
+            </div>
+        </div>
 
-                    <% if (order.orderStatus==='RETURN_REQUESTED' ) { %>
-                        <div
-                            class="bg-[#1A1D1A] border border-orange-500/20 rounded-3xl p-5 flex items-center justify-between shadow-xl">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-500 text-xl">
-                                    📦</div>
-                                <div>
-                                    <p class="text-sm font-bold text-white">Full Order Return Requested</p>
-                                    <p class="text-xs text-gray-500">The customer has requested to return all items in
-                                        this order.</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4">
-                                <button onclick="handleReturnAction('<%= order._id %>', null, 'REJECTED')"
-                                    class="text-[11px] font-bold text-gray-400 hover:text-white uppercase tracking-widest">Reject</button>
-                                <button onclick="handleReturnAction('<%= order._id %>', null, 'APPROVED')"
-                                    class="bg-white text-black text-[11px] font-bold py-3 px-4 rounded-full hover:bg-gray-200 transition">Approve
-                                    Full Return</button>
+        <div class="grid grid-cols-3 gap-8 ">
+            <div class="col-span-2 space-y-8">
+
+                <% if (order.orderStatus==='RETURN_REQUESTED' ) { %>
+                    <div
+                        class="bg-[#1A1D1A] border border-orange-500/20 rounded-3xl p-5 flex items-center justify-between shadow-xl">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-500 text-xl">
+                                📦</div>
+                            <div>
+                                <p class="text-sm font-bold text-white">Full Order Return Requested</p>
+                                <p class="text-xs text-gray-500">The customer has requested to return all items in
+                                    this order.</p>
                             </div>
                         </div>
-                        <% } %>
+                        <div class="flex gap-4">
+                            <button onclick="handleReturnAction('<%= order._id %>', null, 'REJECTED')"
+                                class="text-[11px] font-bold text-gray-400 hover:text-white uppercase tracking-widest">Reject</button>
+                            <button onclick="handleReturnAction('<%= order._id %>', null, 'APPROVED')"
+                                class="bg-white text-black text-[11px] font-bold py-3 px-4 rounded-full hover:bg-gray-200 transition">Approve
+                                Full Return</button>
+                        </div>
+                    </div>
+                    <% } %>
 
-                            <section class="bg-[#1A1D1A] border border-white/5 rounded-3xl p-6 shadow-sm">
-                                <div class="flex items-center gap-2 mb-6">
-                                    <h3 class="text-sm font-semibold text-white uppercase tracking-widest text-[11px]">
-                                        Ordered Items</h3>
-                                </div>
-                                <table class="w-full">
-                                    <thead class="text-[10px] text-gray-600 uppercase border-b border-white/5">
+                        <section class="bg-[#1A1D1A] border border-white/5 rounded-3xl p-6 shadow-sm">
+                            <div class="flex items-center gap-2 mb-6">
+                                <h3 class="text-sm font-semibold text-white uppercase tracking-widest text-[11px]">
+                                    Ordered Items</h3>
+                            </div>
+                            <table class="w-full">
+                                <thead class="text-[10px] text-gray-600 uppercase border-b border-white/5">
+                                    <tr>
+                                        <th class="pb-4 font-bold text-left">Item Details</th>
+                                        <th class="pb-4 font-bold text-center">Qty</th>
+                                        <th class="pb-4 font-bold text-left">Price</th>
+                                        <th class="pb-4 font-bold text-left">Total</th>
+                                        <th class="pb-4 font-bold text-right">Action / Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/5">
+                                    <% order.items.forEach(item=> { %>
                                         <tr>
-                                            <th class="pb-4 font-bold text-left">Item Details</th>
-                                            <th class="pb-4 font-bold text-center">Qty</th>
-                                            <th class="pb-4 font-bold text-left">Price</th>
-                                            <th class="pb-4 font-bold text-left">Total</th>
-                                            <th class="pb-4 font-bold text-right">Action / Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-white/5">
-                                        <% order.items.forEach(item=> { %>
-                                            <tr>
-                                                <td class="py-5">
-                                                    <div class="flex items-center gap-4">
-                                                        <div
-                                                            class="w-12 h-12 rounded-xl bg-black/50 border border-white/5 p-2 flex items-center justify-center overflow-hidden">
-                                                            <img src="<%= item.variant.images[0].url %>" alt="Watch"
-                                                                class="w-full h-full object-contain opacity-80">
-                                                        </div>
-                                                        <div>
-                                                            <p class="text-xs font-bold text-white">
-                                                                <%= item.product.name %>
-                                                            </p>
-                                                            <p class="text-[10px] text-gray-600">
-                                                                <%= item.product.brand %>
-                                                            </p>
+                                            <td class="py-5">
+                                                <div class="flex items-center gap-4">
+                                                    <div
+                                                        class="w-12 h-12 rounded-xl bg-black/50 border border-white/5 p-2 flex items-center justify-center overflow-hidden">
+                                                        <img src="<%= item.variant.images[0].url %>" alt="Watch"
+                                                            class="w-full h-full object-contain opacity-80">
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-xs font-bold text-white">
+                                                            <%= item.product.name %>
+                                                        </p>
+                                                        <p class="text-[10px] text-gray-600">
+                                                            <%= item.product.brand %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-5 text-center text-xs text-white">
+                                                <%= item.quantity %>
+                                            </td>
+                                            <td class="py-5 text-xs text-gray-400">₹ <%=
+                                                    item.price.toLocaleString('en-IN') %>
+                                            </td>
+                                            <td class="py-5 text-xs font-bold text-white">₹ <%= (item.price *
+                                                    item.quantity).toLocaleString('en-IN') %>
+                                            </td>
+                                            <td class="py-5 text-right">
+                                                <% if (item.itemStatus==='RETURN_REQUESTED' ) { %>
+                                                    <div class="flex flex-col items-end gap-3">
+                                                        <span
+                                                            class="flex items-center gap-1.5 text-[8px] font-black text-orange-400 uppercase tracking-widest bg-orange-400/5 px-2 py-1 rounded-md border border-orange-400/10">
+                                                            <span
+                                                                class="w-1 h-1 rounded-full bg-orange-400 animate-pulse"></span>
+                                                            Return Requested
+                                                        </span>
+
+                                                        <div class="flex gap-2">
+                                                            <button
+                                                                onclick="handleReturnAction('<%= order._id %>', '<%= item._id %>', 'REJECTED')"
+                                                                class="px-4 py-1.5 rounded-lg border border-white/5 bg-white/5 text-[9px] font-bold text-gray-400 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 transition-all duration-300 uppercase tracking-wider">
+                                                                Reject
+                                                            </button>
+                                                            <button
+                                                                onclick="handleReturnAction('<%= order._id %>', '<%= item._id %>', 'APPROVED')"
+                                                                class="px-4 py-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-[9px] font-bold text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all duration-300 uppercase tracking-wider shadow-lg shadow-emerald-500/5">
+                                                                Approve
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                </td>
-                                                <td class="py-5 text-center text-xs text-white">
-                                                    <%= item.quantity %>
-                                                </td>
-                                                <td class="py-5 text-xs text-gray-400">₹ <%=
-                                                        item.price.toLocaleString('en-IN') %>
-                                                </td>
-                                                <td class="py-5 text-xs font-bold text-white">₹ <%= (item.price *
-                                                        item.quantity).toLocaleString('en-IN') %>
-                                                </td>
-                                                <td class="py-5 text-right">
-                                                    <% if (item.itemStatus==='RETURN_REQUESTED' ) { %>
-                                                        <div class="flex flex-col items-end gap-3">
+                                                    <% } else if (item.itemStatus==='RETURNED' ) { %>
+                                                        <div
+                                                            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/5 border border-red-500/10">
+                                                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
                                                             <span
-                                                                class="flex items-center gap-1.5 text-[8px] font-black text-orange-400 uppercase tracking-widest bg-orange-400/5 px-2 py-1 rounded-md border border-orange-400/10">
-                                                                <span
-                                                                    class="w-1 h-1 rounded-full bg-orange-400 animate-pulse"></span>
-                                                                Return Requested
-                                                            </span>
-
-                                                            <div class="flex gap-2">
-                                                                <button
-                                                                    onclick="handleReturnAction('<%= order._id %>', '<%= item._id %>', 'REJECTED')"
-                                                                    class="px-4 py-1.5 rounded-lg border border-white/5 bg-white/5 text-[9px] font-bold text-gray-400 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 transition-all duration-300 uppercase tracking-wider">
-                                                                    Reject
-                                                                </button>
-                                                                <button
-                                                                    onclick="handleReturnAction('<%= order._id %>', '<%= item._id %>', 'APPROVED')"
-                                                                    class="px-4 py-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-[9px] font-bold text-emerald-500 hover:bg-emerald-500 hover:text-black transition-all duration-300 uppercase tracking-wider shadow-lg shadow-emerald-500/5">
-                                                                    Approve
-                                                                </button>
-                                                            </div>
+                                                                class="text-[9px] font-bold text-red-500 uppercase tracking-tighter">Returned</span>
                                                         </div>
-                                                        <% } else if (item.itemStatus==='RETURNED' ) { %>
-                                                            <div
-                                                                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/5 border border-red-500/10">
+                                                        <% } else if (item.itemStatus==='RETURN_REJECTED' ) { %>
+                                                            <span
+                                                                class="text-[9px] font-bold text-gray-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">Rejected</span>
+                                                            <% } else { %>
                                                                 <span
-                                                                    class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                                                <span
-                                                                    class="text-[9px] font-bold text-red-500 uppercase tracking-tighter">Returned</span>
-                                                            </div>
-                                                            <% } else if (item.itemStatus==='RETURN_REJECTED' ) { %>
-                                                                <span
-                                                                    class="text-[9px] font-bold text-gray-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">Rejected</span>
-                                                                <% } else { %>
-                                                                    <span
-                                                                        class="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter opacity-80">
-                                                                        <%= order.orderStatus %>
-                                                                    </span>
-                                                                    <% } %>
-                                                </td>
-                                            </tr>
-                                            <% }) %>
-                                    </tbody>
-                                </table>
-                            </section>
+                                                                    class="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter opacity-80">
+                                                                    <%= order.orderStatus %>
+                                                                </span>
+                                                                <% } %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </section>
 
-                            <section class="bg-[#1A1D1A] border border-white/5 rounded-3xl p-8">
-                                <div class="flex items-center gap-2 mb-10">
-                                    <h3 class="text-sm font-semibold text-white uppercase tracking-widest text-[11px]">
-                                        Order Timeline</h3>
+                        <section class="bg-[#1A1D1A] border border-white/5 rounded-3xl p-8">
+                            <div class="flex items-center gap-2 mb-10">
+                                <h3 class="text-sm font-semibold text-white uppercase tracking-widest text-[11px]">
+                                    Order Timeline</h3>
+                            </div>
+                            <div class="space-y-10 relative ml-2">
+                                <div class="timeline-line"></div>
+                                <div class="flex gap-8 relative z-10">
+                                    <div
+                                        class="w-4 h-4 rounded-full bg-emerald-500 border-4 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.3)] mt-1">
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-white">Order Placed</p>
+                                        <p class="text-[10px] text-gray-500 mt-1 uppercase">
+                                            <%= new Date(order.createdAt).toLocaleString() %>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="space-y-10 relative ml-2">
-                                    <div class="timeline-line"></div>
+                                <% if (order.orderStatus==='DELIVERED' ) { %>
                                     <div class="flex gap-8 relative z-10">
                                         <div
-                                            class="w-4 h-4 rounded-full bg-emerald-500 border-4 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.3)] mt-1">
+                                            class="w-4 h-4 rounded-full bg-emerald-500 border-4 border-emerald-500/20 mt-1">
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white">Order Placed</p>
-                                            <p class="text-[10px] text-gray-500 mt-1 uppercase">
-                                                <%= new Date(order.createdAt).toLocaleString() %>
-                                            </p>
+                                            <p class="text-xs font-bold text-white">Delivered</p>
+                                            <p class="text-[10px] text-emerald-500 mt-1 uppercase font-bold">
+                                                Successfully Received</p>
                                         </div>
                                     </div>
-                                    <% if (order.orderStatus==='DELIVERED' ) { %>
-                                        <div class="flex gap-8 relative z-10">
-                                            <div
-                                                class="w-4 h-4 rounded-full bg-emerald-500 border-4 border-emerald-500/20 mt-1">
-                                            </div>
-                                            <div>
-                                                <p class="text-xs font-bold text-white">Delivered</p>
-                                                <p class="text-[10px] text-emerald-500 mt-1 uppercase font-bold">
-                                                    Successfully Received</p>
-                                            </div>
-                                        </div>
-                                        <% } %>
-                                </div>
-                            </section>
-                </div>
-
-                <div class="space-y-6">
-                    <section class="bg-[#1A1D1A] border border-white/5 rounded-3xl p-8 shadow-2xl">
-                        <div class="flex items-center gap-4 border-b border-white/5 pb-8 mb-8">
+                                    <% } %>
+                            </div>
+                        </section>
+            </div>
+            <div class="space-y-6">
+                <section class="bg-[#1A1D1A] border border-white/5 rounded-3xl p-8 shadow-2xl">
+                    <div class="flex items-center gap-4 border-b border-white/5 pb-8 mb-8">
+                        <div>
+                            <h4 class="text-md font-bold text-white">
+                                <%= order.user.name %>
+                            </h4>
+                            <p class="text-[10px] text-gray-600 tracking-widest uppercase mt-0.5">Premium Customer</p>
+                        </div>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex gap-4">
+                            <div class="text-emerald-500 text-sm opacity-60">✉</div>
                             <div>
-                                <h4 class="text-md font-bold text-white">
-                                    <%= order.user.name %>
-                                </h4>
-                                <p class="text-[10px] text-gray-600 tracking-widest uppercase mt-0.5">Premium Customer
+                                <p class="text-[10px] font-bold text-gray-600 uppercase mb-1.5">Email Address</p>
+                                <p class="text-xs text-gray-300">
+                                    <%= order.user.email %>
                                 </p>
                             </div>
                         </div>
-                        <div class="space-y-8">
-                            <div class="flex gap-4">
-                                <div class="text-emerald-500 text-sm opacity-60">✉</div>
-                                <div>
-                                    <p class="text-[10px] font-bold text-gray-600 uppercase mb-1.5">Email Address</p>
-                                    <p class="text-xs text-gray-300">
-                                        <%= order.user.email %>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="text-emerald-500 text-sm opacity-60">🚛</div>
-                                <div>
-                                    <p class="text-[10px] font-bold text-gray-600 uppercase mb-1.5">Address</p>
-                                    <p class="text-xs text-gray-400 leading-relaxed font-medium">
-                                        <%= order.shippingAddress.streetAddress %><br>
-                                            <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> - <%=
-                                                        order.shippingAddress.pincode %>
-                                    </p>
-                                </div>
+
+                        <div class="flex gap-4">
+                            <div class="text-emerald-500 text-sm opacity-60">🚛</div>
+                            <div>
+                                <p class="text-[10px] font-bold text-gray-600 uppercase mb-1.5">Address</p>
+                                <p class="text-xs text-gray-400 leading-relaxed font-medium">
+                                    <%= order.shippingAddress.streetAddress %><br>
+                                        <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> - <%=
+                                                    order.shippingAddress.pincode %>
+                                </p>
                             </div>
                         </div>
-                    </section>
-                </div>
+
+                        <div class="flex gap-4">
+                            <div class="text-emerald-500 text-sm opacity-60">💳</div>
+                            <div>
+                                <p class="text-[10px] font-bold text-gray-600 uppercase mb-1.5">Payment Information</p>
+                                <p class="text-xs text-gray-300">
+                                    Method: <span class="text-gray-400">
+                                        <%= order.paymentMethod %>
+                                    </span><br>
+                                    Status:
+                                    <span
+                                        class="<%= order.paymentStatus === 'Completed' || order.paymentStatus === 'Paid' ? 'text-emerald-500' : 'text-amber-500' %> font-bold uppercase text-[9px] tracking-wider">
+                                        <%= order.paymentStatus %>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </main>
+        </div>
+    </main>
 
-        <script>
-            async function handleReturnAction(orderId, itemId, action) {
-                const type = itemId ? "this specific item" : "the entire order";
+    <script>
+        async function handleReturnAction(orderId, itemId, action) {
+            const type = itemId ? "this specific item" : "the entire order";
 
-                const result = await Swal.fire({
-                    title: 'Confirm Action',
-                    text: `Are you sure you want to ${action.toLowerCase()} the return for ${type}?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: action === 'APPROVED' ? '#10b981' : '#ef4444',
-                    cancelButtonColor: '#303030',
-                    confirmButtonText: 'Yes, Proceed',
-                    background: '#0f100f',
-                    color: '#fff'
-                });
+            const result = await Swal.fire({
+                title: 'Confirm Action',
+                text: `Are you sure you want to ${action.toLowerCase()} the return for ${type}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: action === 'APPROVED' ? '#10b981' : '#ef4444',
+                cancelButtonColor: '#303030',
+                confirmButtonText: 'Yes, Proceed',
+                background: '#0f100f',
+                color: '#fff'
+            });
 
-                if (result.isConfirmed) {
-                    try {
-                        const response = await fetch(`/admin/orders/return-update`, {
-                            method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ orderId, itemId, action })
-                        });
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/admin/orders/return-update`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ orderId, itemId, action })
+                    });
 
-                        const data = await response.json();
+                    const data = await response.json();
 
-                        if (data.success) {
-                            Swal.fire({
-                                title: 'Updated!',
-                                text: data.message,
-                                icon: 'success',
-                                background: '#0f100f',
-                                color: '#fff'
-                            }).then(() => location.reload());
-                        } else {
-                            Swal.fire('Error', data.message, 'error');
-                        }
-                    } catch (error) {
-                        console.error("Return update failed:", error);
-                        Swal.fire('Error', 'Internal Server Error', 'error');
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Updated!',
+                            text: data.message,
+                            icon: 'success',
+                            background: '#0f100f',
+                            color: '#fff'
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
                     }
+                } catch (error) {
+                    console.error("Return update failed:", error);
+                    Swal.fire('Error', 'Internal Server Error', 'error');
                 }
             }
-        </script>
+        }
+    </script>

@@ -18,8 +18,9 @@ import createUploader from "../middlewares/upload.middleware.js";
 import { getProducts, productDetails } from "../controllers/user/shop.controller.js";
 import { addToCart, getCart, removeFromCart, updateQty } from "../controllers/user/cart.controller.js";
 import { addAddressCheckout, getCheckoutPage, placeOrder } from "../controllers/user/checkout.controller.js";
-import { cancellFullOrder, cancelOrderItem, downloadInvoice, getOrderDetailsPage, getOrders, getOrdersSucces, returnRequest } from "../controllers/user/order.controller.js";
+import { cancellFullOrder, cancelOrderItem, downloadInvoice, getOrderDetailsPage, getOrders, getOrdersSucces, getPaymentFailurePage, returnRequest } from "../controllers/user/order.controller.js";
 import { updateOrderStatus } from "../controllers/admin/order.controller.js";
+import { verifyRazorpayPayment } from "../controllers/user/payment.controller.js";
 
 
 // const uploadProfile =createUploader("profile");
@@ -110,6 +111,9 @@ router.post("/cart/update-qty",requireAuth,updateQty)
 router.get("/checkout",requireAuth,getCheckoutPage);
 router.post("/address-checkout",requireAuth,addAddressCheckout)
 router.post("/checkout",requireAuth,placeOrder);
+
+router.post("/checkout/verify-payment",verifyRazorpayPayment);
+router.get("/payment-failed/:orderId", getPaymentFailurePage);
 
 router.get("/orders",requireAuth,getOrders);
 router.get("/order-success/:orderId",getOrdersSucces)

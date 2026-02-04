@@ -52,6 +52,9 @@ const orderSchema = new mongoose.Schema(
             enum: ["PLACED", "CONFIRM", "SHIPPED", "DELIVERED", "CANCELLED", "RETURN_REQUESTED", "RETURNED"],
             default: "PLACED"
         },
+        razorpayOrderId:String,
+        razorpayPaymentId:String,
+        razorpaySignature:String,
         returnReason: String,
         returnRequestedAt: Date,
         subtotal: Number,

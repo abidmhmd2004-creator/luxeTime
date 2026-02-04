@@ -365,3 +365,22 @@ export const downloadInvoice = async (req, res) => {
 
   doc.end();
 };
+
+
+// orderController.js
+
+export const getPaymentFailurePage =asyncHandler(async (req, res) => {
+        const {orderId} =req.params ;
+        
+        const order = await Order.findById(orderId);
+
+        if (!order) {
+            return res.redirect('/cart'); 
+        }
+
+        res.render('user/order-failure', {
+            title: 'Payment Failed | Luxe Time',
+            order: order,
+            user: req.session.user
+        });
+});
