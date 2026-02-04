@@ -12,38 +12,51 @@
 
         <form action="/edit-profile" method="POST" id="editProfileForm" class="space-y-4">
             
-            <div class="relative">
+           <div class="w-full max-w-sm md:max-w-md mx-auto">
+    
+    <div class="bg-card-dark mt-6 rounded-xl p-8 shadow-2xl space-y-5 text-center">
+        
+        <div class="flex flex-col items-center space-y-3">
+            <span class="material-symbols-outlined text-4xl text-primary">person</span>
+            <h2 class="text-xl font-bold text-white">Edit Your Details</h2>
+            <p class="text-sm text-neutral-400">
+                Update your personal information below.
+            </p>
+        </div>
+
+        <form action="/edit-profile" method="POST" id="editProfileForm" class="space-y-4">
+            
+            <div class="relative text-left">
                 <span class="absolute left-10 top-1.5 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Full Name</span>
                 
-                <label for="fullName" class="sr-only" >Full Name</label>
+                <label for="fullName" class="sr-only">Full Name</label>
                 <input type="text" id="fullName" name="name" value="<%= user.name %>" 
                     class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-white placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm focus:ring-primary" />
                 
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">person</span>
-                        <p class="mt-1 text-xs text-red-500 hidden" id="nameError"></p>
-
+                <span class="material-symbols-outlined absolute left-3 top-7 -translate-y-1/2 text-neutral-500 text-lg">person</span>
+                <p class="mt-1 text-[11px] text-red-500 hidden" id="nameError"></p>
             </div>
 
-            <div class="relative">
+            <div class="relative text-left">
                 <span class="absolute left-10 top-1.5 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Phone Number</span>
                 
                 <label for="phoneNumber" class="sr-only">Phone Number</label>
-                <input type="tel" id="phoneNumber" name="phone" value="<%= user.phone ||'-'  %>" 
+                <input type="tel" id="phoneNumber" name="phone" value="<%= user.phone %>" 
                     class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-white placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm focus:ring-primary" />
                 
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">call</span>
-                        <p class="mt-1 text-xs text-red-500 hidden" id="phoneError"></p>
-
+                <span class="material-symbols-outlined absolute left-3 top-7 -translate-y-1/2 text-neutral-500 text-lg">call</span>
+                <p class="mt-1 text-[11px] text-red-500 hidden" id="phoneError"></p>
             </div>
             
-            <div class="relative">
+            <div class="relative text-left">
                 <span class="absolute left-10 top-1.5 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Date of Birth</span>
                 
                 <label for="dob" class="sr-only">Date of Birth</label>
-                <input type="date" id="dob" name="dob" value="<%= user.dob ? user.dob.toDateString():'-' %>"
+                <input type="date" id="dob" name="dob" value="<%= user.dob ? new Date(user.dob).toISOString().split('T')[0] : '' %>"
                     class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-white placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm focus:ring-primary" />
                 
-                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">calendar_month</span>
+                <span class="material-symbols-outlined absolute left-3 top-7 -translate-y-1/2 text-neutral-500 text-lg">calendar_month</span>
+                <p class="mt-1 text-[11px] text-red-500 hidden" id="dobError"></p>
             </div>
 
             <button type="submit"
@@ -65,47 +78,65 @@
 document.getElementById("editProfileForm").addEventListener("submit", function (e) {
     const name = document.getElementById("fullName");
     const phone = document.getElementById("phoneNumber");
+    const dob = document.getElementById("dob");
 
     const nameError = document.getElementById("nameError");
     const phoneError = document.getElementById("phoneError");
-        const dobError = document.getElementById("dobError");
-
+    const dobError = document.getElementById("dobError");
 
     let isValid = true;
 
-    nameError.classList.add("hidden");
-    phoneError.classList.add("hidden");
-    dobError.classList.add("hidden");
+    // Reset all error messages
+    [nameError, phoneError, dobError].forEach(err => {
+        err.classList.add("hidden");
+        err.textContent = "";
+    });
 
     // Name validation
-    if (!name.value.trim()) {
+    const nameValue = name.value.trim();
+    if (!nameValue) {
         nameError.textContent = "Full name is required";
         nameError.classList.remove("hidden");
         isValid = false;
-    } else if (!/^[A-Za-z ]+$/.test(name.value)) {
+    } else if (!/^[A-Za-z\s]+$/.test(nameValue)) {
         nameError.textContent = "Only letters and spaces allowed";
         nameError.classList.remove("hidden");
         isValid = false;
-    } else if (name.value.trim().length < 3) {
+    } else if (nameValue.length < 3) {
         nameError.textContent = "Name must be at least 3 characters";
         nameError.classList.remove("hidden");
         isValid = false;
     }
 
-    // Phone validation (optional)
-    if (phone.value.trim() && !/^[6-9]\d{9}$/.test(phone.value)) {
-        phoneError.textContent = "Enter a valid 10-digit phone number";
+    // Phone validation
+    const phoneValue = phone.value.trim();
+    if (!phoneValue) {
+        phoneError.textContent = "Phone number is required";
+        phoneError.classList.remove("hidden");
+        isValid = false;
+    } else if (!/^\d+$/.test(phoneValue)) {
+        phoneError.textContent = "Phone number must contain only digits";
+        phoneError.classList.remove("hidden");
+        isValid = false;
+    } else if (!/^[6-9]\d{9}$/.test(phoneValue)) {
+        phoneError.textContent = "Enter a valid 10-digit number starting with 6-9";
         phoneError.classList.remove("hidden");
         isValid = false;
     }
-    if (!/^\d+$/.test(phone.value)) {
-        phoneError.textContent = "Phone number must contain only digits";
-        phoneError.classList.remove("hidden");
-        isValid=false
+
+    // Date of Birth validation
+    if (dob.value) {
+        const selectedDate = new Date(dob.value);
+        const today = new Date();
+        if (selectedDate >= today) {
+            dobError.textContent = "Date of birth must be in the past";
+            dobError.classList.remove("hidden");
+            isValid = false;
+        }
     }
 
     if (!isValid) {
-        e.preventDefault(); // stop form submission
+        e.preventDefault(); // Stop form submission
     }
 });
 </script>
