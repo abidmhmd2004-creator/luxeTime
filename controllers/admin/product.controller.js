@@ -7,7 +7,7 @@ import Variant from "../../models/variant.model.js";
 export const getProductPage = asyncHandler(async (req, res) => {
 
     const page = (req.query.page) || 1;
-    const limit = 3;
+    const limit = 8;
     const skip = (page - 1) * limit;
 
     const { search } = req.query;
