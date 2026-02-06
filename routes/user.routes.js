@@ -20,7 +20,7 @@ import { addToCart, getCart, removeFromCart, updateQty } from "../controllers/us
 import { addAddressCheckout, getCheckoutPage, placeOrder } from "../controllers/user/checkout.controller.js";
 import { cancellFullOrder, cancelOrderItem, downloadInvoice, getOrderDetailsPage, getOrders, getOrdersSucces, getPaymentFailurePage, returnRequest } from "../controllers/user/order.controller.js";
 import { updateOrderStatus } from "../controllers/admin/order.controller.js";
-import { verifyRazorpayPayment } from "../controllers/user/payment.controller.js";
+import { markPaymentFailed, verifyRazorpayPayment } from "../controllers/user/payment.controller.js";
 
 
 // const uploadProfile =createUploader("profile");
@@ -114,6 +114,8 @@ router.post("/checkout",requireAuth,placeOrder);
 
 router.post("/checkout/verify-payment",verifyRazorpayPayment);
 router.get("/payment-failed/:orderId", getPaymentFailurePage);
+router.post("/checkout/mark-payment-failed", markPaymentFailed);
+
 
 router.get("/orders",requireAuth,getOrders);
 router.get("/order-success/:orderId",getOrdersSucces)

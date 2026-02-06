@@ -8,6 +8,7 @@ import { getaddProducts, geteditProduct, getProductPage, postAddProducts, postEd
 import { uploadProfileImage } from "../controllers/user/profile.controller.js";
 import createUploader from "../middlewares/upload.middleware.js";
 import { getOrderDetailsPage, getOrdersPage, updateReturnStatus } from "../controllers/admin/order.controller.js";
+import { addCoupon, deleteCoupon, editCoupon, getCouponPage, toggleCouponStatus } from "../controllers/admin/coupon.controller.js";
 
 const uploadProductImage=createUploader("products");
 
@@ -41,9 +42,18 @@ router.get("/edit-product/:id",adminAuth,geteditProduct);
 router.post("/edit-product/:id",uploadProductImage.any(),postEditProduct)
 router.patch("/products/:id/delete",softDeleteProduct)
 
+//orders
 router.get("/orders",adminAuth,getOrdersPage)
 router.get("/orders/:orderId",getOrderDetailsPage)
 router.patch("/orders/return-update",adminAuth,updateReturnStatus)
+
+
+//coupons
+router.get("/coupons",getCouponPage)
+router.post("/coupons/add",addCoupon);
+router.put("/coupons/edit/:couponId",editCoupon)
+router.patch("/coupons/toggle/:couponId",toggleCouponStatus)
+router.delete("/coupons/delete/:couponId",deleteCoupon)
 
 //logout
 router.get("/logout",adminLogout)

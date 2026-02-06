@@ -9,6 +9,24 @@ import { validateCartForCheckout } from "../../helpers/cartValidate.js";
 import razorpay from "../../config/razorpay.js";
 
 export const getCheckoutPage = asyncHandler(async (req, res) => {
+  const { retry, orderId } = req.query;
+
+  const addresses = await Address.find({ userId: req.session.user.id });
+
+  if (retry && orderId) {
+    const order = await Order.findById(orderId);
+
+    if (!order || order.paymentStatus !== "FAILED") {
+      return res.redirect("/orders");
+    }
+
+    return res.render("user/checkout", {
+      retry: true,
+      order,
+      addresses,
+    });
+  }
+
   const cart = await Cart.findOne({ user: req.session.user.id })
     .populate({
       path: "items.product",
@@ -21,8 +39,6 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
   if (!result.valid) {
     return res.redirect("/cart");
   }
-  const addresses = await Address.find({ userId: req.session.user.id });
-
   res.render("user/checkout", {
     cart,
     addresses,
@@ -85,15 +101,45 @@ export const addAddressCheckout = asyncHandler(async (req, res) => {
 });
 
 export const placeOrder = asyncHandler(async (req, res) => {
-  const COD_LIMIT = 10000;
-
   const userId = req.session.user.id;
-  const { addressId, paymentMethod } = req.body;
+  const { addressId, paymentMethod ,orderId} = req.body;
+
+  if (orderId) {
+    const order = await Order.findById(orderId);
+
+    if (!order || order.paymentStatus !== "FAILED"||order.paymentMethod!=="RAZORPAY") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid retry attempt",
+      });
+    }
+    const razorpayOrder = await razorpay.orders.create({
+      amount: order.totalAmount * 100,
+      currency: "INR",
+      receipt: order.orderId,
+    });
+
+    order.razorpayOrderId = razorpayOrder.id;
+    order.paymentStatus = "PENDING";
+    await order.save();
+
+    return res.json({
+      success: true,
+      razorpay: true,
+      orderId: order._id,
+      razorpayOrderId: razorpayOrder.id,
+      amount: order.totalAmount,
+      key: process.env.RAZORPAY_KEY_ID,
+    });
+  }
+
+
+  const COD_LIMIT = 10000;
 
   if (!addressId) {
     return res.status(400).json({
       success: false,
-      message: "Please select a payment method",
+      message: "Please select an address",
     });
   }
   if (!paymentMethod) {
@@ -180,11 +226,11 @@ export const placeOrder = asyncHandler(async (req, res) => {
       message: "Cash on Delivery not availble for this amount",
     });
   }
-  const orderId = `#ORD-${Math.floor(100000 + Math.random() * 900000)}`;
+  const genartedOrderId = `#ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 
   const order = await Order.create({
     user: userId,
-    orderId,
+    orderId :genartedOrderId,
     items: orderItems,
     shippingAddress: {
       fullName: address.fullName,
@@ -200,7 +246,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
     discount,
     tax,
     totalAmount,
-    paymentStatus: paymentMethod === "COD" ? "PENDING" : "PENDING",
+    paymentStatus: "PENDING",
   });
 
   if (paymentMethod === "COD") {
@@ -234,7 +280,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
     return res.json({
       success: true,
       razorpay: true,
-      orderId: order._id, 
+      orderId: order._id,
       razorpayOrderId: razorpayOrder.id,
       amount: totalAmount,
       key: process.env.RAZORPAY_KEY_ID,

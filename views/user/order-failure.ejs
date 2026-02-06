@@ -1,54 +1,120 @@
+<main class="flex-1 flex items-center justify-center p-4">
+    <div
+        class="bg-[#121513]  w-full max-w-md bg-[#0d130f] border border-white/5 rounded-3xl p-8 shadow-2xl text-center">
 
-
-
-    <main class="flex-1 flex items-center justify-center p-4">
-        <div class="bg-[#121513]  w-full max-w-md bg-[#0d130f] border border-white/5 rounded-3xl p-8 shadow-2xl text-center">
-            
-            <div class="flex justify-center mb-6">
-                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/20">
-                    <span class="material-symbols-outlined text-red-500 text-3xl">error</span>
-                </div>
+        <div class="flex justify-center mb-6">
+            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/20">
+                <span class="material-symbols-outlined text-red-500 text-3xl">error</span>
             </div>
-
-            <h1 class="text-2xl font-bold mb-2">Payment Failed</h1>
-            <p class="text-sm text-neutral-400 mb-8 leading-relaxed">
-                Your payment could not be completed. Please try again or use a different payment method.
-            </p>
-
-            <div class="bg-black/40 border border-white/5 rounded-2xl p-6 mb-8 text-left space-y-4">
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Order ID</span>
-                    <span class="text-xs font-mono text-neutral-300">#<%= order._id %></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Attempted Amount</span>
-                    <span class="text-sm font-bold text-white">₹<%= order.totalAmount.toLocaleString('en-IN') %></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Payment Method</span>
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm text-neutral-500">credit_card</span>
-                        <span class="text-xs text-neutral-300"><%= order.paymentMethod %></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-3">
-                <a href="/checkout?retry=true&orderId=<%= order._id %>" 
-                   class="w-full flex items-center justify-center gap-2 bg-[#4ade80] text-black font-bold py-3 rounded-xl hover:bg-[#22c55e] transition-all duration-300 uppercase text-xs tracking-widest">
-                    <span class="material-symbols-outlined text-sm">refresh</span>
-                    Retry Payment
-                </a>
-                
-                <a href="/cart" 
-                   class="w-full block border border-white/10 text-neutral-400 font-bold py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all duration-300 uppercase text-xs tracking-widest">
-                    Go to Cart
-                </a>
-            </div>
-
-            <p class="mt-8 text-[10px] text-neutral-600 italic">
-                If the amount was deducted from your account, it will be automatically refunded within 3-5 business days.
-            </p>
         </div>
-    </main>
 
+        <h1 class="text-2xl font-bold mb-2">Payment Failed</h1>
+        <p class="text-sm text-neutral-400 mb-8 leading-relaxed">
+            Your payment could not be completed. Please try again or use a different payment method.
+        </p>
+
+        <div class="bg-black/40 border border-white/5 rounded-2xl p-6 mb-8 text-left space-y-4">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Order ID</span>
+                <span class="text-xs font-mono text-neutral-300">#<%= order._id %></span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Attempted Amount</span>
+                <span class="text-sm font-bold text-white">₹<%= order.totalAmount.toLocaleString('en-IN') %></span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase tracking-widest text-neutral-500 font-bold">Payment Method</span>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm text-neutral-500">credit_card</span>
+                    <span class="text-xs text-neutral-300">
+                        <%= order.paymentMethod %>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <% if (order.paymentStatus==='FAILED' ) { %>
+                <button id="retryPaymentBtn" data-order-id="<%= order._id %>"
+                    class="bg-red-500/10 text-red-500 px-4 py-2 rounded-lg text-xs font-black uppercase">
+                    Retry Payment
+                </button>
+                <% } %>
+
+
+                    <a href="/cart"
+                        class="w-full block border border-white/10 text-neutral-400 font-bold py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all duration-300 uppercase text-xs tracking-widest">
+                        Go to Cart
+                    </a>
+        </div>
+
+        <p class="mt-8 text-[10px] text-neutral-600 italic">
+            If the amount was deducted from your account, it will be automatically refunded within 3-5 business days.
+        </p>
+    </div>
+</main>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+document.getElementById("retryPaymentBtn")?.addEventListener("click", async function () {
+
+  const orderId = this.dataset.orderId;
+
+  this.disabled = true;
+  this.innerText = "Retrying...";
+
+  const response = await fetch("/checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      orderId: orderId  
+    })
+  });
+
+  const result = await response.json();
+
+  if (!result.success) {
+    Swal.fire("Error", result.message, "error");
+    return;
+  }
+
+  const options = {
+    key: result.key,
+    amount: result.amount * 100,
+    currency: "INR",
+    name: "LuxeTime",
+    description: "Retry payment",
+    order_id: result.razorpayOrderId,
+
+    handler: async function (response) {
+      const verifyRes = await fetch("/checkout/verify-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: result.orderId,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_signature: response.razorpay_signature
+        })
+      });
+
+      const verifyResult = await verifyRes.json();
+
+      if (verifyResult.success) {
+        window.location.href = `/order-success/${result.orderId}`;
+      } else {
+        window.location.href = `/payment-failed/${result.orderId}`;
+      }
+    },
+    modal: {
+      ondismiss: () => {
+        window.location.href = `/payment-failed/${result.orderId}`;
+      }
+    },
+    theme: { color: "#22c55e" }
+  };
+
+  new Razorpay(options).open();
+});
+</script>
