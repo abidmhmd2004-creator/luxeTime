@@ -52,6 +52,14 @@ const orderSchema = new mongoose.Schema(
             enum: ["PLACED", "CONFIRM", "SHIPPED", "DELIVERED", "CANCELLED", "RETURN_REQUESTED", "RETURNED"],
             default: "PLACED"
         },
+        coupon:{
+            couponId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Coupon"
+            },
+            code:String,
+            dsicountAmount:Number
+        },
         razorpayOrderId:String,
         razorpayPaymentId:String,
         razorpaySignature:String,

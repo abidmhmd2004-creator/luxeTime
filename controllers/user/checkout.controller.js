@@ -7,11 +7,14 @@ import Order from "../../models/order.model.js";
 import Razorpay from "razorpay";
 import { validateCartForCheckout } from "../../helpers/cartValidate.js";
 import razorpay from "../../config/razorpay.js";
+import Coupon from "../../models/coupon.model.js";
 
 export const getCheckoutPage = asyncHandler(async (req, res) => {
+  console.log("getting");
   const { retry, orderId } = req.query;
 
   const addresses = await Address.find({ userId: req.session.user.id });
+  const coupons = await Coupon.find({ isDeleted: false });
 
   if (retry && orderId) {
     const order = await Order.findById(orderId);
@@ -24,9 +27,9 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
       retry: true,
       order,
       addresses,
+      coupons,
     });
   }
-
   const cart = await Cart.findOne({ user: req.session.user.id })
     .populate({
       path: "items.product",
@@ -39,9 +42,12 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
   if (!result.valid) {
     return res.redirect("/cart");
   }
+  const appliedCoupon = req.session.appliedCoupon || null;
   res.render("user/checkout", {
     cart,
     addresses,
+    coupons,
+    appliedCoupon,
   });
 });
 
@@ -100,14 +106,96 @@ export const addAddressCheckout = asyncHandler(async (req, res) => {
   return res.redirect("/checkout");
 });
 
+export const applyCoupon = asyncHandler(async (req, res) => {
+  const userId = req.session.user.id;
+  const { code } = req.body;
+
+  if (req.session.appliedCoupon) {
+    return res.json({
+      success: false,
+      message: "Coupon already applied",
+    });
+  }
+
+  const coupon = await Coupon.findOne({
+    code: code.toUpperCase(),
+    isDeleted: false,
+    isListed: true,
+  });
+
+  if (!coupon) {
+    return res.json({
+      success: false,
+      message: "Invalid coupon",
+    });
+  }
+
+  if (coupon.expiry < new Date()) {
+    return res.json({
+      success: false,
+      message: "Coupon is expired",
+    });
+  }
+  if (coupon.useCount >= coupon.maxUsage) {
+    return res.json({
+      success: false,
+      message: "Couponn usage limit exceeded",
+    });
+  }
+
+  const cart = await Cart.findOne({ user: userId }).populate("items.variant");
+
+  if (!cart || cart.items.length === 0) {
+    return res.json({ success: false, message: "Your cart is empty" });
+  }
+
+  let subtotal = 0;
+  for (const item of cart.items) {
+    subtotal += item.variant.finalPrice * item.quantity;
+  }
+
+  if (subtotal < coupon.minPurchase) {
+    return res.json({
+      success: false,
+      message: `Minimum purchase ₹${coupon.minPurchase} required`,
+    });
+  }
+
+  const discountAmount = Math.round((subtotal * coupon.percentage) / 100);
+
+  req.session.appliedCoupon = {
+    couponId: coupon._id,
+    code: coupon.code,
+    discountAmount,
+  };
+
+  res.json({
+    success: true,
+    message: "Coupon applied",
+    discountAmount,
+  });
+});
+
+export const removeCoupon = asyncHandler(async (req, res) => {
+  req.session.appliedCoupon = null;
+  res.json({
+    success: true,
+    message: "Coupon removed",
+  });
+});
+
 export const placeOrder = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
-  const { addressId, paymentMethod ,orderId} = req.body;
+  const { addressId, paymentMethod, orderId } = req.body;
 
   if (orderId) {
     const order = await Order.findById(orderId);
 
-    if (!order || order.paymentStatus !== "FAILED"||order.paymentMethod!=="RAZORPAY") {
+    if (
+      !order ||
+      order.paymentStatus !== "FAILED" ||
+      order.paymentMethod !== "RAZORPAY"
+    ) {
       return res.status(400).json({
         success: false,
         message: "Invalid retry attempt",
@@ -132,7 +220,6 @@ export const placeOrder = asyncHandler(async (req, res) => {
       key: process.env.RAZORPAY_KEY_ID,
     });
   }
-
 
   const COD_LIMIT = 10000;
 
@@ -203,11 +290,11 @@ export const placeOrder = asyncHandler(async (req, res) => {
       });
     }
 
-    const itemBaseTotal = variant.basePrice * item.quantity;
+    // const itemBaseTotal = variant.basePrice * item.quantity;
     const itemFinalTotal = variant.finalPrice * item.quantity;
 
-    subtotal += itemBaseTotal;
-    discount += itemBaseTotal - itemFinalTotal;
+    subtotal += itemFinalTotal;
+    // discount += itemBaseTotal - itemFinalTotal;
 
     orderItems.push({
       product: product._id,
@@ -217,9 +304,6 @@ export const placeOrder = asyncHandler(async (req, res) => {
     });
   }
 
-  tax = Math.round((subtotal - discount) * 0.18);
-  totalAmount = subtotal - discount + tax;
-
   if (paymentMethod === "COD" && totalAmount > COD_LIMIT) {
     return res.status(400).json({
       success: false,
@@ -228,9 +312,33 @@ export const placeOrder = asyncHandler(async (req, res) => {
   }
   const genartedOrderId = `#ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 
+  let couponDiscount = 0;
+  let appliedCoupon = req.session.appliedCoupon;
+
+  if (appliedCoupon) {
+    const coupon = await Coupon.findById(appliedCoupon.couponId);
+
+    if (
+      !coupon ||
+      coupon.expiry < new Date() ||
+      coupon.useCount >= coupon.maxUsage ||
+      subtotal < coupon.minPurchase
+    ) {
+      req.session.appliedCoupon = null;
+      return res.status(400).json({
+        success: false,
+        message: "Applied coupoun is no longer valid",
+      });
+    }
+    couponDiscount = appliedCoupon.discountAmount;
+  }
+
+  tax = Math.round((subtotal - discount) * 0.18);
+  totalAmount = subtotal - discount - couponDiscount + tax;
+
   const order = await Order.create({
     user: userId,
-    orderId :genartedOrderId,
+    orderId: genartedOrderId,
     items: orderItems,
     shippingAddress: {
       fullName: address.fullName,
@@ -243,11 +351,19 @@ export const placeOrder = asyncHandler(async (req, res) => {
     },
     paymentMethod,
     subtotal,
-    discount,
+    discount:couponDiscount,
     tax,
     totalAmount,
     paymentStatus: "PENDING",
   });
+
+  if (appliedCoupon) {
+    await Coupon.findByIdAndUpdate(appliedCoupon.couponId, {
+      $inc: { useCount: 1 },
+    });
+
+    req.session.appliedCoupon = null;
+  }
 
   if (paymentMethod === "COD") {
     for (const item of cart.items) {

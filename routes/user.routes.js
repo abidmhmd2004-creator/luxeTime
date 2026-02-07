@@ -17,10 +17,11 @@ import { addAddress, deleteAddress, editAddress, getAddress } from "../controlle
 import createUploader from "../middlewares/upload.middleware.js";
 import { getProducts, productDetails } from "../controllers/user/shop.controller.js";
 import { addToCart, getCart, removeFromCart, updateQty } from "../controllers/user/cart.controller.js";
-import { addAddressCheckout, getCheckoutPage, placeOrder } from "../controllers/user/checkout.controller.js";
+import { addAddressCheckout, applyCoupon, getCheckoutPage, placeOrder, removeCoupon } from "../controllers/user/checkout.controller.js";
 import { cancellFullOrder, cancelOrderItem, downloadInvoice, getOrderDetailsPage, getOrders, getOrdersSucces, getPaymentFailurePage, returnRequest } from "../controllers/user/order.controller.js";
 import { updateOrderStatus } from "../controllers/admin/order.controller.js";
 import { markPaymentFailed, verifyRazorpayPayment } from "../controllers/user/payment.controller.js";
+import { addToWishlist, getWishlist, removeWishlistItem } from "../controllers/user/wishlist.conroller.js";
 
 
 // const uploadProfile =createUploader("profile");
@@ -115,6 +116,8 @@ router.post("/checkout",requireAuth,placeOrder);
 router.post("/checkout/verify-payment",verifyRazorpayPayment);
 router.get("/payment-failed/:orderId", getPaymentFailurePage);
 router.post("/checkout/mark-payment-failed", markPaymentFailed);
+router.post("/checkout/apply-coupon", applyCoupon);
+router.delete("/checkout/remove-coupon", removeCoupon);
 
 
 router.get("/orders",requireAuth,getOrders);
@@ -130,6 +133,9 @@ router.post("/orders/:orderId/return",requireAuth,returnRequest)
 router.get("/orders/:orderId/invoice",downloadInvoice)
 router.patch("/admin/orders/:orderId/status",updateOrderStatus );
 
+router.get("/wishlist",getWishlist);
+router.post("/wishlist/add",addToWishlist);
+router.delete("/wishlist/remove/:itemId",removeWishlistItem)
 
 //logout
 router.post("/logout", logout);

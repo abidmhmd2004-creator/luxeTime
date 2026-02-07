@@ -1,13 +1,12 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
     body {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: black;
-        color: #ffffff;
-        font-size: 14px;
     }
 
+    /* Keeping custom scrollbar as Tailwind support for it varies by browser */
     .custom-scrollbar::-webkit-scrollbar {
         width: 3px;
     }
@@ -20,532 +19,691 @@
         background: #1a1d1b;
         border-radius: 10px;
     }
-
-    .glass-panel {
-        background: #121513;
-        border: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .selection-active {
-        border-color: #20703d !important;
-
-    }
-
-    .border-default {
-        border-color: rgba(255, 255, 255, 0.05);
-    }
-
-    /* MODAL ERROR TEXT */
-    .error-text {
-        color: #ef4444;
-        font-size: 8px;
-        font-weight: 400;
-        margin-top: 4px;
-        display: block;
-        text-transform: none;
-    }
-
-    .step-active {
-        color: #22c55e;
-    }
-
-    .step-line {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .step-line-active {
-        background: #22c55e;
-    }
 </style>
 
-<main class="max-w-[1100px] mx-auto px-6 py-6">
-    <div class="flex items-center justify-center gap-2 mb-4">
-        <div class="flex items-center gap-2 step-active">
-            <span
-                class="w-5 h-5 rounded-full border border-[#22c55e] flex items-center justify-center text-[10px] font-bold">1</span>
-            <span class="text-[11px] font-black uppercase tracking-widest">Cart</span>
-        </div>
-        <div class="w-10 h-[1px] step-line-active"></div>
-        <div class="flex items-center gap-2 step-active">
-            <span
-                class="w-5 h-5 rounded-full bg-[#22c55e] text-black flex items-center justify-center text-[10px] font-bold">2</span>
-            <span class="text-[11px] font-black uppercase tracking-widest">Checkout</span>
-        </div>
-        <div class="w-10 h-[1px] step-line"></div>
-        <div class="flex items-center gap-2 text-zinc-600">
-            <span
-                class="w-5 h-5 rounded-full border border-zinc-800 flex items-center justify-center text-[10px] font-bold">3</span>
-            <span class="text-[11px] font-black uppercase tracking-widest">Payment</span>
+<body class="bg-black text-white text-[14px]">
+    <main class="max-w-[1100px] mx-auto px-6 py-6">
+        <div class="flex items-center justify-center gap-2 mb-4">
+            <div class="flex items-center gap-2 text-[#22c55e]">
+                <span
+                    class="w-5 h-5 rounded-full border border-[#22c55e] flex items-center justify-center text-[10px] font-bold">1</span>
+                <span class="text-[11px] font-black uppercase tracking-widest">Cart</span>
+            </div>
+            <div class="w-10 h-[1px] bg-[#22c55e]"></div>
+            <div class="flex items-center gap-2 text-[#22c55e]">
+                <span
+                    class="w-5 h-5 rounded-full bg-[#22c55e] text-black flex items-center justify-center text-[10px] font-bold">2</span>
+                <span class="text-[11px] font-black uppercase tracking-widest">Checkout</span>
+            </div>
+            <div class="w-10 h-[1px] bg-white/10"></div>
+            <div class="flex items-center gap-2 text-zinc-600">
+                <span
+                    class="w-5 h-5 rounded-full border border-zinc-800 flex items-center justify-center text-[10px] font-bold">3</span>
+                <span class="text-[11px] font-black uppercase tracking-widest">Payment</span>
+            </div>
         </div>
 
-    </div>
-    <div class="mb-4 flex justify-end">
-        <a href="/cart" class="inline-flex items-center  text-zinc-500 hover:text-[#22c55e] transition-colors group">
-            <i class="fa-solid fa-arrow-left-long text-[10px] group-hover:-translate-x-1 transition-transform"></i>
-            <span class="text-[10px] font-black uppercase tracking-[0.2em]">Return to Cart</span>
-        </a>
-    </div>
+        <div class="mb-4 flex justify-end">
+            <a href="/cart" class="inline-flex items-center text-zinc-500 hover:text-[#22c55e] transition-colors group">
+                <i class="fa-solid fa-arrow-left-long text-[10px] group-hover:-translate-x-1 transition-transform"></i>
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] ml-2">Return to Cart</span>
+            </a>
+        </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        <div class="lg:col-span-8 space-y-4">
-            <div class="glass-panel rounded-2xl p-5">
-                <div class="flex items-center gap-3 mb-4">
-                    <span
-                        class="w-7 h-7 rounded-full bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center text-[11px] font-bold">1</span>
-                    <h2 class="text-lg font-black tracking-tighter uppercase">Delivery Address</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <div class="lg:col-span-8 space-y-4">
+                <div class="bg-[#121513] border border-white/[0.03] rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span
+                            class="w-7 h-7 rounded-full bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center text-[11px] font-bold">1</span>
+                        <h2 class="text-lg font-black tracking-tighter uppercase">Delivery Address</h2>
+                    </div>
+
+                    <div class="space-y-3" id="addressContainer">
+                        <% if (addresses && addresses.length> 0) { %>
+                            <% addresses.forEach((addr, index)=> { %>
+                                <div
+                                    class="address-card bg-[#121513] border rounded-xl p-4 relative transition-all duration-300 <%= index === 0 ? 'border-[#20703d]' : 'border-white/5' %>">
+                                    <div class="absolute top-4 right-5">
+                                        <span
+                                            class="bg-[#22c55e] text-black text-[9px] font-black px-1.5 py-0.5 rounded-sm uppercase">
+                                            <%= addr.addressType %>
+                                        </span>
+                                    </div>
+                                    <label class="flex items-start gap-3 cursor-pointer">
+                                        <input type="radio" name="selectedAddress" value="<%= addr._id %>" <%=index===0
+                                            ? 'checked' : '' %>
+                                        onchange="handleSelection(this, '.address-card')"
+                                        class="mt-1 accent-[#22c55e] w-4 h-4">
+                                        <div>
+                                            <h4 class="font-bold text-white mb-0.5 text-sm">
+                                                <%= addr.fullName %>
+                                            </h4>
+                                            <p class="text-zinc-500 text-xs leading-relaxed">
+                                                <%= addr.streetAddress %>, <%= addr.city %>, <%= addr.state %> - <%=
+                                                                addr.pincode %>
+                                            </p>
+                                            <p class="text-zinc-400 text-[10px] mt-2 font-bold">Mobile: <%= addr.phone
+                                                    %>
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                                <% }) %>
+                                    <% } %>
+                    </div>
+                    <button onclick="toggleModal(true)"
+                        class="mt-4 text-[#22c55e] text-[10px] font-black uppercase tracking-widest hover:opacity-80">
+                        + Add New Address
+                    </button>
                 </div>
 
-                <div class="space-y-3" id="addressContainer">
-                    <% if (addresses && addresses.length> 0) { %>
-                        <% addresses.forEach((addr, index)=> { %>
-                            <div
-                                class="bg-[#121513] border transition-all duration-300 address-card <%= index === 0 ? 'selection-active' : 'border-default' %> rounded-xl p-4 relative">
-                                <div class="absolute top-4 right-5">
-                                    <span
-                                        class="bg-[#22c55e] text-black text-[9px] font-black px-1.5 py-0.5 rounded-sm uppercase">
-                                        <%= addr.addressType %>
-                                    </span>
+                <div class="bg-[#121513] border border-white/[0.03] rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-5">
+                        <span
+                            class="w-7 h-7 rounded-full bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center text-[11px] font-bold">2</span>
+                        <h2 class="text-lg font-black tracking-tighter uppercase">Payment Method</h2>
+                    </div>
+
+                    <div class="space-y-3" id="paymentContainer">
+                        <label
+                            class="payment-card flex items-center justify-between p-4 bg-[#121513] border border-[#20703d] rounded-xl cursor-pointer transition-all">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-credit-card text-[#22c55e] text-sm"></i>
+                                <span class="text-xs font-bold">Razorpay (Cards/UPI/Netbanking)</span>
+                            </div>
+                            <input type="radio" name="paymentMethod" value="RAZORPAY" checked
+                                onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
+                        </label>
+
+                        <label
+                            class="payment-card flex items-center justify-between p-4 bg-[#121513] border border-white/5 rounded-xl cursor-pointer transition-all">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-wallet text-zinc-500 text-sm"></i>
+                                <span class="text-xs font-bold">Wallet</span>
+                            </div>
+                            <input type="radio" name="paymentMethod" value="WALLET"
+                                onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
+                        </label>
+
+                        <label
+                            class="payment-card flex items-center justify-between p-4 bg-[#121513] border border-white/5 rounded-xl cursor-pointer transition-all">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-truck-fast text-zinc-500 text-sm"></i>
+                                <span class="text-xs font-bold">Cash on Delivery</span>
+                            </div>
+                            <input type="radio" name="paymentMethod" value="COD"
+                                onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4">
+                <div class="bg-[#121513] border border-white/[0.03] rounded-2xl p-4 sticky top-6">
+                    <h3 class="text-base font-black tracking-tighter uppercase mb-6">Order Summary</h3>
+
+                    <div class="space-y-4 mb-5 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+                        <% let subtotal=0; let totalDiscount=0; cart.items.forEach(item=> {
+                            let itemBaseTotal = item.variant.basePrice * item.quantity;
+                            let itemOfferTotal = item.variant.finalPrice * item.quantity;
+                            subtotal += itemBaseTotal;
+                            totalDiscount += (itemBaseTotal - itemOfferTotal);
+                            %>
+                            <div class="flex gap-3">
+                                <div class="w-12 h-12 bg-black rounded-lg border border-white/5 p-1 flex-shrink-0">
+                                    <img src="<%= item.variant.images[0].url %>"
+                                        class="w-full h-full object-cover rounded">
                                 </div>
-                                <label class="flex items-start gap-3 cursor-pointer">
-                                    <input type="radio" name="selectedAddress" value="<%= addr._id %>" <%=index===0
-                                        ? 'checked' : '' %>
-                                    onchange="handleSelection(this, '.address-card')"
-                                    class="mt-1 accent-[#22c55e] w-4 h-4">
-                                    <div>
-                                        <h4 class="font-bold text-white mb-0.5 text-sm">
-                                            <%= addr.fullName %>
-                                        </h4>
-                                        <p class="text-zinc-500 text-xs leading-relaxed">
-                                            <%= addr.streetAddress %>, <%= addr.city %>, <%= addr.state %> - <%=
-                                                            addr.pincode %>
-                                        </p>
-                                        <p class="text-zinc-400 text-[10px] mt-2 font-bold">Mobile: <%= addr.phone %>
-                                        </p>
-                                    </div>
-                                </label>
+                                <div class="flex-1">
+                                    <h5 class="text-[11px] font-bold text-gray-200">
+                                        <%= item.product.name %>
+                                    </h5>
+                                    <p class="text-[10px] text-zinc-500 font-bold uppercase mt-0.5">
+                                        Qty: <%= item.quantity %> | <%= item.variant.color %>
+                                    </p>
+                                </div>
+                                <span class="text-[11px] font-bold text-[#22c55e]">₹<%= itemOfferTotal.toLocaleString()
+                                        %></span>
                             </div>
                             <% }) %>
-                                <% } %>
-                </div>
-                <button onclick="toggleModal(true)"
-                    class="mt-4 text-[#22c55e] text-[10px] font-black uppercase tracking-widest hover:opacity-80">+
-                    Add New Address</button>
-            </div>
+                    </div>
 
-            <div class="glass-panel rounded-2xl p-5">
-                <div class="flex items-center gap-3 mb-5">
-                    <span
-                        class="w-7 h-7 rounded-full bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center text-[11px] font-bold">2</span>
-                    <h2 class="text-lg font-black tracking-tighter uppercase">Payment Method</h2>
-                </div>
+                    <div class="relative mb-4">
+                        <input type="text" id="couponInput" placeholder="Enter coupon code"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 pl-4 pr-24 text-xs focus:outline-none focus:border-[#22c55e]/30 transition-all text-gray-200">
 
-                <div class="space-y-3" id="paymentContainer">
-                    <label
-                        class="payment-card flex items-center justify-between p-4 bg-[#121513] border selection-active rounded-xl cursor-pointer transition-all">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-credit-card text-[#22c55e] text-sm"></i>
-                            <span class="text-xs font-bold">Razorpay (Cards/UPI/Netbanking)</span>
-                        </div>
-                        <input type="radio" name="paymentMethod" value="RAZORPAY" checked
-                            onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
-                    </label>
-
-                    <label
-                        class="payment-card flex items-center justify-between p-4 bg-[#121513] border border-default rounded-xl cursor-pointer transition-all">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-wallet text-zinc-500 text-sm"></i>
-                            <span class="text-xs font-bold">Wallet</span>
-                        </div>
-                        <input type="radio" name="paymentMethod" value="WALLET"
-                            onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
-                    </label>
-
-                    <label
-                        class="payment-card flex items-center justify-between p-4 bg-[#121513] border border-default rounded-xl cursor-pointer transition-all">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-truck-fast text-zinc-500 text-sm"></i>
-                            <span class="text-xs font-bold">Cash on Delivery</span>
-                        </div>
-                        <input type="radio" name="paymentMethod" value="COD"
-                            onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="lg:col-span-4">
-            <div class="glass-panel rounded-2xl p-4 sticky top-6">
-                <h3 class="text-base font-black tracking-tighter uppercase mb-6">Order Summary</h3>
-
-                <div class="space-y-4 mb-5 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
-                    <% let subtotal=0; let totalDiscount=0; cart.items.forEach(item=> {
-                        let itemBaseTotal = item.variant.basePrice * item.quantity;
-                        let itemOfferTotal = item.variant.finalPrice * item.quantity;
-                        subtotal += itemBaseTotal;
-                        totalDiscount += (itemBaseTotal - itemOfferTotal);
-                        %>
-                        <div class="flex gap-3">
-                            <div class="w-12 h-12 bg-black rounded-lg border border-white/5 p-1 flex-shrink-0">
-                                <img src="<%= item.variant.images[0].url %>" class="w-full h-full object-cover rounded">
-                            </div>
-                            <div class="flex-1">
-                                <h5 class="text-[11px] font-bold">
-                                    <%= item.product.name %>
-                                </h5>
-                                <p class="text-[10px] text-zinc-500 font-bold uppercase mt-0.5">Qty: <%= item.quantity
-                                        %> | <%= item.variant.color %>
-                                </p>
-                            </div>
-                            <span class="text-[11px] font-bold text-[#22c55e]">₹<%= itemOfferTotal.toLocaleString() %>
-                            </span>
-                        </div>
-                        <% }) %>
-                </div>
-
-                <div class="relative mb-4">
-                    <input type="text" placeholder="Coupon code"
-                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs focus:outline-none focus:border-[#22c55e]/30">
-                    <button
-                        class="absolute right-1.5 top-1.5 bg-[#22c55e] text-black text-[9px] font-black px-3 py-1.5 rounded-md uppercase">Apply</button>
-                </div>
-
-                <% let tax=Math.round((subtotal - totalDiscount) * 0.18); let finalTotal=(subtotal - totalDiscount) +
-                    tax; %>
-
-                    <div class="space-y-3 border-t border-white/5 pt-4 text-[11px] font-bold">
-                        <div class="flex justify-between text-zinc-500">
-                            <span>Subtotal</span>
-                            <span class="text-white">₹<%= subtotal.toLocaleString() %></span>
-                        </div>
-                        <div class="flex justify-between text-zinc-500">
-                            <span>Discount</span>
-                            <span class="text-red-500">- ₹<%= totalDiscount.toLocaleString() %></span>
-                        </div>
-                        <div class="flex justify-between text-zinc-500">
-                            <span>Tax (18% GST)</span>
-                            <span class="text-white">₹<%= tax.toLocaleString() %></span>
-                        </div>
-                        <div class="flex justify-between text-zinc-500">
-                            <span>Shipping</span>
-                            <span class="text-[#22c55e]">Free</span>
-                        </div>
-                        <div class="flex justify-between text-lg font-black border-t border-white/5 pt-3">
-                            <span class="text-xs uppercase">Total</span>
-                            <span class="text-[#22c55e]">₹<%= finalTotal.toLocaleString() %></span>
+                        <div class="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center">
+                            <button onclick="openUserCouponModal()" type="button"
+                                class="text-zinc-500 hover:text-[#22c55e] transition-colors px-2 border-r border-white/10 flex items-center">
+                                <i class="fas fa-chevron-down text-[12px]"></i>
+                            </button>
+                            <button onclick="applyCoupon()"
+                                class="bg-[#22c55e] hover:bg-[#16a34a] text-black text-[9px] font-black px-3 py-1.5 rounded-md uppercase transition-all active:scale-95 ml-1.5">
+                                Apply
+                            </button>
                         </div>
                     </div>
 
-                    <button id="placeOrderBtn"
-                        class="w-full bg-[#22c55e] text-black py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest mt-5 hover:brightness-110 shadow-lg shadow-[#22c55e]/10 transition-all">
-                        Place Order <i class="fa-solid fa-arrow-right ml-1"></i>
-                    </button>
+                    <% let tax=Math.round((subtotal - totalDiscount) * 0.18); let couponDiscount=locals.appliedCoupon ?
+                        appliedCoupon.discountAmount : 0; let finalTotal=(subtotal - totalDiscount - couponDiscount) +
+                        tax; %>
+
+                        <div class="space-y-3 border-t border-white/5 pt-4 text-[11px] font-bold">
+                            <div class="flex justify-between text-zinc-500">
+                                <span>Subtotal</span>
+                                <span class="text-white">₹<%= subtotal.toLocaleString() %></span>
+                            </div>
+
+                            <div class="flex justify-between text-zinc-500">
+                                <span>Product Discount</span>
+                                <span class="text-red-500">- ₹<%= totalDiscount.toLocaleString() %></span>
+                            </div>
+
+                            <% if (locals.appliedCoupon) { %>
+                                <div
+                                    class="flex justify-between items-center py-2 px-3 bg-[#22c55e]/5 border border-[#22c55e]/10 rounded-lg">
+                                    <div class="flex flex-col">
+                                        <span class="text-[#22c55e] text-[9px] uppercase tracking-widest">Coupon
+                                            Applied</span>
+                                        <span class="text-white text-[10px]">
+                                            <%= appliedCoupon.code %>
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-[#22c55e]">- ₹<%= couponDiscount.toLocaleString() %></span>
+                                        <button onclick="removeCoupon()"
+                                            class="text-zinc-500 hover:text-red-500 transition-colors">
+                                            <i class="fas fa-times-circle text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                                    <div class="flex justify-between text-zinc-500">
+                                        <span>Tax (18% GST)</span>
+                                        <span class="text-white">₹<%= tax.toLocaleString() %></span>
+                                    </div>
+
+                                    <div class="flex justify-between text-zinc-500">
+                                        <span>Shipping</span>
+                                        <span class="text-[#22c55e]">Free</span>
+                                    </div>
+
+                                    <div class="flex justify-between text-lg font-black border-t border-white/5 pt-3">
+                                        <span class="text-xs uppercase">Total</span>
+                                        <span class="text-[#22c55e]">₹<%= finalTotal.toLocaleString() %></span>
+                                    </div>
+                        </div>
+
+                        <button id="placeOrderBtn"
+                            class="w-full bg-[#22c55e] text-black py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest mt-5 hover:brightness-110 shadow-lg shadow-[#22c55e]/10 transition-all">
+                            Place Order <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="userCouponModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]" onclick="closeUserCouponModal()"></div>
+
+        <div id="userModalContent"
+            class="relative bg-[#121513] w-full max-w-[380px] rounded-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 scale-95 opacity-0">
+
+            <div class="p-5 border-b border-white/5 flex justify-between items-center bg-[#181c19]">
+                <div>
+                    <h3 class="text-[11px] font-black text-white uppercase tracking-widest">Available Coupons</h3>
+                    <p class="text-[9px] text-zinc-500 mt-0.5 uppercase">Apply to save on your order</p>
+                </div>
+                <button onclick="closeUserCouponModal()" class="text-zinc-500 hover:text-white transition-colors">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+
+            <div class="p-4 max-h-[300px] overflow-y-auto space-y-3 custom-scrollbar">
+
+                <% if (locals.coupons && coupons.length> 0) { %>
+                    <% coupons.forEach(coupon=> { %>
+                        <div onclick="selectCoupon('<%= coupon.code %>')"
+                            class="group relative border border-white/5 bg-white/[0.02] p-4 rounded-xl cursor-pointer hover:border-[#22c55e]/50 hover:bg-[#22c55e]/5 transition-all">
+                            <div class="flex justify-between items-start">
+                                <span
+                                    class="bg-[#22c55e]/10 text-[#22c55e] px-2 py-1 rounded text-[10px] font-mono font-bold border border-[#22c55e]/20 tracking-wider uppercase">
+                                    <%= coupon.code %>
+                                </span>
+                                <span class="text-[#22c55e] text-[11px] font-black">
+                                    <%= coupon.percentage %>% OFF
+                                </span>
+                            </div>
+                            <h4 class="text-[11px] font-bold text-gray-200 uppercase mt-2">
+                                <%= coupon.name %>
+                            </h4>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="text-center py-8">
+                                    <p class="text-zinc-500 text-[10px] font-bold uppercase">No coupons found</p>
+                                </div>
+                                <% } %>
             </div>
         </div>
     </div>
-</main>
 
-<div id="addressModal"
-    class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
-    <div class="glass-panel w-full max-w-lg rounded-2xl p-6 shadow-2xl scale-95 opacity-0 transition-all duration-300"
-        id="modalContent">
-        <h3 class="text-lg font-black uppercase mb-6">New Address Details</h3>
-        <form id="addAddressForm" class="space-y-4">
-            <div>
-                <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Full Name</label>
-                <input type="text" name="fullName"
-                    class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
-                <p id="err-fullName" class="error-text hidden"></p>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
+    <div id="addressModal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
+        <div id="modalContent"
+            class="bg-[#121513] border border-white/[0.03] w-full max-w-lg rounded-2xl p-6 shadow-2xl transition-all duration-300 scale-95 opacity-0">
+            <h3 class="text-lg font-black uppercase mb-6">New Address Details</h3>
+            <form id="addAddressForm" class="space-y-4">
                 <div>
-                    <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Mobile Number</label>
-                    <input type="tel" name="phone"
+                    <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Full Name</label>
+                    <input type="text" name="fullName"
                         class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
-                    <p id="err-phone" class="error-text hidden"></p>
+                    <p id="err-fullName" class="text-[#ef4444] text-[8px] font-normal mt-1 lowercase hidden"></p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Mobile Number</label>
+                        <input type="tel" name="phone"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                        <p id="err-phone" class="text-[#ef4444] text-[8px] font-normal mt-1 lowercase hidden"></p>
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Pincode</label>
+                        <input type="text" name="pincode"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                        <p id="err-pincode" class="text-[#ef4444] text-[8px] font-normal mt-1 lowercase hidden"></p>
+                    </div>
                 </div>
                 <div>
-                    <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Pincode</label>
-                    <input type="text" name="pincode"
+                    <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Street Address</label>
+                    <input type="text" name="streetAddress"
                         class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
-                    <p id="err-pincode" class="error-text hidden"></p>
+                    <p id="err-streetAddress" class="text-[#ef4444] text-[8px] font-normal mt-1 lowercase hidden"></p>
                 </div>
-            </div>
-            <div>
-                <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">Street Address</label>
-                <input type="text" name="streetAddress"
-                    class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
-                <p id="err-streetAddress" class="error-text hidden"></p>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">City</label>
-                    <input type="text" name="city"
-                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
-                    <p id="err-city" class="error-text hidden"></p>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">City</label>
+                        <input type="text" name="city"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                        <p id="err-city" class="text-[#ef4444] text-[8px] font-normal mt-1 lowercase hidden"></p>
+                    </div>
+                    <div>
+                        <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">State</label>
+                        <input type="text" name="state"
+                            class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
+                        <p id="err-state" class="text-[#ef4444] text-[8px] font-normal mt-1 lowercase hidden"></p>
+                    </div>
                 </div>
-                <div>
-                    <label class="text-[9px] font-black text-zinc-500 uppercase block mb-1">State</label>
-                    <input type="text" name="state"
-                        class="w-full bg-[#121513] border border-white/10 rounded-lg py-2.5 px-4 text-xs outline-none focus:border-[#22c55e]/40 text-white">
-                    <p id="err-state" class="error-text hidden"></p>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="toggleModal(false)"
+                        class="flex-1 border border-white/10 py-3 rounded-lg text-[9px] font-black uppercase text-white hover:bg-white/5 transition-all">Cancel</button>
+                    <button type="submit"
+                        class="flex-1 bg-[#22c55e] text-black py-3 rounded-lg text-[9px] font-black uppercase hover:brightness-110 transition-all">Save
+                        Address</button>
                 </div>
-            </div>
-            <div class="flex gap-3 pt-4">
-                <button type="button" onclick="toggleModal(false)"
-                    class="flex-1 border border-white/10 py-3 rounded-lg text-[9px] font-black uppercase text-white">Cancel</button>
-                <button type="submit"
-                    class="flex-1 bg-[#22c55e] text-black py-3 rounded-lg text-[9px] font-black uppercase">Save
-                    Address</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<script>
-    function handleSelection(input, cardClass) {
-        const container = input.closest('.space-y-3');
-        const cards = container.querySelectorAll(cardClass);
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        cards.forEach(card => {
-            card.classList.remove('selection-active');
-            card.classList.add('border-default');
-        });
-
-        const selectedCard = input.closest(cardClass);
-        selectedCard.classList.add('selection-active');
-        selectedCard.classList.remove('border-default');
-    }
-
-    function toggleModal(show) {
-        const modal = document.getElementById('addressModal');
-        const content = document.getElementById('modalContent');
-        if (show) {
+    <script>
+        function openUserCouponModal() {
+            const modal = document.getElementById('userCouponModal');
+            const content = document.getElementById('userModalContent');
             modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => content.classList.add('scale-100', 'opacity-100'), 10);
-        } else {
-            content.classList.remove('scale-100', 'opacity-100');
-            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+            setTimeout(() => {
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
         }
-    }
 
-    // VALIDATION & SUBMISSION
-    document.getElementById('addAddressForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        document.querySelectorAll('.error-text').forEach(p => p.classList.add('hidden'));
+        function closeUserCouponModal() {
+            const modal = document.getElementById('userCouponModal');
+            const content = document.getElementById('userModalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
 
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData.entries());
-        let isValid = true;
+        function selectCoupon(code) {
+            const input = document.getElementById('couponInput');
+            input.value = code;
 
-        const showError = (field, msg) => {
-            const p = document.getElementById(`err-${field}`);
-            p.innerText = msg;
-            p.classList.remove('hidden');
-            isValid = false;
-        };
+            input.classList.add('border-[#22c55e]');
+            setTimeout(() => input.classList.remove('border-[#22c55e]'), 1000);
 
-        if (!data.fullName.trim()) showError('fullName', 'Name is required');
-        if (!/^\d{10}$/.test(data.phone)) showError('phone', '10-digit phone required');
-        if (!/^\d{6}$/.test(data.pincode)) showError('pincode', '6-digit pincode required');
-        if (!data.streetAddress.trim()) showError('streetAddress', 'Address required');
-        if (!data.city.trim()) showError('city', 'City required');
-        if (!data.state.trim()) showError('state', 'State required');
+            closeUserCouponModal();
+        }
+        function handleSelection(input, cardClass) {
+            const container = input.closest('.space-y-3');
+            const cards = container.querySelectorAll(cardClass);
 
-        if (!isValid) return;
-
-        try {
-            const response = await fetch('/address-checkout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+            cards.forEach(card => {
+                card.classList.remove('border-[#20703d]');
+                card.classList.add('border-white/5');
             });
 
-            if (response.redirected) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    background: '#181e18',
-                    color: '#fff',
-                    timer: 1500,
-                    showConfirmButton: false
-                })
-                    .then(() => window.location.href = response.url);
-                return;
+            const selectedCard = input.closest(cardClass);
+            selectedCard.classList.add('border-[#20703d]');
+            selectedCard.classList.remove('border-white/5');
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('addressModal');
+            const content = document.getElementById('modalContent');
+            if (show) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => content.classList.add('scale-100', 'opacity-100'), 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+            }
+        }
+
+        async function applyCoupon() {
+            const code = document.getElementById("couponInput").value.trim();
+
+            if (!code) {
+                return Swal.fire({
+                    icon: "warning",
+                    title: "Coupon Required",
+                    text: "Please enter a coupon code",
+                    background: "#181e18",
+                    color: "#fff"
+                });
             }
 
-            const result = await response.json();
-            if (result.success) {
-                location.reload();
-            } else {
+            try {
+                const res = await fetch("/checkout/apply-coupon", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ code })
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    return Swal.fire({
+                        icon: "error",
+                        title: "Coupon Error",
+                        text: data.message,
+                        background: "#181e18",
+                        color: "#fff"
+                    });
+                }
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Coupon Applied",
+                    text: `You saved ₹${data.discountAmount}`,
+                    timer: 1300,
+                    showConfirmButton: false,
+                    background: "#181e18",
+                    color: "#fff"
+                }).then(() => location.reload());
+
+            } catch (err) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Server Error",
+                    text: "Unable to apply coupon",
+                    background: "#181e18",
+                    color: "#fff"
+                });
+            }
+        }
+
+        async function removeCoupon() {
+            try {
+                const res = await fetch("/checkout/remove-coupon", {
+                    method: "DELETE"
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Coupon Removed",
+                        timer: 1000,
+                        showConfirmButton: false,
+                        background: "#181e18",
+                        color: "#fff"
+                    }).then(() => location.reload());
+                }
+            } catch {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Unable to remove coupon",
+                    background: "#181e18",
+                    color: "#fff"
+                });
+            }
+        }
+
+
+        // VALIDATION & SUBMISSION
+        document.getElementById('addAddressForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.error-text').forEach(p => p.classList.add('hidden'));
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            let isValid = true;
+
+            const showError = (field, msg) => {
+                const p = document.getElementById(`err-${field}`);
+                p.innerText = msg;
+                p.classList.remove('hidden');
+                isValid = false;
+            };
+
+            if (!data.fullName.trim()) showError('fullName', 'Name is required');
+            if (!/^\d{10}$/.test(data.phone)) showError('phone', '10-digit phone required');
+            if (!/^\d{6}$/.test(data.pincode)) showError('pincode', '6-digit pincode required');
+            if (!data.streetAddress.trim()) showError('streetAddress', 'Address required');
+            if (!data.city.trim()) showError('city', 'City required');
+            if (!data.state.trim()) showError('state', 'State required');
+
+            if (!isValid) return;
+
+            try {
+                const response = await fetch('/address-checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.redirected) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        background: '#181e18',
+                        color: '#fff',
+                        timer: 1500,
+                        showConfirmButton: false
+                    })
+                        .then(() => window.location.href = response.url);
+                    return;
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    location.reload();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message,
+                        background: '#181e18',
+                        color: '#fff'
+                    });
+                }
+            } catch (err) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: result.message,
+                    text: 'Server error',
                     background: '#181e18',
                     color: '#fff'
                 });
             }
-        } catch (err) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Server error',
-                background: '#181e18',
-                color: '#fff'
-            });
-        }
-    });
-    async function markPaymentFailed(orderId) {
-        await fetch("/checkout/mark-payment-failed", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ orderId })
         });
-    }
-
-    document.getElementById("placeOrderBtn").addEventListener("click", async function () {
-
-        const selectedAddress = document.querySelector(
-            'input[name="selectedAddress"]:checked'
-        );
-
-        if (!selectedAddress) {
-            return Swal.fire({
-                icon: "warning",
-                title: "Address Required",
-                text: "Please select a delivery address",
-                background: "#181e18",
-                color: "#fff",
-                confirmButtonColor: "#22c55e"
-            });
-        }
-
-        const selectedPayment = document.querySelector(
-            'input[name="paymentMethod"]:checked'
-        );
-
-        if (!selectedPayment) {
-            return Swal.fire({
-                icon: "warning",
-                title: "Payment Method Required",
-                text: "Please select a payment method",
-                background: "#181e18",
-                color: "#fff",
-                confirmButtonColor: "#22c55e"
-            });
-        }
-
-        const addressId = selectedAddress.value;
-        const paymentMethod = selectedPayment.value;
-
-        this.disabled = true;
-        this.innerText = "Processing...";
-
-        try {
-            const response = await fetch("/checkout", {
+        async function markPaymentFailed(orderId) {
+            await fetch("/checkout/mark-payment-failed", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    addressId,
-                    paymentMethod
-                })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderId })
             });
+        }
 
-            const result = await response.json();
+        document.getElementById("placeOrderBtn").addEventListener("click", async function () {
 
-            if (!result.success) {
-                this.disabled = false;
-                this.innerText = "Place Order";
+            const selectedAddress = document.querySelector(
+                'input[name="selectedAddress"]:checked'
+            );
 
+            if (!selectedAddress) {
                 return Swal.fire({
-                    icon: "error",
-                    title: "Checkout Failed",
-                    text: result.message,
+                    icon: "warning",
+                    title: "Address Required",
+                    text: "Please select a delivery address",
                     background: "#181e18",
                     color: "#fff",
                     confirmButtonColor: "#22c55e"
                 });
             }
 
-            if (!result.razorpay) {
+            const selectedPayment = document.querySelector(
+                'input[name="paymentMethod"]:checked'
+            );
+
+            if (!selectedPayment) {
                 return Swal.fire({
-                    icon: "success",
-                    title: "Order Placed",
-                    text: "Redirecting...",
-                    timer: 1500,
-                    showConfirmButton: false,
+                    icon: "warning",
+                    title: "Payment Method Required",
+                    text: "Please select a payment method",
+                    background: "#181e18",
+                    color: "#fff",
+                    confirmButtonColor: "#22c55e"
+                });
+            }
+
+            const addressId = selectedAddress.value;
+            const paymentMethod = selectedPayment.value;
+
+            this.disabled = true;
+            this.innerText = "Processing...";
+
+            try {
+                const response = await fetch("/checkout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        addressId,
+                        paymentMethod
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    this.disabled = false;
+                    this.innerText = "Place Order";
+
+                    return Swal.fire({
+                        icon: "error",
+                        title: "Checkout Failed",
+                        text: result.message,
+                        background: "#181e18",
+                        color: "#fff",
+                        confirmButtonColor: "#22c55e"
+                    });
+                }
+
+                if (!result.razorpay) {
+                    return Swal.fire({
+                        icon: "success",
+                        title: "Order Placed",
+                        text: "Redirecting...",
+                        timer: 1500,
+                        showConfirmButton: false,
+                        background: "#181e18",
+                        color: "#fff"
+                    }).then(() => {
+                        window.location.href = result.redirectUrl;
+                    });
+                }
+
+                if (result.razorpay) {
+
+                    const options = {
+                        key: result.key,
+                        amount: result.amount * 100,
+                        currency: "INR",
+                        name: "LuxeTime",
+                        description: "Order payment",
+                        order_id: result.razorpayOrderId,
+
+                        handler: async function (response) {
+
+                            const verifyRes = await fetch("/checkout/verify-payment", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    orderId: result.orderId,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_signature: response.razorpay_signature
+                                })
+                            })
+
+                            const verifyResult = await verifyRes.json();
+
+                            if (verifyResult.success) {
+                                window.location.href = `/order-success/${result.orderId}`;
+                            } else {
+                                await markPaymentFailed(result.orderId);
+                                window.location.href = `/payment-failed/${result.orderId}`;
+                            }
+                        },
+                        modal: {
+                            ondismiss: async function () {
+                                await markPaymentFailed(result.orderId);
+                                window.location.href = `/payment-failed/${result.orderId}`;
+                            }
+                        },
+                        theme: { color: "#22c55e" }
+                    };
+                    const rzp = new Razorpay(options);
+
+                    rzp.on("payment.failed", async function () {
+                        await markPaymentFailed(result.orderId);
+                        window.location.href = `/payment-failed/${result.orderId}`;
+                    });
+                    rzp.open()
+                }
+
+            } catch (error) {
+                console.error(error);
+
+                this.disabled = false;
+                this.innerText = "Place Order";
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Server Error",
+                    text: "Please try again later",
                     background: "#181e18",
                     color: "#fff"
-                }).then(() => {
-                    window.location.href = result.redirectUrl;
                 });
             }
-
-            if (result.razorpay) {
-
-                const options = {
-                    key: result.key,
-                    amount: result.amount * 100,
-                    currency: "INR",
-                    name: "LuxeTime",
-                    description: "Order payment",
-                    order_id: result.razorpayOrderId,
-
-                    handler: async function (response) {
-
-                        const verifyRes = await fetch("/checkout/verify-payment", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                orderId: result.orderId,
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_order_id: response.razorpay_order_id,
-                                razorpay_signature: response.razorpay_signature
-                            })
-                        })
-
-                        const verifyResult = await verifyRes.json();
-
-                        if (verifyResult.success) {
-                            window.location.href = `/order-success/${result.orderId}`;
-                        } else {
-                            await markPaymentFailed(result.orderId);
-                            window.location.href = `/payment-failed/${result.orderId}`;
-                        }
-                    },
-                    modal: {
-                        ondismiss: async function () {
-                            await markPaymentFailed(result.orderId);
-                            window.location.href = `/payment-failed/${result.orderId}`;
-                        }
-                    },
-                    theme: { color: "#22c55e" }
-                };
-                const rzp = new Razorpay(options);
-
-                rzp.on("payment.failed", async function () {
-                    await markPaymentFailed(result.orderId);
-                    window.location.href = `/payment-failed/${result.orderId}`;
-                });
-                rzp.open()
-            }
-
-        } catch (error) {
-            console.error(error);
-
-            this.disabled = false;
-            this.innerText = "Place Order";
-
-            Swal.fire({
-                icon: "error",
-                title: "Server Error",
-                text: "Please try again later",
-                background: "#181e18",
-                color: "#fff"
-            });
-        }
-    });
-</script>
+        });
+    </script>

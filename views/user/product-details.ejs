@@ -160,9 +160,9 @@
                     <%= defaultVariant.stock <=0 ? 'Out of Stock' : 'Add to Cart' %>
                 </button>
 
-                <button
+                <button type="button" id="wishlistText" onclick="addToWishlist('<%= product._id %>','<%= defaultVariant._id %>')"
                     class="flex-1 rounded-xl border border-white/20 text-white text-xs font-bold py-2.5 hover:bg-white/5 transition flex items-center justify-center gap-2">
-                    <span class="material-symbols-rounded text-sm">favorite</span> Add to Wishlist
+                    <span id="wishlistIcon" class="material-symbols-rounded text-sm">favorite</span> Add to Wishlist
                 </button>
             </div>
 
@@ -367,7 +367,8 @@
 
 
     function addToCart(productId, variantId) {
-        const quantity = parseInt(document.getElementById(`quantity-val-${variantId}`).innerText); fetch("/cart/add", {
+        const quantity = parseInt(document.getElementById(`quantity-val-${variantId}`).innerText);
+        fetch("/cart/add", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -409,5 +410,33 @@
                     text: "Something went wrong.Please try again."
                 })
             })
+    }
+
+    async function addToWishlist(productId,variantId){
+        try{
+            const res = await fetch("/wishlist/add",{
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({productId,variantId})
+            })
+
+            const data = await res.json();
+
+            if(!data.success){
+                Swal.fire("Error","Unable to add wishlist","error");
+            }
+
+            document.getElementById("wishlistIcon").innerText= "❤️";
+            document.getElementById("wishlistText").innerHTML =data.alreadyAdded?"In wishlist":"Added";
+
+            Swal.fire({
+                icon:"success",
+                title:data.alreadyAdded?"Already in wishlist":"Added to wishlist",
+                timer:1000,
+                showConfirmButton:true
+            })
+        }catch{
+            Swal.fire("Error","Something wrong","error");
+        }
     }
 </script>
