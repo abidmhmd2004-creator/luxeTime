@@ -1,160 +1,324 @@
+<style>
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
 
-        <%- include('../partials/adminSidebar') %>
+    ::-webkit-scrollbar-track {
+        background: #0d0f0d;
+    }
 
+    ::-webkit-scrollbar-thumb {
+        background: #262626;
+        border-radius: 10px;
+    }
 
+    ::-webkit-scrollbar-thumb:hover {
+        background: #333333;
+    }
+</style>
 
-<main class="flex-1 p-8 space-y-8 overflow-y-auto ">
-        <div class="flex justify-between bg-[#1A1D1A] items-center border-b border-neutral-700 pb-4">
-            <div>
-                <h1 class="text-xl font-bold">WATCH STORE DASHBOARD</h1>
-                <p class="text-sm text-neutral-400">Overview of sales, orders, and inventory</p>
-            </div>
-            <div class="flex space-x-3 text-sm text-neutral-400">
-                <button class="px-3 py-1 rounded-lg bg-card-dark hover:text-white transition">Today</button>
-                <button class="px-3 py-1 rounded-lg hover:text-white transition">Last 7 Days</button>
-                <button class="px-3 py-1 rounded-lg hover:text-white transition">Monthly</button>
-                <button class="px-3 py-1 rounded-lg hover:text-white transition">Yearly</button>
-            </div>
-        </div>
+<div class="flex w-full h-screen overflow-hidden bg-[#0d0f0d]">
 
-        <div class="grid grid-cols-5 gap-6">
-            <div class="bg-card-dark p-4 rounded-xl shadow-lg space-y-2">
-                <p class="text-sm text-neutral-400">Total Revenue</p>
-                <h2 class="text-2xl font-bold">₹12,45,000</h2>
-                <p class="text-xs text-light-green flex items-center">
-                    <span class="material-symbols-outlined text-xs">arrow_drop_up</span>
-                    +1.5%
-                </p>
-            </div>
-            <div class="bg-card-dark p-4 rounded-xl shadow-lg space-y-2">
-                <p class="text-sm text-neutral-400">Total Orders</p>
-                <h2 class="text-2xl font-bold">342</h2>
-                <p class="text-xs text-light-green flex items-center">
-                    <span class="material-symbols-outlined text-xs">arrow_drop_up</span>
-                    +2.5%
-                </p>
-            </div>
-            <div class="bg-card-dark p-4 rounded-xl shadow-lg space-y-2">
-                <p class="text-sm text-neutral-400">Total Customers</p>
-                <h2 class="text-2xl font-bold">1,335</h2>
-                <p class="text-xs text-light-green flex items-center">
-                    <span class="material-symbols-outlined text-xs">arrow_drop_up</span>
-                    +1.2%
-                </p>
-            </div>
-            <div class="bg-card-dark p-4 rounded-xl shadow-lg space-y-2">
-                <p class="text-sm text-neutral-400">Watches Listed</p>
-                <h2 class="text-2xl font-bold">88</h2>
-                <p class="text-xs text-red-400 flex items-center">
-                    <span class="material-symbols-outlined text-xs">arrow_drop_down</span>
-                    -0.5%
-                </p>
-            </div>
-            <div class="bg-card-dark p-4 rounded-xl shadow-lg space-y-2">
-                <p class="text-sm text-neutral-400">New Admins</p>
-                <h2 class="text-2xl font-bold">12</h2>
-                <p class="text-xs text-light-green flex items-center">
-                    <span class="material-symbols-outlined text-xs">arrow_drop_up</span>
-                    +10%
-                </p>
-            </div>
-        </div>
+    <%- include('../partials/adminSidebar') %>
 
-        <div class="grid grid-cols-3 gap-6">
-            <div class="col-span-2 bg-card-dark p-6 rounded-xl shadow-lg space-y-4">
-                <h3 class="text-lg font-semibold border-b border-neutral-700 pb-3">Sales Revenue Trend</h3>
-                <div class="h-64 flex items-center justify-center text-light-green/50">
-                    [Placeholder for Sales Revenue Trend Graph]
+        <main class="flex-1 w-full p-5 space-y-5 overflow-y-auto text-white">
+
+            <div
+                class="flex flex-col md:flex-row justify-between bg-[#1A1D1A] items-start md:items-center border-b border-neutral-700 pb-4 gap-4">
+                <div>
+                    <h1 class="text-lg font-bold tracking-wider uppercase">Sales & Revenue Report</h1>
+                    <p class="text-[11px] text-neutral-400">Detailed analytics of orders, discounts, and performance</p>
                 </div>
-            </div>
 
-            <div class="col-span-1 bg-card-dark p-6 rounded-xl shadow-lg space-y-4">
-                <h3 class="text-lg font-semibold border-b border-neutral-700 pb-3">Sales by Colors</h3>
-                <div class="h-64 flex flex-col items-center justify-center space-y-4">
-                    <div class="w-32 h-32 rounded-full border-4 border-gray-700 flex items-center justify-center">
-                        <span class="text-xl font-bold text-light-green">1,380</span>
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex bg-neutral-800 rounded-lg p-0.5 text-[10px] text-neutral-400">
+                        <button data-range="daily" class="range-btn px-2.5 py-1 rounded-md">Daily</button>
+                        <button data-range="weekly" class="range-btn px-2.5 py-1 rounded-md">Weekly</button>
+                        <button data-range="yearly" class="range-btn px-2.5 py-1 rounded-md">Yearly</button>
+                        <button id="customBtn" class="px-2.5 py-1 rounded-md flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[10px]">calendar_month</span> Custom
+                        </button>
                     </div>
-                    <div class="w-full space-y-1">
-                        <div class="flex justify-between text-sm text-neutral-400"><span class="flex items-center"><span class="w-2 h-2 rounded-full bg-light-green mr-2"></span>Black</span><span>40%</span></div>
-                        <div class="flex justify-between text-sm text-neutral-400"><span class="flex items-center"><span class="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>Gold</span><span>30%</span></div>
-                        <div class="flex justify-between text-sm text-neutral-400"><span class="flex items-center"><span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span>Silver</span><span>20%</span></div>
-                        <div class="flex justify-between text-sm text-neutral-400"><span class="flex items-center"><span class="w-2 h-2 rounded-full bg-red-500 mr-2"></span>Quartz</span><span>10%</span></div>
+                    <div id="customDateBox" class="hidden flex items-center gap-2 mt-3">
+                        <input type="date" id="startDate"
+                            class="bg-neutral-900 border border-neutral-700 text-[10px] px-2 py-1 rounded">
+                        <input type="date" id="endDate"
+                            class="bg-neutral-900 border border-neutral-700 text-[10px] px-2 py-1 rounded">
+                        <button id="applyCustom"
+                            class="px-3 py-1 bg-light-green text-black text-[10px] font-bold rounded">
+                            Apply
+                        </button>
+                    </div>
+
+
+                    <div class="h-6 w-[1px] bg-neutral-700 hidden md:block"></div>
+
+<a
+  href="/admin/reports/pdf?<%= new URLSearchParams(query).toString() %>"
+  class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-neutral-700 hover:bg-neutral-800 text-[10px] text-neutral-300 transition"
+>
+  <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+  PDF
+</a>
+
+<a
+  href="/admin/reports/excel?<%= new URLSearchParams(query).toString() %>"
+  class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-light-green/10 text-light-green border border-light-green/20 hover:bg-light-green hover:text-black text-[10px] font-bold transition"
+>
+  <span class="material-symbols-outlined text-sm">description</span>
+  EXCEL
+</a>
+
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="bg-card-dark p-4 rounded-xl border border-neutral-800 space-y-1">
+                    <p class="text-[10px] text-neutral-400 uppercase font-semibold">Total Sales Count</p>
+                    <h2 class="text-lg font-black">
+                        <%= summary.totalOrders %>
+                    </h2>
+                    <p class="text-[9px] text-light-green flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[10px]">trending_up</span> +8% vs last month
+                    </p>
+                </div>
+                <div class="bg-card-dark p-4 rounded-xl border border-neutral-800 space-y-1">
+                    <p class="text-[10px] text-neutral-400 uppercase font-semibold">Gross Amount</p>
+                    <h2 class="text-lg font-black">₹<%= summary.grossAmount.toLocaleString() %>
+                    </h2>
+                </div>
+                <!-- <div class="bg-card-dark p-4 rounded-xl border border-neutral-800 space-y-1">
+                    <p class="text-[10px] text-red-400 uppercase font-semibold">Discounts</p>
+                    <h2 class="text-lg font-black text-red-400">₹<%= summary.discountAmount.toLocaleString() %>
+                    </h2>
+                </div> -->
+                <div class="bg-card-dark p-4 rounded-xl border border-neutral-800 ring-1 ring-light-green/20 space-y-1">
+                    <p class="text-[10px] text-light-green uppercase font-semibold">Net Revenue</p>
+                    <h2 class="text-lg font-black text-white">₹<%= summary.netRevenue.toLocaleString() %>
+                    </h2>
+                </div>
+                <div class="bg-card-dark p-4 rounded-xl border border-neutral-800 space-y-1">
+                    <p class="text-[10px] text-neutral-400 uppercase font-semibold">Avg. Value</p>
+                    <h2 class="text-lg font-black">₹<%= Math.round(summary.avgOrderValue).toLocaleString() %>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div class="lg:col-span-2 bg-card-dark p-5 rounded-xl border border-neutral-800 shadow-lg">
+                    <div class="flex justify-between items-center border-b border-neutral-700 pb-2 mb-4">
+                        <h3 class="text-xs font-bold text-neutral-200">Revenue Trend </h3>
+                        <span class="text-[9px] text-neutral-500 italic uppercase">Values in Lakhs</span>
+                    </div>
+                    <div class="h-48">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-card-dark p-5 rounded-xl border border-neutral-800 shadow-lg">
+                    <h3 class="text-xs font-bold text-neutral-200 border-b border-neutral-700 pb-2 mb-4 text-center">
+                        Sales by Color</h3>
+                    <div class="flex flex-col items-center">
+                        <div class="relative w-32 h-32 mb-4">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="40" stroke="#262626" stroke-width="10" fill="transparent" />
+                                <circle cx="50" cy="50" r="40" stroke="#4ade80" stroke-width="10" fill="transparent"
+                                    stroke-dasharray="251.2" stroke-dashoffset="100" />
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <span class="text-lg font-black">
+                                    <%= summary.totalOrders %>
+                                </span>
+                                <span class="text-[8px] text-neutral-500 uppercase tracking-widest">Orders</span>
+                            </div>
+                        </div>
+                        <div class="w-full space-y-1">
+                            <% salesByColor.forEach(color=> { %>
+                                <div class="flex justify-between text-[10px] text-neutral-400">
+                                    <span class="capitalize">
+                                        <%= color._id %>
+                                    </span>
+                                    <span class="font-bold">
+                                        <%= color.units %> units
+                                    </span>
+                                </div>
+                                <% }) %>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="grid grid-cols-3 gap-6">
-            <div class="col-span-2 bg-card-dark p-6 rounded-xl shadow-lg space-y-4">
-                <div class="flex justify-between items-center border-b border-neutral-700 pb-3">
-                    <h3 class="text-lg font-semibold">Recent Orders</h3>
-                    <a href="#" class="text-sm text-light-green hover:underline">View All</a>
+            <div class="bg-card-dark rounded-xl shadow-lg border border-neutral-800 overflow-hidden">
+                <div class="p-3 border-b border-neutral-700 flex justify-between items-center bg-[#1A1D1A]/50">
+                    <h3 class="text-xs font-bold text-neutral-200 uppercase tracking-widest">Detailed Sales Ledger</h3>
+                    <div class="relative">
+                        <input type="text" placeholder="Search report..."
+                            class="bg-neutral-900 border border-neutral-700 text-[10px] px-7 py-1 rounded-lg outline-none focus:border-light-green w-40">
+                        <span
+                            class="material-symbols-outlined absolute left-2 top-1 text-sm text-neutral-500">search</span>
+                    </div>
                 </div>
-                
+
                 <div class="overflow-x-auto">
-                    <table class="min-w-full text-sm text-neutral-300">
-                        <thead>
-                            <tr class="text-left text-neutral-400 border-b border-neutral-700">
-                                <th class="py-2 pr-4 font-normal">ORDER ID</th>
-                                <th class="py-2 pr-4 font-normal">CUSTOMER</th>
-                                <th class="py-2 pr-4 font-normal">WATCH MODEL</th>
-                                <th class="py-2 pr-4 font-normal">AMOUNT</th>
-                                <th class="py-2 pr-4 font-normal">STATUS</th>
-                                <th class="py-2 font-normal">DATE</th>
+                    <table class="w-full text-[11px] text-neutral-300">
+                        <thead class="bg-neutral-800/30 text-[10px] text-neutral-500 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-4 py-2 text-left">Date</th>
+                                <th class="px-4 py-2 text-left">Order ID</th>
+                                <th class="px-4 py-2 text-left">Customer</th>
+                                <th class="px-4 py-2 text-right">Amount</th>
+                                <!-- <th class="px-4 py-2 text-right text-red-400">Discount</th> -->
+                                <th class="px-4 py-2 text-right text-light-green">Net Total</th>
+                                <th class="px-4 py-2 text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
-                                <td class="py-3 font-medium text-white">#OS-3521</td>
-                                <td class="py-3">Anjali Kumari</td>
-                                <td class="py-3">Rolex Datejust</td>
-                                <td class="py-3">₹45,000</td>
-                                <td class="py-3"><span class="text-light-green">Completed</span></td>
-                                <td class="py-3">Oct 26, 2026</td>
-                            </tr>
-                            <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
-                                <td class="py-3 font-medium text-white">#OS-3520</td>
-                                <td class="py-3">Shivank Sharma</td>
-                                <td class="py-3">Omega Seamaster</td>
-                                <td class="py-3">₹88,000</td>
-                                <td class="py-3"><span class="bg-yellow-500/20 text-yellow-500 px-2 py-0.5 rounded text-xs">Processing</span></td>
-                                <td class="py-3">Oct 26, 2026</td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 font-medium text-white">#OS-3519</td>
-                                <td class="py-3">Priya Singh</td>
-                                <td class="py-3">Cartier Tank Française</td>
-                                <td class="py-3">₹99,000</td>
-                                <td class="py-3"><span class="text-red-400">Cancelled</span></td>
-                                <td class="py-3">Oct 26, 2026</td>
-                            </tr>
+                        <tbody class="divide-y divide-neutral-800">
+                            <% ledger.forEach(order=> { %>
+                                <tr class="hover:bg-neutral-800/40 transition">
+                                    <td class="px-4 py-3">
+                                        <%= new Date(order.createdAt).toDateString() %>
+                                    </td>
+                                    <td class="px-4 py-3 font-bold"><%= order.orderId %>
+                                    </td>
+                                    <td class="px-4 py-3"><%= order.user.name%></td>
+                                    <td class="px-4 py-3 text-right">₹<%= order.subtotal.toLocaleString() %>
+                                    </td>
+                                    <!-- <td class="px-4 py-3 text-right text-red-400">₹<%= order.discount.toLocaleString()
+                                            %>
+                                    </td> -->
+                                    <td class="px-4 py-3 text-right font-black">₹<%= order.totalAmount.toLocaleString()
+                                            %>
+                                    </td>
+                                    <td class="px-4 py-3 text-center">
+                                        <span
+                                            class="px-2 py-0.5 rounded bg-light-green/10 text-light-green text-[9px] font-bold">PAID</span>
+                                    </td>
+                                </tr>
+                                <% }) %>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <div class="col-span-1 bg-card-dark p-6 rounded-xl shadow-lg space-y-4">
-                <h3 class="text-lg font-semibold border-b border-neutral-700 pb-3">Top Selling Models</h3>
-                
-                <div class="space-y-3">
-                    <div class="text-sm">
-                        <div class="flex justify-between text-neutral-300"><span>Rolex Daytona</span><span>1750</span></div>
-                        <div class="w-full bg-neutral-700 h-2 rounded-full mt-1"><div class="bg-primary h-2 rounded-full" style="width: 90%;"></div></div>
+                <div class="p-3 border-t border-neutral-800 flex items-center justify-between bg-neutral-900/10">
+                    <span class="text-[10px] text-neutral-500 font-medium">Page <%= currentPage %> of <%= totalPages %>
+                    </span>
+                    <div class="flex items-center gap-1">
+                        <% for (let i=1; i <=totalPages; i++) { %>
+
+                            <% const params=new URLSearchParams(query); params.set("page", i); %>
+
+                                <a href="?<%= params.toString() %>" class="px-2.5 py-1 text-[10px] border rounded transition
+      <%= i === currentPage
+        ? 'bg-light-green text-black font-bold border-light-green'
+        : 'text-neutral-400 border-neutral-700 hover:bg-neutral-800' %>">
+
+                                    <%= i %>
+                                </a>
+
+                                <% } %>
                     </div>
-                    <div class="text-sm">
-                        <div class="flex justify-between text-neutral-300"><span>Omega Seamaster</span><span>1125</span></div>
-                        <div class="w-full bg-neutral-700 h-2 rounded-full mt-1"><div class="bg-primary h-2 rounded-full" style="width: 65%;"></div></div>
-                    </div>
-                    <div class="text-sm">
-                        <div class="flex justify-between text-neutral-300"><span>Tag Heuer Carrera</span><span>850</span></div>
-                        <div class="w-full bg-neutral-700 h-2 rounded-full mt-1"><div class="bg-primary h-2 rounded-full" style="width: 50%;"></div></div>
-                    </div>
-                    <div class="text-sm">
-                        <div class="flex justify-between text-neutral-300"><span>Patek Philipe EX</span><span>725</span></div>
-                        <div class="w-full bg-neutral-700 h-2 rounded-full mt-1"><div class="bg-primary h-2 rounded-full" style="width: 40%;"></div></div>
-                    </div>
+
                 </div>
             </div>
-        </div>
+        </main>
+</div>
 
-    </main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const revenueData = <%- JSON.stringify(revenueTrend) %>;
+</script>
+
+<script>
+    const ctx = document.getElementById("revenueChart");
+
+    const labels = revenueData.map(item =>
+        new Date(item._id).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+        })
+    );
+
+    const values = revenueData.map(item => item.revenue);
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels,
+            datasets: [{
+                label: "Revenue (₹)",
+                data: values,
+                backgroundColor: "rgba(74, 222, 128, 0.8)",
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: value => "₹" + value.toLocaleString()
+                    },
+                    grid: { color: "#262626" }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+</script>
+
+
+
+<script>
+    (function () {
+        const rangeButtons = document.querySelectorAll(".range-btn");
+        const customBtn = document.getElementById("customBtn");
+        const customBox = document.getElementById("customDateBox");
+        const applyCustom = document.getElementById("applyCustom");
+
+        const params = new URLSearchParams(window.location.search);
+
+        const activeRange = params.get("range") || "daily";
+        rangeButtons.forEach(btn => {
+            if (btn.dataset.range === activeRange) {
+                btn.classList.add("bg-card-dark", "text-white", "font-bold");
+            }
+        });
+
+        rangeButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                params.set("range", btn.dataset.range);
+                params.delete("startDate");
+                params.delete("endDate");
+                params.set("page", 1);
+                window.location.search = params.toString();
+            });
+        });
+
+        customBtn.addEventListener("click", () => {
+            customBox.classList.toggle("hidden");
+        });
+
+        applyCustom.addEventListener("click", () => {
+            const start = document.getElementById("startDate").value;
+            const end = document.getElementById("endDate").value;
+
+            if (!start || !end) {
+                alert("Select both start and end dates");
+                return;
+            }
+
+            params.set("range", "custom");
+            params.set("startDate", start);
+            params.set("endDate", end);
+            params.set("page", 1);
+
+            window.location.search = params.toString();
+        });
+    })();
+</script>

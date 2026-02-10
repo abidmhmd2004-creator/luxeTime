@@ -22,6 +22,7 @@ import { cancellFullOrder, cancelOrderItem, downloadInvoice, getOrderDetailsPage
 import { updateOrderStatus } from "../controllers/admin/order.controller.js";
 import { markPaymentFailed, verifyRazorpayPayment } from "../controllers/user/payment.controller.js";
 import { addToWishlist, getWishlist, removeWishlistItem } from "../controllers/user/wishlist.conroller.js";
+import { getWalletPage } from "../controllers/user/wallet.controller.js";
 
 
 // const uploadProfile =createUploader("profile");
@@ -133,9 +134,12 @@ router.post("/orders/:orderId/return",requireAuth,returnRequest)
 router.get("/orders/:orderId/invoice",downloadInvoice)
 router.patch("/admin/orders/:orderId/status",updateOrderStatus );
 
-router.get("/wishlist",getWishlist);
+router.get("/wishlist",requireAuth,getWishlist);
 router.post("/wishlist/add",addToWishlist);
 router.delete("/wishlist/remove/:itemId",removeWishlistItem)
+
+router.get("/wallet", getWalletPage);
+
 
 //logout
 router.post("/logout", logout);

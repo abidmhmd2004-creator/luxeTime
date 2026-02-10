@@ -84,8 +84,31 @@
                             </p>
 
                             <div class="flex items-center justify-center sm:justify-start gap-6">
-                                <span class="text-lg font-bold">₹<%= item.variant.finalPrice.toLocaleString("en-IN") %>
-                                </span>
+                                <div class="flex flex-col gap-1.5">
+                                    <div class="flex items-baseline gap-2">
+                                        <span class="text-xl font-bold text-white tracking-tight">
+                                            ₹<%= item.variant.finalPrice.toLocaleString("en-IN") %>
+                                        </span>
+
+                                        <% if (item.variant.basePrice> item.variant.finalPrice) { %>
+                                            <span class="text-xs text-gray-500 line-through decoration-gray-600">
+                                                ₹<%= item.variant.basePrice.toLocaleString("en-IN") %>
+                                            </span>
+                                            <% } %>
+                                    </div>
+
+                                    <% const savedPercent=Math.round(((item.variant.basePrice - item.variant.finalPrice)
+                                        / item.variant.basePrice) * 100); %>
+
+                                        <div class="flex items-center">
+                                            <span
+                                                class="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase tracking-wide">
+                                                <i class="fa-solid fa-piggy-bank mr-1.5 text-[9px]"></i>
+                                                (<%= savedPercent %>% OFF)
+                                            </span>
+                                        </div>
+                                </div>
+
                                 <div class="flex items-center bg-black/40 border border-white/5 rounded-lg">
                                     <button onclick="updateQty('<%= item.variant._id %>', -1)"
                                         class="px-3 py-1 text-gray-500 hover:text-white">-</button>
@@ -226,15 +249,15 @@
     }
 
 </script>
-<% if (cartIssues && cartIssues.length > 0) { %>
-<script>
-  Swal.fire({
-    icon: "warning",
-    title: "Cart Needs Attention",
-    text: "<%= cartIssues[0] %>",
-    background: "#181e18",
-    color: "#fff",
-    confirmButtonColor: "#4ade80"
-  });
-</script>
-<% } %>
+<% if (cartIssues && cartIssues.length> 0) { %>
+    <script>
+        Swal.fire({
+            icon: "warning",
+            title: "Cart Needs Attention",
+            text: "<%= cartIssues[0] %>",
+            background: "#181e18",
+            color: "#fff",
+            confirmButtonColor: "#4ade80"
+        });
+    </script>
+    <% } %>

@@ -9,6 +9,8 @@ import { uploadProfileImage } from "../controllers/user/profile.controller.js";
 import createUploader from "../middlewares/upload.middleware.js";
 import { getOrderDetailsPage, getOrdersPage, updateReturnStatus } from "../controllers/admin/order.controller.js";
 import { addCoupon, deleteCoupon, editCoupon, getCouponPage, toggleCouponStatus } from "../controllers/admin/coupon.controller.js";
+import { exportSalesPDF } from "../controllers/admin/salesReport.controller.js";
+import { exportSalesExcel } from "../controllers/admin/salesReport.controller.js";
 
 const uploadProductImage=createUploader("products");
 
@@ -54,6 +56,12 @@ router.post("/coupons/add",addCoupon);
 router.put("/coupons/edit/:couponId",editCoupon)
 router.patch("/coupons/toggle/:couponId",toggleCouponStatus)
 router.delete("/coupons/delete/:couponId",deleteCoupon)
+
+//report
+router.get("/reports",adminAuth,getDashboard);
+router.get("/reports/excel", exportSalesExcel);
+router.get("/reports/pdf", exportSalesPDF);
+
 
 //logout
 router.get("/logout",adminLogout)

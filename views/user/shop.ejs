@@ -182,8 +182,8 @@
                         const v = product.variant;
                         const image = v?.images?.[0]?.url || "/images/placeholder.png";
                         const base = v?.basePrice || 0;
-                        const offer = v?.offerPercentage || 0;
-                        const finalPrice =Math.round(base - (base * offer / 100));
+                        const offer = v.appliedOffer;
+                        const finalPrice =v.finalPrice;
                         %>
 
                         <div class="product-card card-bg rounded-xl p-4 flex flex-col relative overflow-hidden">
@@ -204,9 +204,9 @@
                                 <div class="flex justify-between items-end mb-3">
                                     <div class="flex flex-col">
                                         <div class="flex items-center gap-4 mb-3">
-                                            <% if(offer> 0) { %>
-                                                <span class="text-[10px] text-gray-500 line-through">₹ <%=
-                                                        base.toLocaleString() %></span>
+                                            <span class="text-[10px] text-gray-500 line-through">₹ <%=
+                                                    base.toLocaleString() %></span>
+                                            <% if(v.appliedOffer>0){ %>
                                                 <span
                                                     class="text-[9px] font-bold text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded">
                                                     <%= offer %>% OFF

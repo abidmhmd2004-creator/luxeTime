@@ -3,6 +3,7 @@ import Variant from "../../models/variant.model.js";
 import Cart from "../../models/cart.model.js";
 import Product from "../../models/product.model.js";
 import Wishlist from "../../models/wishlist.model.js";
+import { calculateBestOffer } from "../../helpers/calculateOffer.js";
 
 export const getCart = asyncHandler(async (req, res) => {
   const cart = await Cart.findOne({ user: req.session.user.id })
@@ -41,7 +42,16 @@ export const getCart = asyncHandler(async (req, res) => {
       if (variant.stock < item.quantity) {
         cartIssues.push(`Only ${variant.stock} left for ${product.name}`);
       }
-      subtotal += variant.finalPrice * item.quantity;
+
+      const { finalPrice, appliedOffer } = calculateBestOffer({
+        basePrice: variant.basePrice,
+        product,
+        category,
+      });
+
+      item.variant.finalPrice = finalPrice;
+      item.variant.appliedOffer = appliedOffer;
+      subtotal += finalPrice * item.quantity;
     }
   }
 

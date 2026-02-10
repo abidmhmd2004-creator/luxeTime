@@ -120,11 +120,11 @@
 
             <div class="flex items-center gap-3 mb-6">
                 <span class="text-2xl font-bold text-primary">₹<%= defaultVariant.finalPrice.toLocaleString() %></span>
-                <% if(defaultVariant.offerPercentage> 0) { %>
+                <% if(defaultVariant.appliedOffer> 0) { %>
                     <span class="text-sm text-gray-500 line-through">₹<%= defaultVariant.basePrice.toLocaleString() %>
                     </span>
                     <span class="bg-red-500/10 text-red-500 text-[9px] font-bold px-1.5 py-0.5 rounded">
-                        <%= defaultVariant.offerPercentage %>% OFF
+                        <%= defaultVariant.appliedOffer %>% OFF
                     </span>
                     <% } %>
             </div>
@@ -160,7 +160,8 @@
                     <%= defaultVariant.stock <=0 ? 'Out of Stock' : 'Add to Cart' %>
                 </button>
 
-                <button type="button" id="wishlistText" onclick="addToWishlist('<%= product._id %>','<%= defaultVariant._id %>')"
+                <button type="button" id="wishlistText"
+                    onclick="addToWishlist('<%= product._id %>','<%= defaultVariant._id %>')"
                     class="flex-1 rounded-xl border border-white/20 text-white text-xs font-bold py-2.5 hover:bg-white/5 transition flex items-center justify-center gap-2">
                     <span id="wishlistIcon" class="material-symbols-rounded text-sm">favorite</span> Add to Wishlist
                 </button>
@@ -250,29 +251,46 @@
             </div>
         </div>
     </section>
-
     <section class="mt-16">
         <div class="flex justify-between items-end mb-6">
             <h2 class="text-xl font-bold">You Might Also Like</h2>
         </div>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <% recommendations.forEach(rec=> { %>
-                <div class="card-bg rounded-lg p-3 group">
-                    <div class="bg-zinc-900 rounded overflow-hidden mb-3 aspect-square">
-                        <img src="<%= rec.variant.images[0].url %>"
-                            class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <% if (rec && rec.variant) { %>
+                    <div class="card-bg rounded-lg p-3 group">
+                        <div class="bg-zinc-900 rounded overflow-hidden mb-3 aspect-square relative">
+                            <img src="<%= rec.variant.images[0]?.url %>"
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                            <% if (rec.variant.appliedOffer> 0) { %>
+                                <span
+                                    class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                                    <%= rec.variant.appliedOffer %>% OFF
+                                </span>
+                                <% } %>
+                        </div>
+                        <h3 class="font-bold text-[11px] mb-1 truncate">
+                            <%= rec.name %>
+                        </h3>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-primary font-bold text-xs">
+                                    ₹<%= rec.variant.finalPrice.toLocaleString() %>
+                                </span>
+                                <% if (rec.variant.appliedOffer> 0) { %>
+                                    <span class="block text-[9px] text-gray-500 line-through">
+                                        ₹<%= rec.variant.basePrice.toLocaleString() %>
+                                    </span>
+                                <% } %>
+                            </div>
+                            <a href="/product/<%= rec._id %>"
+                                class="text-[9px] text-gray-500 uppercase font-bold border-b border-primary/30">
+                                View
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-[11px] mb-1">
-                        <%= rec.name %>
-                    </h3>
-                    <div class="flex justify-between items-center">
-                        <span class="text-primary font-bold text-xs">₹<%= rec.variant.finalPrice.toLocaleString() %>
-                        </span>
-                        <a href="/product/<%= rec._id %>"
-                            class="text-[9px] text-gray-500 uppercase font-bold border-b border-primary/30">View</a>
-                    </div>
-                </div>
-                <% }) %>
+                <% } %>
+            <% }) %>
         </div>
     </section>
 </main>
@@ -412,31 +430,31 @@
             })
     }
 
-    async function addToWishlist(productId,variantId){
-        try{
-            const res = await fetch("/wishlist/add",{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify({productId,variantId})
+    async function addToWishlist(productId, variantId) {
+        try {
+            const res = await fetch("/wishlist/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ productId, variantId })
             })
 
             const data = await res.json();
 
-            if(!data.success){
-                Swal.fire("Error","Unable to add wishlist","error");
+            if (!data.success) {
+                Swal.fire("Error", "Unable to add wishlist", "error");
             }
 
-            document.getElementById("wishlistIcon").innerText= "❤️";
-            document.getElementById("wishlistText").innerHTML =data.alreadyAdded?"In wishlist":"Added";
+            document.getElementById("wishlistIcon").innerText = "❤️";
+            document.getElementById("wishlistText").innerHTML = data.alreadyAdded ? "In wishlist" : "Added";
 
             Swal.fire({
-                icon:"success",
-                title:data.alreadyAdded?"Already in wishlist":"Added to wishlist",
-                timer:1000,
-                showConfirmButton:true
+                icon: "success",
+                title: data.alreadyAdded ? "Already in wishlist" : "Added to wishlist",
+                timer: 1000,
+                showConfirmButton: true
             })
-        }catch{
-            Swal.fire("Error","Something wrong","error");
+        } catch {
+            Swal.fire("Error", "Something wrong", "error");
         }
     }
 </script>

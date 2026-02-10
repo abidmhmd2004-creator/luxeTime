@@ -122,7 +122,7 @@
                                             </span>
                                             <% } %>
                                 </td>
-                                
+
 
                                 <td class="px-5 py-4 text-right space-x-2 text-gray-500">
                                     <button onclick="showProductDetails('<%= product._id %>')"
@@ -140,7 +140,7 @@
                                 </td>
                             </tr>
                             <% }) %>
-                        <% } %>
+                                <% } %>
                 </tbody>
             </table>
             <div class="p-6 flex items-center justify-center  bg-black/20">
@@ -325,9 +325,10 @@
                 <p class="text-center text-gray-500 text-sm">No variants found</p>
             `;
                 } else {
+                    const offer = product.offerPercentage || 0;
+
                     variants.forEach((variant, index) => {
                         const base = variant.basePrice || 0;
-                        const offer = variant.offerPercentage || 0;
                         const finalPrice = Math.round(base - (base * offer / 100));
 
                         const imageUrl =

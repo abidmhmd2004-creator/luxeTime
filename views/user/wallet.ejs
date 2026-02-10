@@ -1,0 +1,198 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0d0f0d;
+    }
+
+    .transaction-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .transaction-list::-webkit-scrollbar-track {
+        background: #1A1D1A;
+    }
+
+    .transaction-list::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+    }
+
+    .transaction-list::-webkit-scrollbar-thumb:hover {
+        background: #444;
+    }
+</style>
+</head>
+
+
+<div class="container max-w-[1200px] px-2 py-8 flex-grow flex flex-col md:flex-row gap-4">
+
+    <%- include('../partials/sidebar') %>
+
+        <main class=" md:w-3/4 space-y-8">
+
+            <div>
+                <h1 class="text-2xl font-bold text-white tracking-tight">My Wallet</h1>
+                <p class="text-xs text-gray-500 mt-1">Manage your funds and view transaction history securely.</p>
+            </div>
+
+            <div
+                class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#102e1c] to-[#0a1f12] border border-emerald-500/20 p-6 shadow-2xl">
+                <div
+                    class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none">
+                </div>
+
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2 text-emerald-400/80">
+                            <i class="fa-solid fa-building-columns text-sm"></i>
+                            <span class="text-[10px] uppercase font-bold tracking-widest">Total Balance</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <h2 class="text-3xl font-extrabold text-white tracking-tight">
+                                ₹<%= (wallet && wallet.balance ? wallet.balance : 0).toLocaleString('en-IN', {
+                                    minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                            </h2>
+                            <span class="text-sm font-bold text-gray-500">IND</span>
+                        </div>
+                        <!-- <p class="text-[10px] text-gray-500 mt-2">Last updated: Just now</p> -->
+                    </div>
+
+                    <!-- <button onclick="openAddMoneyModal()"
+                        class="bg-[#4ade80] hover:bg-[#3edc76] text-black px-8 py-3 rounded-full text-xs font-black uppercase tracking-wide shadow-[0_0_20px_rgba(74,222,128,0.3)] hover:shadow-[0_0_30px_rgba(74,222,128,0.5)] hover:scale-105 transition-all duration-300">
+                        <i class="fa-solid fa-plus mr-2"></i> Add Money
+                    </button> -->
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="text-lg font-bold text-white">Transactions</h3>
+                    <% if (typeof transactions !=='undefined' && transactions && transactions.length> 0) { %>
+                        <!-- <a href="/wallet/statement"
+                            class="text-[10px] font-bold text-[#4ade80] hover:text-white uppercase tracking-wider transition">
+                            Download Statement
+                        </a> -->
+                        <% } %>
+                </div>
+
+                <div class="bg-[#111311] border border-white/5 rounded-2xl overflow-hidden shadow-xl">
+                    <div
+                        class="grid grid-cols-12 gap-4 px-6 py-4 bg-white/[0.02] border-b border-white/5 text-[10px] uppercase font-bold text-gray-500 tracking-widest">
+                        <div class="col-span-6">Description</div>
+                        <div class="col-span-3">Date</div>
+                        <div class="col-span-3 text-right">Amount</div>
+                    </div>
+
+                    <div class="divide-y divide-white/5 max-h-[500px] overflow-y-auto transaction-list">
+
+                        <% if (typeof transactions !=='undefined' && transactions && transactions.length> 0) { %>
+                            <% transactions.forEach(txn=> { %>
+                                <div
+                                    class="grid grid-cols-12 gap-4 px-6 py-5 items-center hover:bg-white/[0.01] transition group">
+
+                                    <div class="col-span-6 flex items-center gap-4">
+                                        <div
+                                            class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 
+                                            <%= txn.type === 'CREDIT' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500' %>">
+
+                                            <% if (txn.type==='CREDIT' && txn.reason.includes('Refund')) { %>
+                                                <i class="fa-solid fa-arrow-rotate-left text-sm"></i>
+                                                <% } else if (txn.type==='CREDIT' ) { %>
+                                                    <i class="fa-solid fa-arrow-down text-sm"></i>
+                                                    <% } else { %>
+                                                        <i class="fa-solid fa-bag-shopping text-sm"></i>
+                                                        <% } %>
+
+                                        </div>
+
+                                        <div>
+                                            <p
+                                                class="text-sm font-bold text-white group-hover:text-emerald-400 transition">
+                                                <%= txn.reason %>
+                                            </p>
+                                            <p class="text-[10px] text-gray-500 mt-0.5">
+                                                Ref: <%= txn._id.toString().slice(-8).toUpperCase() %>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-3">
+                                        <p class="text-xs text-gray-300 font-medium">
+                                            <%= new Date(txn.createdAt).toLocaleDateString('en-IN', { day: 'numeric' ,
+                                                month: 'short' , year: 'numeric' }) %>
+                                        </p>
+                                        <!-- <p class="text-[10px] text-gray-600 mt-0.5">
+                                            <%= new Date(txn.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit' ,
+                                                minute: '2-digit' }) %>
+                                        </p> -->
+                                    </div>
+
+                                    <div class="col-span-3 text-right">
+                                        <p
+                                            class="text-sm font-bold <%= txn.type === 'CREDIT' ? 'text-[#4ade80]' : 'text-red-400' %>">
+                                            <%= txn.type==='CREDIT' ? '+' : '-' %> ₹<%=
+                                                    txn.amount.toLocaleString('en-IN') %>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <% }) %>
+
+                                    <div class="p-3 text-center border-t border-white/5 bg-white/[0.01]">
+                                        <a href="/wallet/history"
+                                            class="text-xs font-bold text-gray-500 hover:text-white transition">View All
+                                            Transactions</a>
+                                    </div>
+
+                                    <% } else { %>
+                                        <div class="flex flex-col items-center justify-center py-16 text-center">
+                                            <div
+                                                class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                                                <i class="fa-solid fa-receipt text-2xl text-gray-600"></i>
+                                            </div>
+                                            <h3 class="text-sm font-bold text-white">No transactions yet</h3>
+                                            <p class="text-xs text-gray-500 mt-1 max-w-[200px]">Add money to your wallet
+                                                or make a purchase to see activity here.</p>
+                                        </div>
+                                        <% } %>
+
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+</div>
+
+<!-- <div id="addMoneyModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 backdrop-blur-sm">
+    <div
+        class="bg-[#111311] border border-white/10 p-6 rounded-2xl w-full max-w-sm shadow-2xl transform transition-all scale-100">
+        <h3 class="text-lg font-bold text-white mb-4">Add Money to Wallet</h3>
+        <input type="number" id="addAmount" placeholder="Enter Amount (₹)"
+            class="w-full bg-[#0d0f0d] border border-white/10 rounded-lg px-4 py-3 text-white focus:border-emerald-500 outline-none mb-4">
+        <div class="flex gap-3">
+            <button onclick="closeAddMoneyModal()"
+                class="flex-1 px-4 py-2 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition">Cancel</button>
+            <button onclick="submitAddMoney()"
+                class="flex-1 px-4 py-2 rounded-lg bg-emerald-500 text-black font-bold hover:bg-emerald-400 transition">Pay
+                Now</button>
+        </div>
+    </div>
+</div> -->
+
+<script>
+    function openAddMoneyModal() {
+        document.getElementById('addMoneyModal').classList.remove('hidden');
+        document.getElementById('addMoneyModal').classList.add('flex');
+    }
+
+    function closeAddMoneyModal() {
+        document.getElementById('addMoneyModal').classList.add('hidden');
+        document.getElementById('addMoneyModal').classList.remove('flex');
+    }
+
+    // Optional: Close modal on outside click
+    document.getElementById('addMoneyModal').addEventListener('click', function (e) {
+        if (e.target === this) closeAddMoneyModal();
+    });
+</script>

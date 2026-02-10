@@ -145,7 +145,6 @@ export const uploadProfileImage =asyncHandler( async (req, res) => {
 export const deleteProfileImage =asyncHandler( async (req, res) => {
    
         const user = await User.findById(req.session.user.id);
-        // console.log(user.publicId)
 
         if (!user || !user.profileImage?.publicId) {
             return res.redirect("/profile")

@@ -4,13 +4,16 @@ import Address from "../../models/address.model.js";
 import Product from "../../models/product.model.js";
 import Variant from "../../models/variant.model.js";
 import Order from "../../models/order.model.js";
+import Wallet from "../../models/wallet.model.js";
 import Razorpay from "razorpay";
 import { validateCartForCheckout } from "../../helpers/cartValidate.js";
 import razorpay from "../../config/razorpay.js";
 import Coupon from "../../models/coupon.model.js";
+import Category from "../../models/category.model.js";
+import { calculateBestOffer } from "../../helpers/calculateOffer.js";
+import { debitWallet } from "../../helpers/wallet.helper.js";
 
 export const getCheckoutPage = asyncHandler(async (req, res) => {
-  console.log("getting");
   const { retry, orderId } = req.query;
 
   const addresses = await Address.find({ userId: req.session.user.id });
@@ -42,12 +45,47 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
   if (!result.valid) {
     return res.redirect("/cart");
   }
+
+  let subtotal = 0;
+  let totalDiscount = 0;
+
+  for (const item of cart.items) {
+    const product = item.product;
+    const variant = item.variant;
+    const category = product.category;
+
+    const { finalPrice, appliedOffer } = calculateBestOffer({
+      basePrice: variant.basePrice,
+      product,
+      category,
+    });
+    variant.finalPrice = finalPrice;
+    variant.appliedOffer = appliedOffer;
+
+    const baseTotal = variant.basePrice * item.quantity;
+    const finalTotal = finalPrice * item.quantity;
+
+    subtotal += finalTotal;
+    totalDiscount += baseTotal - finalTotal;
+  }
+
   const appliedCoupon = req.session.appliedCoupon || null;
+  const couponDiscount = appliedCoupon ? appliedCoupon.discountAmount : 0;
+
+  const tax = Math.round((subtotal - couponDiscount) * 0.18);
+  const total = subtotal - couponDiscount + tax;
   res.render("user/checkout", {
     cart,
     addresses,
     coupons,
     appliedCoupon,
+    summary: {
+      subtotal,
+      totalDiscount,
+      couponDiscount,
+      tax,
+      total,
+    },
   });
 });
 
@@ -290,26 +328,24 @@ export const placeOrder = asyncHandler(async (req, res) => {
       });
     }
 
-    // const itemBaseTotal = variant.basePrice * item.quantity;
-    const itemFinalTotal = variant.finalPrice * item.quantity;
+    const { finalPrice, appliedOffer } = calculateBestOffer({
+      basePrice: variant.basePrice,
+      product,
+      category: await Category.findById(product.category),
+    });
+
+    const itemFinalTotal = finalPrice * item.quantity;
 
     subtotal += itemFinalTotal;
-    // discount += itemBaseTotal - itemFinalTotal;
 
     orderItems.push({
       product: product._id,
       variant: variant._id,
       quantity: item.quantity,
-      price: variant.finalPrice,
+      price: finalPrice,
     });
   }
 
-  if (paymentMethod === "COD" && totalAmount > COD_LIMIT) {
-    return res.status(400).json({
-      success: false,
-      message: "Cash on Delivery not availble for this amount",
-    });
-  }
   const genartedOrderId = `#ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 
   let couponDiscount = 0;
@@ -336,6 +372,24 @@ export const placeOrder = asyncHandler(async (req, res) => {
   tax = Math.round((subtotal - discount) * 0.18);
   totalAmount = subtotal - discount - couponDiscount + tax;
 
+  if(paymentMethod ==="WALLET"){
+    const wallet= await Wallet.findOne({user:userId});
+
+    if(!wallet || wallet.balance <totalAmount){
+      return res.status(400).json({
+        success:false,
+        message:"Insufficient wallet balance"
+      })
+    }
+  }
+
+   if (paymentMethod === "COD" && totalAmount > COD_LIMIT) {
+    return res.status(400).json({
+      success: false,
+      message: "Cash on Delivery not availble for this amount",
+    });
+  }
+
   const order = await Order.create({
     user: userId,
     orderId: genartedOrderId,
@@ -351,7 +405,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
     },
     paymentMethod,
     subtotal,
-    discount:couponDiscount,
+    discount: couponDiscount,
     tax,
     totalAmount,
     paymentStatus: "PENDING",
@@ -363,6 +417,34 @@ export const placeOrder = asyncHandler(async (req, res) => {
     });
 
     req.session.appliedCoupon = null;
+  }
+
+  if(paymentMethod ==="WALLET"){
+
+    await debitWallet({
+      userId,
+      amount:totalAmount,
+      reason:"Order payment",
+      orderId:order._id
+    })
+
+    order.paymentStatus="PAID";
+    await order.save();
+
+    for(const item of cart.items){
+      await Variant.findByIdAndUpdate(item.variant._id,{
+        $inc:{stock:-item.quantity}
+      })
+    }
+    cart.items=[];
+    await cart.save();
+
+    return res.json({
+      success:true,
+      message:"Order placed using wallet",
+      orderId:order._id,
+      redirectUrl:`/order-success/${order._id}`
+    })
   }
 
   if (paymentMethod === "COD") {

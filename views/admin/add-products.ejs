@@ -117,14 +117,14 @@
                                             <input type="number" name="variants[0][basePrice]"
                                                 class="base-price-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                                         </div>
-                                        <div>
+                                        <!-- <div>
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
                                                 (%)</label>
                                             <input type="number" name="variants[0][offerPercentage]"
                                                 class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
                                                 value="0">
                                         </div>
-                                        <!-- <div>
+                                        <div>
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
                                                 Expiry </label>
                                                 <div class="relative">
@@ -135,7 +135,7 @@
                                                     class="fa-solid fa-calendar-days  absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
                                                 </div>
                                         </div> -->
-                                        <div>
+                                        <div class="col-span-2">
                                             <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Final
                                                 Price</label>
                                             <input type="text" readonly
@@ -171,6 +171,67 @@
                 </div>
 
                 <div class="col-span-12 lg:col-span-4 space-y-6">
+                    <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-6">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
+                                <i class="fa-solid fa-tag text-sm"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white font-bold">Offer</h3>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
+                                    (%)</label>
+                                <input type="number" name="offerPercentage"
+                                    class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
+                                    value="0">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
+                                    Expiry </label>
+                                <div class="relative">
+                                    <input type="date" id="offerExpiry" name="offerExpiry"
+                                        class="offerExpiry  w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white/60 outline-none">
+
+                                    <i
+                                        class="fa-solid fa-calendar-days  absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- <div>
+                                <label
+                                    class="block text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Base
+                                    Price (₹) <span class="text-red-500">*</span></label>
+                                <input type="number" placeholder="0.00"
+                                    class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none">
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Total
+                                    Stock Quantity</label>
+                                <input type="number" value="0" readonly
+                                    class="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-sm text-gray-500 cursor-not-allowed outline-none">
+                            </div> -->
+
+                            <!-- <div class="bg-black/20 rounded-2xl p-4 border border-white/5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Stock Status</span>
+                            <span class="text-[10px] font-bold text-[#4ade80] uppercase">In Stock (Auto)</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-white/5">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Low Stock Alert</span>
+                            <label class="relative inline-flex items-center cursor-pointer scale-90">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:bg-[#4ade80] peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+                            </label>
+                        </div>
+                    </div> -->
+                        </div>
+                    </div>
+
+
                     <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
                         <h3 class="text-sm font-bold text-white uppercase mb-5">Specifications</h3>
                         <div class="space-y-4">
@@ -222,8 +283,9 @@
         </form>
     </main>
 
+
     <script>
-        // --- IMAGE LOGIC ---
+        // --- IMAGE LOGIC (Unchanged) ---
         function triggerUpload(btn) {
             btn.closest('.variant-card').querySelector('.imagePicker').click();
         }
@@ -292,18 +354,36 @@
             previewItem.remove();
         }
 
-        // --- PRICING LOGIC ---
+        // --- UPDATED PRICING & OFFER LOGIC ---
+        
+        // Function to recalculate all prices
+        function updateAllPrices() {
+            const globalOffer = parseInt(document.querySelector('input[name="offerPercentage"]').value) || 0;
+            const cards = document.querySelectorAll('.variant-card');
+            
+            cards.forEach(card => {
+                const basePriceInput = card.querySelector('.base-price-input');
+                const finalPriceDisplay = card.querySelector('.final-price-display');
+                
+                const base = parseInt(basePriceInput.value) || 0;
+                const final = Math.round(base - (base * globalOffer / 100));
+                
+                finalPriceDisplay.value = `₹ ${final.toLocaleString()}`;
+            });
+        }
+
+        // Listen for changes in Base Prices
         document.getElementById('variantContainer').addEventListener('input', function (e) {
-            if (e.target.classList.contains('base-price-input') || e.target.classList.contains('offer-input')) {
-                const card = e.target.closest('.variant-card');
-                const base = parseInt(card.querySelector('.base-price-input').value) || 0;
-                const off = parseInt(card.querySelector('.offer-input').value) || 0;
-                const final = Math.round(base - (base * off / 100));
-                card.querySelector('.final-price-display').value = `₹ ${final}`;
+            if (e.target.classList.contains('base-price-input')) {
+                updateAllPrices();
             }
         });
 
-        // --- VARIANT MANAGEMENT ---
+        // Listen for changes in the Global Offer input
+        document.querySelector('input[name="offerPercentage"]').addEventListener('input', updateAllPrices);
+
+
+        // --- VARIANT MANAGEMENT (Unchanged) ---
         function addNewVariant() {
             const container = document.getElementById("variantContainer");
             const cards = container.querySelectorAll(".variant-card");
@@ -316,13 +396,17 @@
                     input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
                 }
                 if (input.type === "number" || input.type === "text") {
-                    input.value = input.classList.contains("offer-input") ? "0" : "";
+                    // Don't clear readonly final price, updateAllPrices will handle it
+                    if(!input.classList.contains('final-price-display')) {
+                        input.value = "";
+                    }
                 }
             });
 
             clone.querySelector(".imagePreviewGrid").innerHTML = "";
             clone.images = [];
             container.appendChild(clone);
+            updateAllPrices(); // Initialize price for new variant
         }
 
         function removeVariant(btn) {
@@ -335,19 +419,17 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const cards = document.querySelectorAll('.variant-card');
-            if (!validateVariantPrices()) return;
-
+            
+            if (!validateForm()) return;
 
             for (let i = 0; i < cards.length; i++) {
                 const card = cards[i];
-
-
-                card.images.forEach(blob => {
-                    formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
-                });
+                if(card.images) {
+                    card.images.forEach(blob => {
+                        formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
+                    });
+                }
             }
-
-
 
             Swal.fire({
                 title: "Adding product...",
@@ -355,6 +437,7 @@
                 allowOutsideClick: false,
                 didOpen: () => Swal.showLoading()
             });
+
             try {
                 const res = await fetch("/admin/add-products", { method: "POST", body: formData });
                 const data = await res.json();
@@ -367,32 +450,26 @@
                 Swal.fire("Error", "Server error", "error");
             }
         });
-        function validateVariantPrices() {
+
+        function validateForm() {
             const cards = document.querySelectorAll('.variant-card');
+            const offer = parseInt(document.querySelector('input[name="offerPercentage"]').value) || 0;
+
+            if (offer < 0 || offer > 99) {
+                Swal.fire("Error", "Offer must be between 0 and 99%", "error");
+                return false;
+            }
 
             for (let i = 0; i < cards.length; i++) {
-                const card = cards[i];
-
-                const base = parseInt(card.querySelector('.base-price-input').value) || 0;
-                const offer = parseInt(card.querySelector('.offer-input').value) || 0;
-                const final = Math.round(base - (base * offer / 100));
-
+                const base = parseInt(cards[i].querySelector('.base-price-input').value) || 0;
                 if (base <= 0) {
                     Swal.fire("Error", `Variant ${i + 1}: Base price must be greater than 0`, "error");
                     return false;
                 }
-
-                if (offer < 0 || offer > 90) {
-                    Swal.fire("Error", `Variant ${i + 1}: Offer must be between 0 and 90%`, "error");
-                    return false;
-                }
-
-                if (final > base) {
-                    Swal.fire(
-                        "Error",
-                        `Variant ${i + 1}: Final price must be less than base price`,
-                        "error"
-                    );
+                
+                // Image validation
+                if (!cards[i].images || cards[i].images.length < 3) {
+                    Swal.fire("Error", `Variant ${i + 1}: Please upload at least 3 images`, "error");
                     return false;
                 }
             }

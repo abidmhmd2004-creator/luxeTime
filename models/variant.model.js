@@ -19,12 +19,12 @@ const variantSchema =new mongoose.Schema(
             type:Number,
             required:true
         },
-        offerPercentage:{
-            type:Number,
-            min:0,
-            max:90,
-            default:0
-        },
+        // offerPercentage:{
+        //     type:Number,
+        //     min:0,
+        //     max:90,
+        //     default:0
+        // },
         stock:{
             type:Number,
             required:true,

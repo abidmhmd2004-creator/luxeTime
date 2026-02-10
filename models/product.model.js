@@ -26,12 +26,16 @@ const productSchema = new mongoose.Schema(
             strapType:String,
             movementType:String
         },
-        // offerPercentage:{
-        //     type:Number,
-        //     min:0,
-        //     max:90,
-        //     default:0
-        // },
+        offerPercentage:{
+            type:Number,
+            min:0,
+            max:90,
+            default:0
+        },
+        offerExpiry:{
+            type:Date,
+            default:null
+        },
         isActive:{
             type:Boolean,
             default:true

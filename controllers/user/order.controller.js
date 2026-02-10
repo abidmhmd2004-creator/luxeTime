@@ -1,28 +1,28 @@
 import asyncHandler from "../../utils/asyncHandler.js";
-import PDFDocument from "pdfkit"
+import PDFDocument from "pdfkit";
 import Order from "../../models/order.model.js";
-import Variant from "../../models/variant.model.js"
+import Variant from "../../models/variant.model.js";
+import { creditWallet } from "../../helpers/wallet.helper.js";
 
 export const getOrders = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
-  const {search} =req.query;
+  const { search } = req.query;
 
-  let filter={user:userId};
+  let filter = { user: userId };
 
-  if(search&&search.trim()!==""){
-    filter.orderId ={
-      $regex:search.trim(),
-      $options:"i"
-    }
+  if (search && search.trim() !== "") {
+    filter.orderId = {
+      $regex: search.trim(),
+      $options: "i",
+    };
   }
   const orders = await Order.find(filter)
     .populate("items.product", "name")
     .populate("items.variant", "color images")
-    .sort({createdAt:-1});
+    .sort({ createdAt: -1 });
 
-  res.render("user/orders", { orders ,searchQuery:search||""})
-})
-
+  res.render("user/orders", { orders, searchQuery: search || "" });
+});
 
 export const getOrdersSucces = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
@@ -30,42 +30,40 @@ export const getOrdersSucces = asyncHandler(async (req, res) => {
 
   const order = await Order.findOne({
     _id: orderId,
-    user: userId
+    user: userId,
   })
     .populate({
       path: "items.product",
-      select: "name  isActive"
+      select: "name  isActive",
     })
     .populate({
       path: "items.variant",
-      select: "color images"
+      select: "color images",
     })
     .sort({ createdAt: -1 });
 
   if (!order) {
-    return res.redirect("/cart")
+    return res.redirect("/cart");
   }
-  res.render("user/order-success", { order })
-})
+  res.render("user/order-success", { order });
+});
 
 export const getOrderDetailsPage = asyncHandler(async (req, res) => {
-
   const { orderId } = req.params;
   const userId = req.session.user.id;
 
   const order = await Order.findOne({
     _id: orderId,
-    user: userId
+    user: userId,
   })
     .populate("items.product")
     .populate("items.variant");
 
   if (!order) {
-    return res.redirect("/cart")
+    return res.redirect("/cart");
   }
   res.render("user/orderDetails", { order });
-})
-
+});
 
 export const cancelOrderItem = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
@@ -79,29 +77,37 @@ export const cancelOrderItem = asyncHandler(async (req, res) => {
   if (!item || item.itemStatus !== "ACTIVE") {
     return res.status(400).json({
       success: false,
-      message: "Invalid item"
-    })
+      message: "Invalid item",
+    });
   }
   item.itemStatus = "CANCELLED";
 
   await Variant.findByIdAndUpdate(item.variant, {
-    $inc: { stock: item.quantity }
-  })
+    $inc: { stock: item.quantity },
+  });
 
-  const allCancelled = order.items.every(i => i.itemStatus === "CANCELLED");
+  const allCancelled = order.items.every((i) => i.itemStatus === "CANCELLED");
 
   if (allCancelled) {
-    order.orderStatus = "CANCELLED"
+    order.orderStatus = "CANCELLED";
   }
+      const refundAmount = order.totalAmount;
 
-  await order.save()
+
+  await creditWallet({
+    userId,
+    amount: refundAmount,
+    reason: "Order cancelled refund",
+    orderId: order._id,
+  });
+
+  await order.save();
 
   res.json({
     success: true,
-    message: "Order cancelled successfully"
-  })
-
-})
+    message: "Order cancelled successfully",
+  });
+});
 
 export const cancellFullOrder = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
@@ -115,19 +121,28 @@ export const cancellFullOrder = asyncHandler(async (req, res) => {
       item.itemStatus = "CANCELLED";
 
       await Variant.findByIdAndUpdate(item.variant, {
-        $inc: { stock: item.quantity }
-      })
+        $inc: { stock: item.quantity },
+      });
     }
   }
+  if (
+  order.paymentMethod !== "COD" &&
+  order.paymentStatus === "PAID"
+) {
+  await creditWallet({
+    userId: order.user,
+    amount: order.totalAmount,
+    reason: "Order cancelled refund",
+    orderId: order._id,
+  });
+}
 
   order.orderStatus = "CANCELLED";
 
   await order.save();
 
-  res.json({ success: true })
-
-
-})
+  res.json({ success: true });
+});
 
 export const returnRequest = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
@@ -137,8 +152,8 @@ export const returnRequest = asyncHandler(async (req, res) => {
   if (!reason || reason.trim().length < 3) {
     return res.status(400).json({
       success: false,
-      message: "Reason is required"
-    })
+      message: "Reason is required",
+    });
   }
 
   const order = await Order.findOne({ _id: orderId, user: userId });
@@ -146,14 +161,14 @@ export const returnRequest = asyncHandler(async (req, res) => {
   if (!order) {
     return res.status(400).json({
       success: false,
-      message: "Order not found"
-    })
+      message: "Order not found",
+    });
   }
   if (order.orderStatus !== "DELIVERED") {
     return res.status(400).json({
       success: false,
-      message: "Return allowed only after delivery"
-    })
+      message: "Return allowed only after delivery",
+    });
   }
 
   const now = Date.now();
@@ -161,73 +176,75 @@ export const returnRequest = asyncHandler(async (req, res) => {
   if (itemId) {
     const item = order.items.id(itemId);
 
-
     if (!item) {
       return res.status(400).json({
         success: false,
-        message: "Invalid order item"
-      })
+        message: "Invalid order item",
+      });
     }
     if (item.itemStatus !== "ACTIVE") {
       return res.status(400).json({
         success: false,
-        message: "Item is already cancelled or returned"
-      })
+        message: "Item is already cancelled or returned",
+      });
     }
 
     item.itemStatus = "RETURN_REQUESTED";
     item.returnReason = reason;
     item.returnRequestedAt = now;
   } else {
-
     const activeItems = order.items.filter(
-      item => item.itemStatus === "ACTIVE"
-    )
+      (item) => item.itemStatus === "ACTIVE",
+    );
     if (activeItems.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "No items eligible for return"
-      })
+        message: "No items eligible for return",
+      });
     }
 
-    order.items.forEach(item => {
+    order.items.forEach((item) => {
       if (item.itemStatus === "ACTIVE") {
         item.itemStatus = "RETURN_REQUESTED";
         item.returnReason = reason;
         item.returnRequestedAt = now;
       }
-    })
+    });
   }
-  if (order.items.every(item => item.itemStatus === "RETURN_REQUESTED")) {
+  if (order.items.every((item) => item.itemStatus === "RETURN_REQUESTED")) {
     order.orderStatus = "RETURN_REQUESTED";
     order.returnRequestedAt = now;
   }
 
-
-
-  await order.save()
+  await order.save();
 
   res.json({
     success: true,
-    message: itemId ? "Return requested for selectedItem" : "Return requested for entire order"
-  })
-})
+    message: itemId
+      ? "Return requested for selectedItem"
+      : "Return requested for entire order",
+  });
+});
 
 export const downloadInvoice = async (req, res) => {
-  const safe = (v) => Number.isFinite(Number(v)) ? Number(v) : 0;
+  const safe = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
 
   const { orderId } = req.params;
   const userId = req.session.user.id;
 
-  const order = await Order.findOne({ _id: orderId, user: userId })
-    .populate("items.product");
+  const order = await Order.findOne({ _id: orderId, user: userId }).populate(
+    "items.product",
+  );
 
   if (!order) return res.redirect("/orders");
 
   const doc = new PDFDocument({ size: "A4", margin: 50 });
 
   res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", `attachment; filename=invoice-${order._id}.pdf`);
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename=invoice-${order._id}.pdf`,
+  );
 
   doc.pipe(res);
 
@@ -241,21 +258,21 @@ export const downloadInvoice = async (req, res) => {
 
   doc.font("Helvetica-Bold").fontSize(24).text("LUXE TIME", left, y);
 
-  doc.font("Helvetica").fontSize(10).fillColor("#555")
+  doc
+    .font("Helvetica")
+    .fontSize(10)
+    .fillColor("#555")
     .text("Premium Watch Store", left, y + 28);
 
-  doc.font("Helvetica-Bold")
+  doc
+    .font("Helvetica-Bold")
     .fontSize(16)
     .fillColor("#000")
     .text("INVOICE", right - 120, y + 5);
 
   y += 80;
 
-
-
-  doc.font("Helvetica")
-    .fontSize(10)
-    .fillColor("#333");
+  doc.font("Helvetica").fontSize(10).fillColor("#333");
 
   doc.text(`Invoice No:`, left, y);
   doc.text(order._id.toString(), left + 90, y);
@@ -264,7 +281,7 @@ export const downloadInvoice = async (req, res) => {
   doc.text(
     new Date(order.createdAt).toLocaleDateString("en-IN"),
     left + 90,
-    y + 15
+    y + 15,
   );
 
   doc.text(`Payment Method:`, left, y + 30);
@@ -272,24 +289,25 @@ export const downloadInvoice = async (req, res) => {
 
   y += 70;
 
-
   const a = order.shippingAddress || {};
 
-  doc.font("Helvetica-Bold")
-    .fontSize(11)
-    .text("BILL TO", left, y);
+  doc.font("Helvetica-Bold").fontSize(11).text("BILL TO", left, y);
 
   y += 16;
 
-  doc.font("Helvetica")
+  doc
+    .font("Helvetica")
     .fontSize(10)
     .text(a.fullName || "-", left, y)
     .text(a.streetAddress || "-", left, y + 14)
-    .text(`${a.city || "-"}, ${a.state || "-"} - ${a.pincode || "-"}`, left, y + 28)
+    .text(
+      `${a.city || "-"}, ${a.state || "-"} - ${a.pincode || "-"}`,
+      left,
+      y + 28,
+    )
     .text(`Phone: ${a.phone || "-"}`, left, y + 42);
 
   y += 85;
-
 
   doc.moveTo(left, y).lineTo(right, y).stroke();
   y += 12;
@@ -304,10 +322,9 @@ export const downloadInvoice = async (req, res) => {
   doc.moveTo(left, y).lineTo(right, y).stroke();
   y += 10;
 
-
   doc.font("Helvetica").fontSize(10);
 
-  order.items.forEach(item => {
+  order.items.forEach((item) => {
     const qty = safe(item.quantity);
     const price = safe(item.price);
     const total = qty * price;
@@ -352,37 +369,34 @@ export const downloadInvoice = async (req, res) => {
 
   y += 50;
 
-
-  doc.font("Helvetica")
+  doc
+    .font("Helvetica")
     .fontSize(9)
     .fillColor("#666")
     .text(
       "Thank you for shopping with LUXE TIME.\nThis is a computer-generated invoice and does not require a signature.",
       left,
       y,
-      { width: right - left, align: "center" }
+      { width: right - left, align: "center" },
     );
 
   doc.end();
 };
 
-
 // orderController.js
 
-export const getPaymentFailurePage =asyncHandler(async (req, res) => {
-        const {orderId} =req.params ;
-        
-        const order = await Order.findById(orderId);
+export const getPaymentFailurePage = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
 
-        if (!order) {
-            return res.redirect('/cart'); 
-        }
+  const order = await Order.findById(orderId);
 
-        res.render('user/order-failure', {
-            title: 'Payment Failed | Luxe Time',
-            order: order,
-            user: req.session.user
-        });
+  if (!order) {
+    return res.redirect("/cart");
+  }
+
+  res.render("user/order-failure", {
+    title: "Payment Failed | Luxe Time",
+    order: order,
+    user: req.session.user,
+  });
 });
-
-
