@@ -254,10 +254,9 @@ export const postEditProduct = asyncHandler(async (req, res) => {
     variants,
   } = req.body;
 
-  
-//   console.log(offerPercentage);
+  //   console.log(offerPercentage);
 
-//   console.log(offerExpiry);
+  //   console.log(offerExpiry);
 
   if (!name || !name.trim()) {
     return res.status(400).json({
@@ -309,7 +308,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
       name,
       category,
       description,
-      offerPercentage:offer,
+      offerPercentage: offer,
       offerExpiry,
       specifications: {
         caseSize,

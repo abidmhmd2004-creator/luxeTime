@@ -199,7 +199,7 @@
                                         class="fa-solid fa-calendar-days  absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
                                 </div>
                             </div>
-                            
+
                             <!-- <div>
                                 <label
                                     class="block text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Base
@@ -355,19 +355,19 @@
         }
 
         // --- UPDATED PRICING & OFFER LOGIC ---
-        
+
         // Function to recalculate all prices
         function updateAllPrices() {
             const globalOffer = parseInt(document.querySelector('input[name="offerPercentage"]').value) || 0;
             const cards = document.querySelectorAll('.variant-card');
-            
+
             cards.forEach(card => {
                 const basePriceInput = card.querySelector('.base-price-input');
                 const finalPriceDisplay = card.querySelector('.final-price-display');
-                
+
                 const base = parseInt(basePriceInput.value) || 0;
                 const final = Math.round(base - (base * globalOffer / 100));
-                
+
                 finalPriceDisplay.value = `₹ ${final.toLocaleString()}`;
             });
         }
@@ -397,7 +397,7 @@
                 }
                 if (input.type === "number" || input.type === "text") {
                     // Don't clear readonly final price, updateAllPrices will handle it
-                    if(!input.classList.contains('final-price-display')) {
+                    if (!input.classList.contains('final-price-display')) {
                         input.value = "";
                     }
                 }
@@ -419,12 +419,12 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             const cards = document.querySelectorAll('.variant-card');
-            
+
             if (!validateForm()) return;
 
             for (let i = 0; i < cards.length; i++) {
                 const card = cards[i];
-                if(card.images) {
+                if (card.images) {
                     card.images.forEach(blob => {
                         formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
                     });
@@ -466,7 +466,7 @@
                     Swal.fire("Error", `Variant ${i + 1}: Base price must be greater than 0`, "error");
                     return false;
                 }
-                
+
                 // Image validation
                 if (!cards[i].images || cards[i].images.length < 3) {
                     Swal.fire("Error", `Variant ${i + 1}: Please upload at least 3 images`, "error");

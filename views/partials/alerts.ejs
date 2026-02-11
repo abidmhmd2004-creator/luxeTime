@@ -1,10 +1,7 @@
 <% if ((success && success.length) || (error && error.length)) { %>
-  <div
-    id="flash-message"
-    class="mb-4 rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg
+  <div id="flash-message" class="mb-4 rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg
            transition-all duration-500
-           <%= success && success.length ? 'bg-green-600' : 'bg-red-600' %>"
-  >
+           <%= success && success.length ? 'bg-green-600' : 'bg-red-600' %>">
     <%= success && success.length ? success[0] : error[0] %>
   </div>
 
@@ -20,4 +17,4 @@
       }, 2000);
     })();
   </script>
-<% } %>
+  <% } %>

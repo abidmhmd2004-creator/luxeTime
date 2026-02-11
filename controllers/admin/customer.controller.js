@@ -1,89 +1,80 @@
-
 import mongoose from "mongoose";
-import User from "../../models/user.model.js"
+import User from "../../models/user.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 
-export const getCustomers =asyncHandler(async(req,res)=>{
-  
+export const getCustomers = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
 
-        const page=parseInt(req.query.page)||1;
+  const limit = 3;
+  const skip = (page - 1) * limit;
 
-        const limit=3;
-        const skip=(page-1)*limit;
+  const { search, status } = req.query;
 
-        const {search,status}=req.query;
+  const filter = { role: "user" };
 
-       
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+    ];
+  }
 
-        const filter={role:"user"};
+  if (status == "Active") {
+    filter.isBlocked = false;
+  } else if (status == "Blocked") {
+    filter.isBlocked = true;
+  }
 
-        if(search){
-            filter.$or=[
-                {name:{$regex:search,$options:"i"}},
-                {email:{$regex:search,$options:"i"}}
-            ]
-        }
+  const totalUsers = await User.countDocuments(filter);
 
-        if(status=="Active"){
-            filter.isBlocked=false;
-        }else if(status=="Blocked"){
-            filter.isBlocked=true;
-        }
+  const totalPages = Math.ceil(totalUsers / limit);
 
+  const users = await User.find(filter)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
 
-        const totalUsers=await User.countDocuments(filter);
+  res.render("admin/customers", {
+    layout: "layouts/admin",
+    users,
+    totalPages,
+    currentPage: page,
+    search,
+    status,
+    limit,
+    totalUsers,
+  });
+});
 
-        const totalPages=Math.ceil(totalUsers/limit);
+export const toggleCustomerStatus = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
 
-        const users=await User.find(filter)
-            .sort({createdAt:-1})
-            .skip(skip)
-            .limit(limit);
+  const user = await User.findById(userId);
 
+  if (!user) {
+    req.flash("error", "User not found");
+    return res.redirect("/admin/customers");
+  }
 
-            res.render("admin/customers",{layout:"layouts/admin",
-                users,
-                totalPages,
-                currentPage:page,
-                search,
-                status,
-                limit,
-                totalUsers
-            })
-})
+  user.isBlocked = !user.isBlocked;
+  // console.log(req.cookies)
+  //         res.clearCookie("luxetime.sid")
+  await user.save();
 
+  // console.log("blocked")
 
-export const toggleCustomerStatus =asyncHandler( async (req,res)=>{
-    
-           const {userId}=req.params;
+  if (user.isBlocked) {
+    const session = mongoose.connection.collection("user_sessions");
 
-        const user= await User.findById(userId);
+    await session.deleteMany({ "session.user.id": userId });
+  }
 
-        if(!user){
-            req.flash("error","User not found");
-            return res.redirect("/admin/customers");
-        }
+  req.flash(
+    "success",
+    user.isBlocked
+      ? "User blocked successfully"
+      : "User unblocked successfully",
+  );
 
-
-        
-
-        user.isBlocked=!user.isBlocked;
-// console.log(req.cookies)
-//         res.clearCookie("luxetime.sid")
-        await user.save();
-
-        // console.log("blocked") 
-
-        if(user.isBlocked){
-            const session=mongoose.connection.collection("user_sessions");
-
-            await session.deleteMany({"session.user.id":userId});
-        }
-
-        req.flash("success",user.isBlocked ?"User blocked successfully":"User unblocked successfully");
-
-       return  res.redirect("/admin/customers");
-
-
-
-})
+  return res.redirect("/admin/customers");
+});

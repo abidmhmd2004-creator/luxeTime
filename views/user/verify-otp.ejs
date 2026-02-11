@@ -196,7 +196,7 @@
         e.preventDefault();
         const paste = (e.clipboardData || window.clipboardData).getData('text');
 
-        const cleanPaste = paste.replace(/\D/g, '').slice(0, 6); 
+        const cleanPaste = paste.replace(/\D/g, '').slice(0, 6);
 
         if (!cleanPaste) return;
 

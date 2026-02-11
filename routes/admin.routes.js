@@ -1,72 +1,99 @@
 import express from "express";
-import { adminLogout, loadAdminLogin, postAdminLogin } from "../controllers/admin/auth.controller.js";
+import {
+  adminLogout,
+  loadAdminLogin,
+  postAdminLogin,
+} from "../controllers/admin/auth.controller.js";
 import { getDashboard } from "../controllers/admin/dashboard.controller.js";
-import { getCustomers, toggleCustomerStatus } from "../controllers/admin/customer.controller.js";
+import {
+  getCustomers,
+  toggleCustomerStatus,
+} from "../controllers/admin/customer.controller.js";
 import { adminAuth } from "../middlewares/adminAuth.js";
-import { addCategory, editCategory, getCategory, getCategoryAjax, softDeleteCategory, toggleCategory } from "../controllers/admin/categories.controller.js";
-import { getaddProducts, geteditProduct, getProductPage, postAddProducts, postEditProduct, productDetails, softDeleteProduct } from "../controllers/admin/product.controller.js";
+import {
+  addCategory,
+  editCategory,
+  getCategory,
+  getCategoryAjax,
+  softDeleteCategory,
+  toggleCategory,
+} from "../controllers/admin/categories.controller.js";
+import {
+  getaddProducts,
+  geteditProduct,
+  getProductPage,
+  postAddProducts,
+  postEditProduct,
+  productDetails,
+  softDeleteProduct,
+} from "../controllers/admin/product.controller.js";
 import { uploadProfileImage } from "../controllers/user/profile.controller.js";
 import createUploader from "../middlewares/upload.middleware.js";
-import { getOrderDetailsPage, getOrdersPage, updateReturnStatus } from "../controllers/admin/order.controller.js";
-import { addCoupon, deleteCoupon, editCoupon, getCouponPage, toggleCouponStatus } from "../controllers/admin/coupon.controller.js";
+import {
+  getOrderDetailsPage,
+  getOrdersPage,
+  updateReturnStatus,
+} from "../controllers/admin/order.controller.js";
+import {
+  addCoupon,
+  deleteCoupon,
+  editCoupon,
+  getCouponPage,
+  toggleCouponStatus,
+} from "../controllers/admin/coupon.controller.js";
 import { exportSalesPDF } from "../controllers/admin/salesReport.controller.js";
 import { exportSalesExcel } from "../controllers/admin/salesReport.controller.js";
 
-const uploadProductImage=createUploader("products");
+const uploadProductImage = createUploader("products");
 
-const router=express.Router();
+const router = express.Router();
 
 //login
-router.get("/login",loadAdminLogin);
-router.post("/login",postAdminLogin);
+router.get("/login", loadAdminLogin);
+router.post("/login", postAdminLogin);
 
 //dashboard
-router.get("/dashboard",adminAuth,getDashboard);
+router.get("/dashboard", adminAuth, getDashboard);
 
 //cutomers
-router.get("/customers",adminAuth,getCustomers);
-router.patch("/customers/toggle/:userId",adminAuth,toggleCustomerStatus);
+router.get("/customers", adminAuth, getCustomers);
+router.patch("/customers/toggle/:userId", adminAuth, toggleCustomerStatus);
 
 //category
-router.get("/categories",adminAuth,getCategory);
-router.post("/categories",addCategory)
-router.put("/categories/:id",editCategory);
-router.patch("/category/:id/delete",softDeleteCategory)
-router.patch("/categories/toggle/:id",adminAuth,toggleCategory);
-router.get("/categories/ajax",getCategoryAjax);
+router.get("/categories", adminAuth, getCategory);
+router.post("/categories", addCategory);
+router.put("/categories/:id", editCategory);
+router.patch("/category/:id/delete", softDeleteCategory);
+router.patch("/categories/toggle/:id", adminAuth, toggleCategory);
+router.get("/categories/ajax", getCategoryAjax);
 
 //products
-router.get("/products",adminAuth,getProductPage);
-router.get("/add-products",adminAuth,getaddProducts);
-router.post("/add-products",uploadProductImage.any(),postAddProducts)
-router.get("/products/:id",adminAuth,productDetails);
-router.get("/edit-product/:id",adminAuth,geteditProduct);
-router.post("/edit-product/:id",uploadProductImage.any(),postEditProduct)
-router.patch("/products/:id/delete",softDeleteProduct)
+router.get("/products", adminAuth, getProductPage);
+router.get("/add-products", adminAuth, getaddProducts);
+router.post("/add-products", uploadProductImage.any(), postAddProducts);
+router.get("/products/:id", adminAuth, productDetails);
+router.get("/edit-product/:id", adminAuth, geteditProduct);
+router.post("/edit-product/:id", uploadProductImage.any(), postEditProduct);
+router.patch("/products/:id/delete", softDeleteProduct);
 
 //orders
-router.get("/orders",adminAuth,getOrdersPage)
-router.get("/orders/:orderId",getOrderDetailsPage)
-router.patch("/orders/return-update",adminAuth,updateReturnStatus)
-
+router.get("/orders", adminAuth, getOrdersPage);
+router.get("/orders/:orderId", getOrderDetailsPage);
+router.patch("/orders/return-update", adminAuth, updateReturnStatus);
 
 //coupons
-router.get("/coupons",getCouponPage)
-router.post("/coupons/add",addCoupon);
-router.put("/coupons/edit/:couponId",editCoupon)
-router.patch("/coupons/toggle/:couponId",toggleCouponStatus)
-router.delete("/coupons/delete/:couponId",deleteCoupon)
+router.get("/coupons", getCouponPage);
+router.post("/coupons/add", addCoupon);
+router.put("/coupons/edit/:couponId", editCoupon);
+router.patch("/coupons/toggle/:couponId", toggleCouponStatus);
+router.delete("/coupons/delete/:couponId", deleteCoupon);
 
 //report
-router.get("/reports",adminAuth,getDashboard);
+router.get("/reports", adminAuth, getDashboard);
 router.get("/reports/excel", exportSalesExcel);
 router.get("/reports/pdf", exportSalesPDF);
 
-
 //logout
-router.get("/logout",adminLogout)
-
-
-
+router.get("/logout", adminLogout);
 
 export default router;

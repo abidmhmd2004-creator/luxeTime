@@ -51,11 +51,6 @@ export const getProducts = asyncHandler(async (req, res) => {
 
     if (!variant) continue;
 
-    // console.log(variant)
-
-    // product.variant = variant;
-    // finalProducts.push(product);
-
     const { finalPrice, appliedOffer } = calculateBestOffer({
       basePrice: variant.basePrice,
       product,
@@ -157,7 +152,7 @@ export const productDetails = asyncHandler(async (req, res) => {
       const { finalPrice, appliedOffer } = calculateBestOffer({
         basePrice: variant.basePrice,
         product: p,
-        category: product.category, 
+        category: product.category,
       });
 
       return {

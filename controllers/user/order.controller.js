@@ -91,8 +91,7 @@ export const cancelOrderItem = asyncHandler(async (req, res) => {
   if (allCancelled) {
     order.orderStatus = "CANCELLED";
   }
-      const refundAmount = order.totalAmount;
-
+  const refundAmount = order.totalAmount;
 
   await creditWallet({
     userId,
@@ -125,17 +124,14 @@ export const cancellFullOrder = asyncHandler(async (req, res) => {
       });
     }
   }
-  if (
-  order.paymentMethod !== "COD" &&
-  order.paymentStatus === "PAID"
-) {
-  await creditWallet({
-    userId: order.user,
-    amount: order.totalAmount,
-    reason: "Order cancelled refund",
-    orderId: order._id,
-  });
-}
+  if (order.paymentMethod !== "COD" && order.paymentStatus === "PAID") {
+    await creditWallet({
+      userId: order.user,
+      amount: order.totalAmount,
+      reason: "Order cancelled refund",
+      orderId: order._id,
+    });
+  }
 
   order.orderStatus = "CANCELLED";
 

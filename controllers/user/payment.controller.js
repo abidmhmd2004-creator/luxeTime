@@ -49,12 +49,11 @@ export const verifyRazorpayPayment = asyncHandler(async (req, res) => {
   return res.json({ success: true });
 });
 
-
 export const markPaymentFailed = asyncHandler(async (req, res) => {
   const { orderId } = req.body;
 
   await Order.findByIdAndUpdate(orderId, {
-    paymentStatus: "FAILED"
+    paymentStatus: "FAILED",
   });
 
   res.json({ success: true });

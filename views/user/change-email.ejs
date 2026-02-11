@@ -34,12 +34,12 @@
                         Email Address</span>
 
                     <label for="newEmail" class="sr-only">New Email Address</label>
-                    <input type="email" id="newEmail" name="newEmail" 
+                    <input type="email" id="newEmail" name="newEmail"
                         class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-white placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm focus:ring-primary" />
 
                     <span
                         class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">alternate_email</span>
-                                <p class="mt-1 text-xs text-red-500 hidden" id="emailErr"></p>
+                    <p class="mt-1 text-xs text-red-500 hidden" id="emailErr"></p>
 
                 </div>
 
@@ -61,32 +61,31 @@
 
 <script>
 
-    const emailForm=document.getElementById("emailForm");
-    emailForm.addEventListener(('click'),(e)=>{
-        let valid=true;
+    const emailForm = document.getElementById("emailForm");
+    emailForm.addEventListener(('click'), (e) => {
+        let valid = true;
 
-        const email=document.getElementById("newEmail");
-        const emailErr=document.getElementById("emailErr");
+        const email = document.getElementById("newEmail");
+        const emailErr = document.getElementById("emailErr");
 
         emailErr.classList.add("hidden");
 
         emailErr.textContent = "";
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // EMAIL VALIDATION
-    if (email.value.trim() === "") {
-      emailErr.textContent = "Email is required";
-      emailErr.classList.remove("hidden");
-      valid = false;
-    } else if (!emailRegex.test(email.value.trim())) {
-      emailErr.textContent = "Enter a valid email address";
-      emailErr.classList.remove("hidden");
-      valid = false;
-    }
-    if (!valid) {
-      e.preventDefault();
-    }
+        // EMAIL VALIDATION
+        if (email.value.trim() === "") {
+            emailErr.textContent = "Email is required";
+            emailErr.classList.remove("hidden");
+            valid = false;
+        } else if (!emailRegex.test(email.value.trim())) {
+            emailErr.textContent = "Enter a valid email address";
+            emailErr.classList.remove("hidden");
+            valid = false;
+        }
+        if (!valid) {
+            e.preventDefault();
+        }
     })
 </script>
-

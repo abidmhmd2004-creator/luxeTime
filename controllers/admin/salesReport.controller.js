@@ -2,9 +2,7 @@ import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
 import Order from "../../models/order.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-import getDateRange from "../../helpers/reportFilter.js"
-
-
+import getDateRange from "../../helpers/reportFilter.js";
 
 export const exportSalesPDF = async (req, res) => {
   const { range = "daily", startDate, endDate } = req.query;
@@ -42,10 +40,7 @@ export const exportSalesPDF = async (req, res) => {
   const doc = new PDFDocument({ margin: 40, size: "A4" });
 
   res.setHeader("Content-Type", "application/pdf");
-  res.setHeader(
-    "Content-Disposition",
-    "attachment; filename=sales-report.pdf"
-  );
+  res.setHeader("Content-Disposition", "attachment; filename=sales-report.pdf");
 
   doc.pipe(res);
 
@@ -58,10 +53,9 @@ export const exportSalesPDF = async (req, res) => {
     .moveDown(0.5)
     .fontSize(10)
     .font("Helvetica")
-    .text(
-      `Period: ${from.toDateString()} - ${to.toDateString()}`,
-      { align: "center" }
-    );
+    .text(`Period: ${from.toDateString()} - ${to.toDateString()}`, {
+      align: "center",
+    });
 
   doc.moveDown(1.5);
 
@@ -136,10 +130,7 @@ export const exportSalesPDF = async (req, res) => {
 
   doc.moveDown(2);
 
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(11)
-    .text("Summary", 40);
+  doc.font("Helvetica-Bold").fontSize(11).text("Summary", 40);
 
   doc.moveDown(0.5);
 
@@ -153,76 +144,73 @@ export const exportSalesPDF = async (req, res) => {
   doc.end();
 };
 
+export const exportSalesExcel = asyncHandler(async (req, res) => {
+  const { range = "daily", startDate, endDate } = req.query;
 
+  const { from, to } = getDateRange(range, startDate, endDate);
 
+  const orders = await Order.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: from, $lte: to },
+        paymentStatus: "PAID",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+    {
+      $project: {
+        orderId: 1,
+        createdAt: 1,
+        subtotal: 1,
+        discount: 1,
+        totalAmount: 1,
+        "user.name": 1,
+      },
+    },
+    { $sort: { createdAt: -1 } },
+  ]);
 
-export const exportSalesExcel = asyncHandler(async(req,res)=>{
-    const {range ="daily",startDate,endDate }=req.query;
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Sales Report");
 
-    const {from,to} =getDateRange(range,startDate,endDate);
-
-    const orders = await Order.aggregate([
-        {
-            $match:{
-                createdAt:{$gte:from ,$lte:to},
-                paymentStatus :"PAID",
-            }
-        },
-        {
-            $lookup:{
-                from:"users",
-                localField:"user",
-                foreignField:"_id",
-                as:"user"
-            },
-            },
-            {$unwind:"$user"},
-            {
-                $project:{
-                    orderId:1,
-                    createdAt:1,
-                    subtotal:1,
-                    discount:1,
-                    totalAmount:1,
-                    "user.name":1
-                }
-            },
-            {$sort:{createdAt:-1}}
-    ])
-
-    const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet("Sales Report");
-
-    sheet.columns =[
-        { header: "Date", key: "date", width: 15 },
+  sheet.columns = [
+    { header: "Date", key: "date", width: 15 },
     { header: "Order ID", key: "orderId", width: 15 },
     { header: "Customer", key: "customer", width: 20 },
     { header: "Gross Amount", key: "subtotal", width: 15 },
     // { header: "Discount", key: "discount", width: 15 },
     { header: "Net Total", key: "total", width: 15 },
-    ]
+  ];
 
-    orders.forEach(order=>{
-        sheet.addRow({
-            date:new Date(order.createdAt).toLocaleDateString(),
-            orderId:order.orderId,
-            customer:order.user.name,
-            subtotal:order.subtotal,
-            // discount:order.discount,
-            total:order.totalAmount
-        })
-    })
+  orders.forEach((order) => {
+    sheet.addRow({
+      date: new Date(order.createdAt).toLocaleDateString(),
+      orderId: order.orderId,
+      customer: order.user.name,
+      subtotal: order.subtotal,
+      // discount:order.discount,
+      total: order.totalAmount,
+    });
+  });
 
-    sheet.getRow(1).font ={bold:true};
+  sheet.getRow(1).font = { bold: true };
 
-    res.setHeader(
+  res.setHeader(
     "Content-Type",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   );
   res.setHeader(
     "Content-Disposition",
-    "attachment; filename=sales-report.xlsx"
+    "attachment; filename=sales-report.xlsx",
   );
-   await workbook.xlsx.write(res);
+  await workbook.xlsx.write(res);
   res.end();
 });

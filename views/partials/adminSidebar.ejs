@@ -1,24 +1,30 @@
 <aside class="bg-[#121412] w-50 min-h-screen p-5 flex flex-col space-y-8 shadow-2xl">
-    
+
     <div class="text-xl font-extrabold text-white flex items-center space-x-2 border-b border-neutral-700 pb-4">
         <span class="material-symbols-outlined text-3xl text-primary">watch</span>
         <span>LUXE TIME</span>
     </div>
 
     <nav class="p-4 space-y-2" id="admin-sidebar-nav">
-        <a href="/admin/dashboard" class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg text-white font-semibold" data-path="/admin/dashboard">
+        <a href="/admin/dashboard"
+            class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg text-white font-semibold"
+            data-path="/admin/dashboard">
             <span class="material-symbols-outlined">dashboard</span>
             <span>Dashboard</span>
         </a>
 
         <div class="flex flex-col space-y-1 text-white">
 
-            <a href="/admin/products" class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition" data-path="/admin/watches">
+            <a href="/admin/products"
+                class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition"
+                data-path="/admin/watches">
                 <span class="material-symbols-outlined">watch</span>
                 <span>Products</span>
             </a>
 
-            <a href="/admin/categories" class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition" data-path="/admin/categories">
+            <a href="/admin/categories"
+                class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition"
+                data-path="/admin/categories">
                 <span class="material-symbols-outlined">category</span>
                 <span>Categories</span>
             </a>
@@ -28,17 +34,23 @@
                 <span>Brands</span>
             </a> -->
 
-            <a href="/admin/orders" class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition" data-path="/admin/orders">
+            <a href="/admin/orders"
+                class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition"
+                data-path="/admin/orders">
                 <span class="material-symbols-outlined">inventory_2</span>
                 <span>Orders</span>
             </a>
 
-            <a href="/admin/customers" class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition" data-path="/admin/customers">
+            <a href="/admin/customers"
+                class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition"
+                data-path="/admin/customers">
                 <span class="material-symbols-outlined">group</span>
                 <span>Customers</span>
             </a>
 
-            <a href="/admin/coupons" class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition" data-path="/admin/coupons">
+            <a href="/admin/coupons"
+                class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition"
+                data-path="/admin/coupons">
                 <span class="material-symbols-outlined">redeem</span>
                 <span>Coupons</span>
             </a>
@@ -48,7 +60,9 @@
                 <span>Sales</span>
             </a> -->
 
-            <a href="/admin/reports" class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition" data-path="/admin/reports">
+            <a href="/admin/reports"
+                class="admin-sidebar-link flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-800 transition"
+                data-path="/admin/reports">
                 <span class="material-symbols-outlined">analytics</span>
                 <span>Reports</span>
             </a>
@@ -59,10 +73,11 @@
             </a> -->
         </div>
     </nav>
-    
-    <div class="flex-grow"></div> 
-    
-    <a href="/admin/logout" class="flex items-center space-x-3 p-3 rounded-lg text-red-400 hover:bg-card-dark transition">
+
+    <div class="flex-grow"></div>
+
+    <a href="/admin/logout"
+        class="flex items-center space-x-3 p-3 rounded-lg text-red-400 hover:bg-card-dark transition">
         <span class="material-symbols-outlined text-lg">logout</span>
         <span>Logout</span>
     </a>
@@ -72,7 +87,7 @@
 <script>
     const ADMIN_ACTIVE_CLASSES = "bg-green-700";
     const ADMIN_INACTIVE_CLASSES = "hover:bg-neutral-800";
-    
+
     const adminLinks = document.querySelectorAll(".admin-sidebar-link");
     const currentPath = window.location.pathname;
 
@@ -80,7 +95,7 @@
         const linkPath = link.getAttribute("href");
 
         link.classList.remove(ADMIN_ACTIVE_CLASSES, ...ADMIN_INACTIVE_CLASSES.split(' '));
-        
+
         if (linkPath === currentPath) {
             link.classList.add(ADMIN_ACTIVE_CLASSES);
         } else {
@@ -92,7 +107,7 @@
                 l.classList.remove(ADMIN_ACTIVE_CLASSES);
                 l.classList.add(...ADMIN_INACTIVE_CLASSES.split(' '));
             });
-            
+
             link.classList.remove(...ADMIN_INACTIVE_CLASSES.split(' '));
             link.classList.add(ADMIN_ACTIVE_CLASSES);
         });

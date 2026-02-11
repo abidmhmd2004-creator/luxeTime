@@ -1,26 +1,29 @@
-export const calculateBestOffer = ({basePrice,product,category})=>{
-    const now = new Date();
+export const calculateBestOffer = ({ basePrice, product, category }) => {
+  const now = new Date();
 
-    let productOffer =0;
-    let categoryOffer =0;
+  let productOffer = 0;
+  let categoryOffer = 0;
 
-    if(product?.offerPercentage>0&&
-        (!product.offerExpiry || product.offerExpiry >now)
-    ){
-        productOffer =product.offerPercentage
-    }
+  if (
+    product?.offerPercentage > 0 &&
+    (!product.offerExpiry || product.offerExpiry > now)
+  ) {
+    productOffer = product.offerPercentage;
+  }
 
-    if(category?.offerValue>0&&
-        (!category.offerValue || category.offerExpiry >now)
-    ){
-        categoryOffer=category.offerValue
-    }
-    
-    const bestOffer = Math.max(productOffer,categoryOffer);
+  if (
+    category?.offerValue > 0 &&
+    (!category.offerValue || category.offerExpiry > now)
+  ) {
+    categoryOffer = category.offerValue;
+  }
 
-    const finalPrice = Math.round(basePrice -(basePrice * bestOffer)/100);
+  const bestOffer = Math.max(productOffer, categoryOffer);
 
-    return {
-        finalPrice,appliedOffer:bestOffer
-    };
+  const finalPrice = Math.round(basePrice - (basePrice * bestOffer) / 100);
+
+  return {
+    finalPrice,
+    appliedOffer: bestOffer,
+  };
 };

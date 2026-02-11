@@ -12,7 +12,7 @@ export const getWishlist = asyncHandler(async (req, res) => {
     ? wishlist.items.filter((item) => item.product && item.variant)
     : [];
 
-  res.render("user/wishlist",{items});
+  res.render("user/wishlist", { items });
 });
 
 export const addToWishlist = asyncHandler(async (req, res) => {
@@ -53,29 +53,27 @@ export const addToWishlist = asyncHandler(async (req, res) => {
   res.json({ success: true, alreadyAdded: false });
 });
 
+export const removeWishlistItem = asyncHandler(async (req, res) => {
+  const userId = req.session.user.id;
+  const { itemId } = req.params;
 
-export const removeWishlistItem =asyncHandler(async(req,res)=>{
+  const wishlist = await Wishlist.findOne({ user: userId });
 
-    const userId = req.session.user.id;
-    const {itemId} = req.params;
+  if (!wishlist) {
+    return res.status(404).json({
+      success: false,
+      message: "Wishlist not found",
+    });
+  }
 
-    const wishlist = await Wishlist.findOne({user:userId});
+  wishlist.items = wishlist.items.filter(
+    (item) => item._id.toString() !== itemId,
+  );
 
-    if(!wishlist){
-        return res.status(404).json({
-            success:false,
-            message:"Wishlist not found"
-        })
-    }
+  await wishlist.save();
 
-    wishlist.items = wishlist.items.filter(
-        item => item._id.toString() !== itemId
-    )
-
-    await wishlist.save();
-
-    return res.json({
-        success:true,
-        message:"Item removed successfully"
-    })
-})
+  return res.json({
+    success: true,
+    message: "Item removed successfully",
+  });
+});

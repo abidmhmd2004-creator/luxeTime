@@ -37,9 +37,9 @@ export const validateCartForCheckout = (cart) => {
         `Only ${variant.stock} left for ${product.name}. Please update your cart`,
       );
     }
-     if (product.category && !product.category.isListed) {
-    errors.push(`${product.name} category is unavailable`);
-  }
+    if (product.category && !product.category.isListed) {
+      errors.push(`${product.name} category is unavailable`);
+    }
   }
 
   return {

@@ -1,32 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Error - Luxe Time</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-        .bg-dark-black { background-color: #0d1310; } 
-        .bg-primary { background-color: #38a169; } 
-        .text-primary { color: #38a169; }
-        .bg-card-dark { background-color: #1a322c; }
-        
-        /* Subtle pulse animation for the icon */
-        @keyframes pulse-red {
-            0% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 0.5; }
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+    .bg-dark-black {
+        background-color: #0d1310;
+    }
+
+    .bg-primary {
+        background-color: #38a169;
+    }
+
+    .text-primary {
+        color: #38a169;
+    }
+
+    .bg-card-dark {
+        background-color: #1a322c;
+    }
+
+    /* Subtle pulse animation for the icon */
+    @keyframes pulse-red {
+        0% {
+            transform: scale(1);
+            opacity: 0.5;
         }
-        .animate-error {
-            animation: pulse-red 3s infinite ease-in-out;
+
+        50% {
+            transform: scale(1.05);
+            opacity: 0.8;
         }
-    </style>
+
+        100% {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+    }
+
+    .animate-error {
+        animation: pulse-red 3s infinite ease-in-out;
+    }
+</style>
 </head>
+
 <body class="bg-dark-black min-h-screen text-white flex items-center justify-center font-sans p-6">
 
     <div class="text-center space-y-8 max-w-2xl">
-        
+
         <div class="relative flex justify-center">
             <span class="material-symbols-outlined text-[120px] text-red-500/20 absolute animate-error">
                 history_toggle_off
@@ -37,32 +55,31 @@
         </div>
 
         <div class="space-y-4">
-            <h1 class="text-8xl font-black text-white/10 tracking-tighter absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 -z-10 select-none">
+            <h1
+                class="text-8xl font-black text-white/10 tracking-tighter absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 -z-10 select-none">
                 500
             </h1>
             <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
                 INTERNAL SERVER ERROR
             </h2>
             <p class="text-neutral-400 max-w-md mx-auto leading-relaxed">
-                The clock stopped unexpectedly. Our servers encountered a glitch while processing your request. Don't worry, our watchmakers have been notified.
+                The clock stopped unexpectedly. Our servers encountered a glitch while processing your request. Don't
+                worry, our watchmakers have been notified.
             </p>
         </div>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <button onclick="window.location.reload()" 
+            <button onclick="window.location.reload()"
                 class="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-3 rounded-lg bg-primary text-black font-bold hover:bg-green-700 transition shadow-lg shadow-green-900/20">
                 <span class="material-symbols-outlined text-xl">refresh</span>
                 <span>Try Refreshing</span>
             </button>
-            
-            <a href="/home" 
+
+            <a href="/home"
                 class="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-3 rounded-lg border border-neutral-700 text-neutral-300 font-bold hover:bg-neutral-800 transition">
                 <span class="material-symbols-outlined text-xl">home</span>
                 <span>Back to Home</span>
             </a>
         </div>
 
-       
-
     </div>
-

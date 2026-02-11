@@ -4,9 +4,9 @@ import mongoose from "mongoose";
 
 export const getDashboard = asyncHandler(async (req, res) => {
   const { range = "daily", startDate, endDate, limit = 5 } = req.query;
-  const page = parseInt(req.query.page)|| 1;
+  const page = parseInt(req.query.page) || 1;
 
-  const skip =(page - 1) * limit;
+  const skip = (page - 1) * limit;
 
   let from = new Date();
   let to = new Date();

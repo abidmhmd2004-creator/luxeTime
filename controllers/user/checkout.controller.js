@@ -372,18 +372,18 @@ export const placeOrder = asyncHandler(async (req, res) => {
   tax = Math.round((subtotal - discount) * 0.18);
   totalAmount = subtotal - discount - couponDiscount + tax;
 
-  if(paymentMethod ==="WALLET"){
-    const wallet= await Wallet.findOne({user:userId});
+  if (paymentMethod === "WALLET") {
+    const wallet = await Wallet.findOne({ user: userId });
 
-    if(!wallet || wallet.balance <totalAmount){
+    if (!wallet || wallet.balance < totalAmount) {
       return res.status(400).json({
-        success:false,
-        message:"Insufficient wallet balance"
-      })
+        success: false,
+        message: "Insufficient wallet balance",
+      });
     }
   }
 
-   if (paymentMethod === "COD" && totalAmount > COD_LIMIT) {
+  if (paymentMethod === "COD" && totalAmount > COD_LIMIT) {
     return res.status(400).json({
       success: false,
       message: "Cash on Delivery not availble for this amount",
@@ -419,32 +419,31 @@ export const placeOrder = asyncHandler(async (req, res) => {
     req.session.appliedCoupon = null;
   }
 
-  if(paymentMethod ==="WALLET"){
-
+  if (paymentMethod === "WALLET") {
     await debitWallet({
       userId,
-      amount:totalAmount,
-      reason:"Order payment",
-      orderId:order._id
-    })
+      amount: totalAmount,
+      reason: "Order payment",
+      orderId: order._id,
+    });
 
-    order.paymentStatus="PAID";
+    order.paymentStatus = "PAID";
     await order.save();
 
-    for(const item of cart.items){
-      await Variant.findByIdAndUpdate(item.variant._id,{
-        $inc:{stock:-item.quantity}
-      })
+    for (const item of cart.items) {
+      await Variant.findByIdAndUpdate(item.variant._id, {
+        $inc: { stock: -item.quantity },
+      });
     }
-    cart.items=[];
+    cart.items = [];
     await cart.save();
 
     return res.json({
-      success:true,
-      message:"Order placed using wallet",
-      orderId:order._id,
-      redirectUrl:`/order-success/${order._id}`
-    })
+      success: true,
+      message: "Order placed using wallet",
+      orderId: order._id,
+      redirectUrl: `/order-success/${order._id}`,
+    });
   }
 
   if (paymentMethod === "COD") {

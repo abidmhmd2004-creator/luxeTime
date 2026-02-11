@@ -117,25 +117,23 @@ export const toggleCouponStatus = asyncHandler(async (req, res) => {
   });
 });
 
+export const deleteCoupon = asyncHandler(async (req, res) => {
+  const { couponId } = req.params;
 
-export const deleteCoupon = asyncHandler(async(req,res)=>{
+  const coupon = await Coupon.findById(couponId);
 
-    const {couponId}=req.params;
+  if (!coupon) {
+    return res.json({
+      success: false,
+      message: "Coupon not found.",
+    });
+  }
 
-    const coupon = await Coupon.findById(couponId);
+  coupon.isDeleted = true;
+  await coupon.save();
 
-    if(!coupon){
-        return res.json({
-            success:false,
-            message:"Coupon not found."
-        })
-    }
-
-    coupon.isDeleted = true;
-    await coupon.save();
-
-    res.json({
-        success:true,
-        message:"Coupon deleted successfully"
-    })
-})
+  res.json({
+    success: true,
+    message: "Coupon deleted successfully",
+  });
+});

@@ -54,21 +54,17 @@
 
                     <div class="h-6 w-[1px] bg-neutral-700 hidden md:block"></div>
 
-<a
-  href="/admin/reports/pdf?<%= new URLSearchParams(query).toString() %>"
-  class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-neutral-700 hover:bg-neutral-800 text-[10px] text-neutral-300 transition"
->
-  <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
-  PDF
-</a>
+                    <a href="/admin/reports/pdf?<%= new URLSearchParams(query).toString() %>"
+                        class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-neutral-700 hover:bg-neutral-800 text-[10px] text-neutral-300 transition">
+                        <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+                        PDF
+                    </a>
 
-<a
-  href="/admin/reports/excel?<%= new URLSearchParams(query).toString() %>"
-  class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-light-green/10 text-light-green border border-light-green/20 hover:bg-light-green hover:text-black text-[10px] font-bold transition"
->
-  <span class="material-symbols-outlined text-sm">description</span>
-  EXCEL
-</a>
+                    <a href="/admin/reports/excel?<%= new URLSearchParams(query).toString() %>"
+                        class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-light-green/10 text-light-green border border-light-green/20 hover:bg-light-green hover:text-black text-[10px] font-bold transition">
+                        <span class="material-symbols-outlined text-sm">description</span>
+                        EXCEL
+                    </a>
 
                 </div>
             </div>
@@ -179,9 +175,12 @@
                                     <td class="px-4 py-3">
                                         <%= new Date(order.createdAt).toDateString() %>
                                     </td>
-                                    <td class="px-4 py-3 font-bold"><%= order.orderId %>
+                                    <td class="px-4 py-3 font-bold">
+                                        <%= order.orderId %>
                                     </td>
-                                    <td class="px-4 py-3"><%= order.user.name%></td>
+                                    <td class="px-4 py-3">
+                                        <%= order.user.name%>
+                                    </td>
                                     <td class="px-4 py-3 text-right">₹<%= order.subtotal.toLocaleString() %>
                                     </td>
                                     <!-- <td class="px-4 py-3 text-right text-red-400">₹<%= order.discount.toLocaleString()
@@ -226,7 +225,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const revenueData = <%- JSON.stringify(revenueTrend) %>;
+    const revenueData = <% - JSON.stringify(revenueTrend) %>;
 </script>
 
 <script>
