@@ -1,16 +1,32 @@
 import asyncHandler from "../../utils/asyncHandler.js";
 import Wishlist from "../../models/wishlist.model.js";
+import { calculateBestOffer } from "../../helpers/calculateOffer.js";
 
 export const getWishlist = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
 
   const wishlist = await Wishlist.findOne({ user: userId })
-    .populate("items.product")
+    .populate({
+      path: "items.product",
+      populate: { path: "category" },
+    })
     .populate("items.variant");
 
-  const items = wishlist
-    ? wishlist.items.filter((item) => item.product && item.variant)
-    : [];
+  let items = [];
+
+  if (wishlist)
+    items = wishlist.items.filter((item) => item.product && item.variant);
+
+  for (const item of items) {
+    const { finalPrice, appliedOffer } = calculateBestOffer({
+      basePrice: item.variant.basePrice,
+      product: item.product,
+      category: item.product.category,
+    });
+
+    item.variant.finalPrice = finalPrice;
+    item.variant.appliedOffer = appliedOffer;
+  }
 
   res.render("user/wishlist", { items });
 });

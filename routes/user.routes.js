@@ -1,5 +1,8 @@
 import express from "express";
-import { showhomePage } from "../controllers/user/home.controller.js";
+import {
+  getAboutPage,
+  showhomePage,
+} from "../controllers/user/home.controller.js";
 import {
   getResetPassword,
   logout,
@@ -42,6 +45,7 @@ import createUploader from "../middlewares/upload.middleware.js";
 import {
   getProducts,
   productDetails,
+  toggleWishlist,
 } from "../controllers/user/shop.controller.js";
 import {
   addToCart,
@@ -83,22 +87,30 @@ import { getReferralPage } from "../controllers/user/referral.controller.js";
 
 const router = express.Router();
 
-router.get("/home", showhomePage);
+router.get("/", showhomePage);
 
 //signup
-router.get("/signup", redirectIfAuthenticated, showSignup);
-router.post("/signup", postSignup);
+router
+  .route("/signup")
+  .get(redirectIfAuthenticated, showSignup)
+  .post(postSignup);
 
 //otp verify
-router.get("/verify-otp", requireOtpSession, showVerifyOtp);
-router.post("/verify-otp", verifyOtp);
+router
+  .route("/verify-otp")
+  .get(requireOtpSession, showVerifyOtp)
+  .post(verifyOtp);
 
 //resent-otp
 router.post("/resend-otp", resentOtp);
-router.get("/login", redirectIfAuthenticated, showLogin);
-router.post("/login", postLogin);
 
-//goggle auth
+//login
+router
+  .route("/login")
+  .get(redirectIfAuthenticated, showLogin)
+  .post(postLogin);
+
+//google auth
 router.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] }),
@@ -113,32 +125,41 @@ router.get(
       name: req.user.name,
       email: req.user.email,
     };
-    res.redirect("/home");
+    res.redirect("/");
   },
 );
 
 //forgot password
-router.get("/forgot-password", loadForgotPass);
-router.post("/forgot-password", postForgotPass);
+router
+.route("forgot-password")
+.get(loadForgotPass)
+.post(postForgotPass)
 
 //reset-password
-router.get("/reset-password", getResetPassword);
-router.patch("/reset-password", postResetPassword);
+router.route("/reset-password")
+.get(getResetPassword)
+.post(postResetPassword)
 
 //profile
 router.get("/profile", requireAuth, getProfile);
 
 //edit profile
-router.get("/edit-profile", requireAuth, loadEditProfile);
-router.post("/edit-profile", postEditProfile);
+router
+  .route("/edit-profile")
+  .get(requireAuth,loadEditProfile)
+  .post(postEditProfile)
 
 //change password
-router.get("/change-password", requireAuth, getChangePassword);
-router.patch("/change-Password", postChangePassword);
+router
+  .route("/change-password")
+  .get(requireAuth, getChangePassword)
+  .patch( postChangePassword);
 
 //change email
-router.get("/change-email", requireAuth, loadChangeEmail);
-router.patch("/change-email", postChangeEmail);
+router
+  .route("/change-email")
+  .get(requireAuth, loadChangeEmail)
+  .patch(postChangeEmail);
 
 //address
 router.get("/address", requireAuth, getAddress);
@@ -168,9 +189,11 @@ router.post("/cart/add", requireAuth, addToCart);
 router.delete("/cart/remove/:variantId", removeFromCart);
 router.post("/cart/update-qty", requireAuth, updateQty);
 
-router.get("/checkout", requireAuth, getCheckoutPage);
+router
+  .route("/checkout") 
+  .get(requireAuth, getCheckoutPage)
+  .post(requireAuth,placeOrder)
 router.post("/address-checkout", requireAuth, addAddressCheckout);
-router.post("/checkout", requireAuth, placeOrder);
 
 router.post("/checkout/verify-payment", verifyRazorpayPayment);
 router.get("/payment-failed/:orderId", getPaymentFailurePage);
@@ -191,13 +214,17 @@ router.post("/orders/:orderId/return", requireAuth, returnRequest);
 router.get("/orders/:orderId/invoice", downloadInvoice);
 router.patch("/admin/orders/:orderId/status", updateOrderStatus);
 
+//wishlist
 router.get("/wishlist", requireAuth, getWishlist);
 router.post("/wishlist/add", addToWishlist);
 router.delete("/wishlist/remove/:itemId", removeWishlistItem);
+router.post("/wishlist/toggle", toggleWishlist);
 
 router.get("/wallet", getWalletPage);
 
-router.get("/referral",getReferralPage)
+router.get("/referral", getReferralPage);
+
+router.get("/about", getAboutPage);
 
 //logout
 router.post("/logout", logout);

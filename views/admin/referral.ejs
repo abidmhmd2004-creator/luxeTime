@@ -1,0 +1,205 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+
+    .content-area {
+        flex-grow: 1;
+        padding: 2rem;
+        overflow-y: auto;
+        height: 100%;
+    }
+
+    .status-paid {
+        background: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+    }
+
+    .status-pending {
+        background: rgba(234, 179, 8, 0.1);
+        color: #eab308;
+    }
+
+    input,
+    select {
+        background: #1a1f1c !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+</style>
+</head>
+
+<body>
+    <%- include('../partials/adminSidebar') %>
+
+        <main class="content-area overflow-y-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start  md:items-end mb-8 gap-4">
+                <div>
+                    <p class="text-[10px] font-black text-[#22c55e] uppercase tracking-[0.4em] mb-1">Privilege Admin
+                    </p>
+                    <h1 class="text-3xl font-black uppercase tracking-tighter">Referral Management</h1>
+                </div>
+
+                <div class="flex flex-wrap gap-4">
+                    <div class="relative group">
+                        <div
+                            class="absolute -inset-0.5 bg-gradient-to-r from-[#22c55e]/20 to-transparent rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000">
+                        </div>
+                        <div
+                            class="relative flex items-center gap-4 bg-white/[0.03] backdrop-blur-md border border-white/10 p-4 rounded-2xl min-w-[180px]">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-[#22c55e]/10 flex items-center justify-center border border-[#22c55e]/20">
+                                <i class="fa-solid fa-users text-[#22c55e] text-sm"></i>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-zinc-500 text-[9px] font-black uppercase tracking-[0.2em] leading-none mb-1.5">
+                                    Active Referrals</p>
+                                <p class="text-xl font-black text-white leading-none">
+                                    <%= totalReferrals %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <div
+                            class="absolute -inset-0.5 bg-gradient-to-r from-[#22c55e]/20 to-transparent rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000">
+                        </div>
+                        <div
+                            class="relative flex items-center gap-4 bg-white/[0.03] backdrop-blur-md border border-white/10 p-4 rounded-2xl min-w-[180px]">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-[#22c55e]/20 flex items-center justify-center border border-[#22c55e]/30 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+                                <i class="fa-solid fa-indian-rupee-sign text-[#22c55e] text-sm"></i>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-zinc-500 text-[9px] font-black uppercase tracking-[0.2em] leading-none mb-1.5">
+                                    Total Rewards</p>
+                                <p class="text-xl font-black text-[#22c55e] leading-none">₹<%= totalRewardAmount %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="/admin/referral" method="GET" class="admin-card p-4 mb-6 flex flex-wrap gap-4 items-center">
+                <div class="relative flex-grow max-w-md">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
+                    <input type="text" name="search" placeholder="Search by name or email..."
+                        value="<%= searchQuery || '' %>"
+                        class="w-full pl-12 pr-4 py-2.5 rounded-lg text-sm focus:outline-none focus:border-[#22c55e] transition-all bg-black border border-white/10 text-white">
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <% if (searchQuery && searchQuery.trim().length> 0) { %>
+                        <a href="/admin/referral"
+                            class="text-zinc-500 hover:text-red-400 text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2 border-r border-white/10 pr-4">
+                            <i class="fas fa-times-circle"></i>
+                            Clear
+                        </a>
+                        <% } %>
+                            <button type="submit"
+                                class="bg-[#22c55e] text-black font-black uppercase tracking-tighter py-2.5 px-8 rounded-lg text-xs hover:bg-green-400 transition-all active:scale-95">
+                                Search
+                            </button>
+                </div>
+            </form>
+
+            <div class="admin-card overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="uppercase text-[10px] tracking-widest text-zinc-500 border-b border-white/5">
+                                <th class="p-4 font-bold">Referrer Details</th>
+                                <th class="p-4 font-bold">Referred User</th>
+                                <th class="p-4 font-bold text-center">Signup Date</th>
+                                <th class="p-4 font-bold text-center">Reward</th>
+                                <th class="p-4 font-bold text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (referrals && referrals.length> 0) { %>
+                                <% referrals.forEach(item=> { %>
+                                    <tr class="border-b border-white/[0.02] hover:bg-white/[0.01] transition-colors">
+                                        <td class="p-4">
+                                            <div class="font-bold text-white text-sm">
+                                                <%= item.referrerName %>
+                                            </div>
+                                            <div class="text-[11px] text-zinc-500">
+                                                <%= item.referrerEmail %>
+                                            </div>
+                                        </td>
+                                        <td class="p-4">
+                                            <div class="text-zinc-300 text-sm">
+                                                <%= item.referredUser %>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-center text-zinc-500 text-xs">
+                                            <%= new Date(item.signupDate).toLocaleDateString('en-IN', { day: '2-digit' ,
+                                                month: 'short' , year: 'numeric' }) %>
+                                        </td>
+                                        <td class="p-4 text-center font-black text-white text-sm">
+                                            ₹<%= item.reward %>
+                                        </td>
+                                        <td class="p-4 text-right">
+                                            <span
+                                                class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest <%= item.status === 'Paid' ? 'status-paid' : 'status-pending' %>">
+                                                <%= item.status || 'Pending' %>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="5"
+                                                    class="p-12 text-center text-zinc-600 uppercase text-xs font-bold tracking-[0.2em]">
+                                                    No referral records found
+                                                </td>
+                                            </tr>
+                                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <% if (referrals && referrals.length> 0) { %>
+                    <div
+                        class="p-6 flex items-center justify-center bg-black/20 mt-4 rounded-2xl border border-white/5">
+                        <nav id="paginationNav" class="flex items-center gap-3 justify-center">
+
+                            <% if (currentPage> 1) { %>
+                                <a href="/admin/referral?page=<%= currentPage - 1 %>&search=<%= searchQuery || '' %>"
+                                    class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-zinc-500 hover:text-[#22c55e] hover:border-[#22c55e]/30 transition-all duration-300">
+                                    <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                                </a>
+                                <% } %>
+
+                                    <div
+                                        class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
+                                        <div
+                                            class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#22c55e] text-black font-black text-[11px] shadow-[0_0_15px_rgba(34,197,94,0.2)]">
+                                            <%= currentPage %>
+                                        </div>
+
+                                        <% if (currentPage < totalPages) { %>
+                                            <a href="/admin/referral?page=<%= totalPages %>&search=<%= searchQuery || '' %>"
+                                                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
+                                                <%= totalPages %>
+                                            </a>
+                                            <% } %>
+                                    </div>
+
+                                    <% if (currentPage < totalPages) { %>
+                                        <a href="/admin/referral?page=<%= currentPage + 1 %>&search=<%= searchQuery || '' %>"
+                                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-zinc-500 hover:text-[#22c55e] hover:border-[#22c55e]/30 transition-all duration-300">
+                                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                        </a>
+                                        <% } %>
+
+                        </nav>
+                    </div>
+                    <% } %>
+            </div>
+        </main>

@@ -24,6 +24,10 @@ const couponSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    maxDiscount:{
+      type:Number,
+      default:0
+    },
     expiry: {
       type: Date,
       required: true,
@@ -31,6 +35,10 @@ const couponSchema = new mongoose.Schema(
     maxUsage: {
       type: Number,
       default: 0,
+    },
+    useCount:{
+      type:Number,
+      default:0
     },
     isListed: {
       type: Boolean,
@@ -40,6 +48,10 @@ const couponSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    usedBy:[{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"User"
+    }]
   },
   { timestamps: true },
 );

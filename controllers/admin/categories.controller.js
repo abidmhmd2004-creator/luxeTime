@@ -102,7 +102,7 @@ export const addCategory = asyncHandler(async (req, res) => {
 
 export const editCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, description, offerValue, offerExpiry } = req.body;
+  let { name, description, offerValue, offerExpiry } = req.body;
 
   if (!name || name.trim() === "") {
     return res.status(400).json({ message: "Category name is required" });
@@ -110,9 +110,8 @@ export const editCategory = asyncHandler(async (req, res) => {
 
   const exists = await Category.findOne({
     _id: { $ne: id },
-    name: { $regex: `${name.trim()}$`, $options: "i" },
+    name: { $regex: `^${name}$`, $options: "i" },
   });
-
   if (exists) {
     return res.status(409).json({ message: "Category already exists" });
   }

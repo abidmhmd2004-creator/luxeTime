@@ -375,12 +375,38 @@
     function changeQty(variantId, val, stock) {
         const qtySpan = document.getElementById(`quantity-val-${variantId}`);
 
+        const MAX_QTY =10;
         let current = parseInt(qtySpan.innerText);
         let next = current + val;
-
-        if (next >= 1 && next <= stock) {
-            qtySpan.innerText = next;
+        
+        if(next<1){
+            Swal.fire({
+                icon:"warning",
+                title:"Minimum qunatity is 1",
+                timer:1200,
+                showConfirmButton:false
+            })
+            return ;
         }
+        if(next >MAX_QTY){
+            Swal.fire({
+                icon:"warning",
+                title:`You can only by ${MAX_QTY} units`,
+                timer:1200,
+                showConfirmButton:false
+            })
+            return;
+        }
+        if(next >stock){
+            Swal.fire({
+                icon:"warning",
+                title:`Only ${stock} items available`,
+                timer:1200,
+                showConfirmButton:false
+            })
+            return;
+        }
+            qtySpan.innerText = next;
     }
 
 

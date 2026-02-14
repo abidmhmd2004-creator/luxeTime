@@ -1,6 +1,7 @@
 import asyncHandler from "../../utils/asyncHandler.js";
 import Product from "../../models/product.model.js";
 import Variant from "../../models/variant.model.js";
+import Wishlist from "../../models/wishlist.model.js"
 import Category from "../../models/category.model.js";
 import { calculateBestOffer } from "../../helpers/calculateOffer.js";
 
@@ -173,3 +174,35 @@ export const productDetails = asyncHandler(async (req, res) => {
     recommendations: recommendedWithData,
   });
 });
+
+
+
+export const toggleWishlist = asyncHandler(async(req,res)=>{
+  const userId = req.session.user.id;
+  const {productId,variantId}= req.body;
+
+  const wishlist = await Wishlist.findOne({user:userId});
+
+  if(!wishlist){
+    await Wishlist.create({
+      user:userId,
+      items:[{product:productId,variant:variantId}]
+    })
+    return res.josn({added:true});
+  }
+
+const index = wishlist.items.findIndex(
+  item=>
+    item.product.toString()===productId&&
+  item.variant.toString()===variantId
+)
+  if(index>-1){
+    wishlist.items.splice(index,1);
+    await wishlist.save();
+    return res.json({added:false})
+  }else{
+    wishlist.items.push({product:productId,variant:variantId});
+    await wishlist.save();
+    return res.json({added:true});
+  }
+})

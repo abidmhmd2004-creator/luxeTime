@@ -43,14 +43,17 @@ import {
 } from "../controllers/admin/coupon.controller.js";
 import { exportSalesPDF } from "../controllers/admin/salesReport.controller.js";
 import { exportSalesExcel } from "../controllers/admin/salesReport.controller.js";
+import { getReferralManagement } from "../controllers/admin/referral.controller.js";
 
 const uploadProductImage = createUploader("products");
 
 const router = express.Router();
 
 //login
-router.get("/login", loadAdminLogin);
-router.post("/login", postAdminLogin);
+router
+  .route("/login") 
+  .get(loadAdminLogin)
+  .post(postAdminLogin);
 
 //dashboard
 router.get("/dashboard", adminAuth, getDashboard);
@@ -60,8 +63,11 @@ router.get("/customers", adminAuth, getCustomers);
 router.patch("/customers/toggle/:userId", adminAuth, toggleCustomerStatus);
 
 //category
-router.get("/categories", adminAuth, getCategory);
-router.post("/categories", addCategory);
+router
+  .route("/categories")
+  .get(adminAuth, getCategory)
+  .post(adminAuth,addCategory);
+
 router.put("/categories/:id", editCategory);
 router.patch("/category/:id/delete", softDeleteCategory);
 router.patch("/categories/toggle/:id", adminAuth, toggleCategory);
@@ -69,11 +75,18 @@ router.get("/categories/ajax", getCategoryAjax);
 
 //products
 router.get("/products", adminAuth, getProductPage);
-router.get("/add-products", adminAuth, getaddProducts);
-router.post("/add-products", uploadProductImage.any(), postAddProducts);
+router
+  .route("/add-products")
+  .get(adminAuth, getaddProducts)
+  .post(uploadProductImage.any(), postAddProducts);
+
 router.get("/products/:id", adminAuth, productDetails);
-router.get("/edit-product/:id", adminAuth, geteditProduct);
-router.post("/edit-product/:id", uploadProductImage.any(), postEditProduct);
+
+router
+  .route("/edit-product/:id")
+  .get(adminAuth, geteditProduct)
+  .post( uploadProductImage.any(), postEditProduct);
+  
 router.patch("/products/:id/delete", softDeleteProduct);
 
 //orders
@@ -82,16 +95,19 @@ router.get("/orders/:orderId", getOrderDetailsPage);
 router.patch("/orders/return-update", adminAuth, updateReturnStatus);
 
 //coupons
-router.get("/coupons", getCouponPage);
-router.post("/coupons/add", addCoupon);
+router.get("/coupons",adminAuth, getCouponPage);
+router.post("/coupons/add",adminAuth, addCoupon);
 router.put("/coupons/edit/:couponId", editCoupon);
 router.patch("/coupons/toggle/:couponId", toggleCouponStatus);
 router.delete("/coupons/delete/:couponId", deleteCoupon);
 
 //report
 router.get("/reports", adminAuth, getDashboard);
-router.get("/reports/excel", exportSalesExcel);
-router.get("/reports/pdf", exportSalesPDF);
+router.get("/reports/excel",adminAuth, exportSalesExcel);
+router.get("/reports/pdf",adminAuth, exportSalesPDF);
+
+
+router.get("/referral",adminAuth,getReferralManagement);
 
 //logout
 router.get("/logout", adminLogout);

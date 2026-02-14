@@ -5,7 +5,7 @@ import Wallet from "../../models/wallet.model.js"
 export const getReferralPage =asyncHandler(async(req,res)=>{
     const userId = req.session.user.id;
 
-      const user = await User.findById(userId);
+    const user = await User.findById(userId);
     const wallet = await Wallet.findOne({user:userId});
 
     const referredUsers = await User.find({

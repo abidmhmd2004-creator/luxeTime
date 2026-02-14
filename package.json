@@ -40,6 +40,8 @@
     "razorpay": "^2.9.6"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "prettier": "^3.8.1",
+    "prettier-plugin-ejs": "^1.0.3"
   }
 }

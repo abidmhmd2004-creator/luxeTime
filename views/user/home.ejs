@@ -1,5 +1,6 @@
-<main class="flex-grow">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+<main class="flex-grow">
 
     <!-- Hero Section -->
     <section class="relative mx-auto max-w-[1440px] px-4 py-6 md:px-10">
@@ -35,58 +36,57 @@
                             class="rounded-full bg-primary px-8 py-4 text-base font-bold text-black hover:bg-white transition-colors duration-300 shadow-[0_0_20px_rgba(56,224,123,0.3)]">
                             Shop Watches
                         </button>
-                        <button
+                        <!-- <button
                             class="rounded-full border border-white/20 bg-white/10 px-8 py-4 text-base font-bold text-white backdrop-blur-sm hover:bg-white/20 transition-colors">
                             View Lookbook
-                        </button>
+                        </button> -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!-- Featured Collections (Cards with horizontal layout) -->
-    <section class="mx-auto max-w-[1440px] px-4 py-16 md:px-10">
-        <h2 class="mb-8 text-3xl font-bold text-white md:text-4xl">Browse by Category</h2>
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <!-- Collection 1 -->
-            <div
-                class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12">
-                <div class="absolute inset-0 bg-cover bg-center opacity-60"
-                    data-alt="Close up of mechanical watch gears"
-                    style='background-image: url("images/banner\ watch.jfif");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
-                <div class="relative z-10 max-w-sm">
-                    <h3 class="text-2xl font-bold text-white md:text-3xl">Shop By Men</h3>
-                    <p class="mt-2 text-gray-300">Intricate designs for the true connoisseur. Experience the heartbeat
-                        of time.</p>
-                    <button
-                        class="mt-6 flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors">
-                        Explore Collection <span class="material-symbols-outlined text-base">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-            <!-- Collection 2 -->
-            <div
-                class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12">
-                <div class="absolute inset-0 bg-cover bg-center opacity-60"
-                    data-alt="Person checking time on smartwatch while running"
-                    style='background-image: url("images//banner\ watch\ \(1\).jfif");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
-                <div class="relative z-10 max-w-sm">
-                    <h3 class="text-2xl font-bold text-white md:text-3xl">Shop By Woman</h3>
-                    <p class="mt-2 text-gray-300">Rugged, waterproof, and smart. Built to keep up with your every move.
-                    </p>
-                    <button
-                        class="mt-6 flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors">
-                        Shop Sport <span class="material-symbols-outlined text-base">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
+   <section class="mx-auto max-w-[1440px] px-4 py-16 md:px-10">
+    <h2 class="mb-8 text-3xl font-bold text-white md:text-4xl">Browse by Category</h2>
 
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+        <% categories.forEach(cat => { %>
+
+            <div class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12">
+
+                <!-- Background Image -->
+                <div class="absolute inset-0 bg-cover bg-center opacity-60"
+                     style='background-image: url("<%= cat.name === "Men" ? "/images/banner watch.jfif" : "/images/banner watch (1).jfif" %>");'>
+                </div>
+
+                <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
+
+                <div class="relative z-10 max-w-sm">
+                    <h3 class="text-2xl font-bold text-white md:text-3xl">
+                        Shop By <%= cat.name %>
+                    </h3>
+
+                    <p class="mt-2 text-gray-300">
+                        Discover our exclusive <%= cat.name %> collection.
+                    </p>
+
+                    <!-- IMPORTANT PART -->
+                    <a href="/shop?category=<%= cat._id %>"
+                       class="mt-6 inline-flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors">
+
+                        Explore Collection
+                        <span class="material-symbols-outlined text-base">arrow_forward</span>
+
+                    </a>
+                </div>
+
+            </div>
+
+        <% }) %>
+
+    </div>
+</section>
     <!-- <section class="mx-auto max-w-[1440px] px-4 py-12 md:px-10">
         <div class="mb-8 flex items-end justify-between">
             <div>
@@ -160,137 +160,58 @@
         </div>
     </section> -->
     <!-- Best Sellers / Trending -->
-    <section class="bg-[#1c2e24]/30 py-16">
-        <div class="mx-auto max-w-[1440px] px-4 md:px-10">
-            <div class="mb-10 text-center">
-                <span class="text-sm font-bold uppercase tracking-widest text-primary">Trending Now</span>
-                <h2 class="mt-2 text-3xl font-bold text-white md:text-5xl">Best Sellers</h2>
-            </div>
-            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                <!-- Product Card 1 -->
-                <div
-                    class="group flex flex-col rounded-3xl bg-[#1c2e24] p-4 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
-                    <div class="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#111714]">
-                        <img alt="Silver minimalist watch on dark background"
-                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            data-alt="Silver minimalist watch on dark background"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuARAnoDk7ixHqCgwiwGxWi7e4LwpvaXNhDSMdGr2MsqJurqQrJGZiGwP-LAi4PaUamMNdbueFqpdedmG1p0nSTsHy_GDTRNUcgNOi5AgVCSc_ng-KEVzfIvL16ryYXvRWQfwyGnndi648onJE1j05_Oi6ySk7-4vDFLGHjT8-Sxlcu9ICIrvKOBkw5ETpJJSnq1E5S3g25DJEhL2unMHSrpbkXgavpO5AJhF5Y_H6B4Zz0cMTFzfP49qtty45ZL6cOLblL01la_cOd3" />
-                        <button
-                            class="absolute right-3 top-3 rounded-full bg-black/40 p-2 text-white backdrop-blur-md hover:bg-primary hover:text-black transition-colors">
-                            <span class="material-symbols-outlined text-[20px]">favorite</span>
-                        </button>
-                        <div class="absolute bottom-3 left-3 flex gap-2">
-                            <span
-                                class="rounded-full bg-black/60 px-2 py-1 text-[10px] font-bold uppercase text-white backdrop-blur-md">Automatic</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 flex flex-1 flex-col">
-                        <h3 class="text-lg font-bold text-white">Chronos Silver Elite</h3>
-                        <p class="text-sm text-gray-400">Classic Series</p>
-                        <div class="mt-auto flex items-center justify-between pt-4">
-                            <span class="text-xl font-bold text-primary">₹2,450</span>
-                            <button
-                                class="flex items-center justify-center rounded-full bg-white p-2 text-black hover:bg-primary transition-colors">
-                                <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Card 2 -->
-                <div
-                    class="group flex flex-col rounded-3xl bg-[#1c2e24] p-4 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
-                    <div class="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#111714]">
-                        <img alt="Gold luxury watch with black face"
-                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            data-alt="Gold luxury watch with black face"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlCBDnmcRLxjZsw44sCmL7mIAQ9LDdQEyJDsAOIW8rBOrMVozO0w_iqo1mmdjD3VOyG0zaJhOHMpaX_82rSUhiESDYPvvyj3n99dICpafPA-xnqybRNpfG_uPUiYInlYzbj-Kiyu-v4x9zXeJBN17o_Ybq5EYdA2suat-OP0np85LcCoEQCFsY9XxFQ-B_4ZiBLZAlnwsl5SmZqs8NaDgdP-tbOIK3wOsp0J3iBOmndcYMsbXZiWEmsvVs7lEa1cykAaOVhJxYaAvP" />
-                        <button
-                            class="absolute right-3 top-3 rounded-full bg-black/40 p-2 text-white backdrop-blur-md hover:bg-primary hover:text-black transition-colors">
-                            <span class="material-symbols-outlined text-[20px]">favorite</span>
-                        </button>
-                        <div class="absolute bottom-3 left-3 flex gap-2">
-                            <span
-                                class="rounded-full bg-black/60 px-2 py-1 text-[10px] font-bold uppercase text-white backdrop-blur-md">Gold
-                                Plated</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 flex flex-1 flex-col">
-                        <h3 class="text-lg font-bold text-white">Royal Oak Gold</h3>
-                        <p class="text-sm text-gray-400">Luxury Collection</p>
-                        <div class="mt-auto flex items-center justify-between pt-4">
-                            <span class="text-xl font-bold text-primary">₹8,900</span>
-                            <button
-                                class="flex items-center justify-center rounded-full bg-white p-2 text-black hover:bg-primary transition-colors">
-                                <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Card 3 -->
-                <div
-                    class="group flex flex-col rounded-3xl bg-[#1c2e24] p-4 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
-                    <div class="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#111714]">
-                        <img alt="Minimalist black leather watch"
-                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            data-alt="Minimalist black leather watch"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyaNJdNhwknX78OAgHDhF0nVcFdhiiR24teDX9zCobiSWpG6yj8UeWh_tTRXZMt5dEKRXJ3DLWzRaDQKI9ctS3p5gcexwancjJATkKeDBBVfaGoYxKU9S8YqSKr5T6qO8N6o52yBoFwI4pPhIAY2zWbIK0nPXqRGW26FjWMErhcqqNLDwTwCe7v2lbJIFVVF6hXdoVLHaJ2tJwFi8kR8etpjL3Qwzvdz0wwfR2LOf1M5WWtHiSgG2yiqbE-FGjDDhgxgtfBdSx_xzZ" />
-                        <button
-                            class="absolute right-3 top-3 rounded-full bg-black/40 p-2 text-white backdrop-blur-md hover:bg-primary hover:text-black transition-colors">
-                            <span class="material-symbols-outlined text-[20px]">favorite</span>
-                        </button>
-                        <div class="absolute bottom-3 left-3 flex gap-2">
-                            <span
-                                class="rounded-full bg-black/60 px-2 py-1 text-[10px] font-bold uppercase text-white backdrop-blur-md">Leather</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 flex flex-1 flex-col">
-                        <h3 class="text-lg font-bold text-white">Noir Minimalist</h3>
-                        <p class="text-sm text-gray-400">Everyday Wear</p>
-                        <div class="mt-auto flex items-center justify-between pt-4">
-                            <span class="text-xl font-bold text-primary">₹350</span>
-                            <button
-                                class="flex items-center justify-center rounded-full bg-white p-2 text-black hover:bg-primary transition-colors">
-                                <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Product Card 4 -->
-                <div
-                    class="group flex flex-col rounded-3xl bg-[#1c2e24] p-4 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
-                    <div class="relative aspect-square w-full overflow-hidden rounded-2xl bg-[#111714]">
-                        <img alt="High tech smartwatch with fitness tracking"
-                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            data-alt="High tech smartwatch with fitness tracking"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDogBQQOfWb91AM6MreMIamJhuNGGD5jNIRJSsgqRRpCslS59PPO29RhPAsejqabczpxiRiHz6YWtckHmpsPMRtbFEXGuFjyaZJK5SkeCF_9WzWTOLQIXRn8a8Ur1mLr5IQVP2JHgNDI8pwGMa96kYmvE8Ws350solp6h0trs_eFHDICBVGBMqjbe_qYwfg16hwxi6xC9NAIjfpt8mYhlBcfF-1Xh_9dLj3yQ5nzodE3WhvuyDGXNhhMFAr2f48myxarGPPinPxbTLX" />
-                        <button
-                            class="absolute right-3 top-3 rounded-full bg-black/40 p-2 text-white backdrop-blur-md hover:bg-primary hover:text-black transition-colors">
-                            <span class="material-symbols-outlined text-[20px]">favorite</span>
-                        </button>
-                        <div class="absolute bottom-3 left-3 flex gap-2">
-                            <span
-                                class="rounded-full bg-black/60 px-2 py-1 text-[10px] font-bold uppercase text-white backdrop-blur-md">Smart
-                                Tech</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 flex flex-1 flex-col">
-                        <h3 class="text-lg font-bold text-white">Apex Pro Smart</h3>
-                        <p class="text-sm text-gray-400">Tech Series</p>
-                        <div class="mt-auto flex items-center justify-between pt-4">
-                            <span class="text-xl font-bold text-primary">₹599</span>
-                            <button
-                                class="flex items-center justify-center rounded-full bg-white p-2 text-black hover:bg-primary transition-colors">
-                                <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<section class="bg-[#1c2e24]/30 py-16">
+  <div class="mx-auto max-w-[1440px] px-4 md:px-10">
+    
+    <div class="mb-10 flex items-end justify-between">
+      <div class="text-left">
+        <!-- <span class="text-sm font-bold uppercase tracking-widest text-[#22c55e]">Fresh Drops</span> -->
+        <h2 class="mt-2 text-3xl font-bold text-white md:text-4xl">New Arrivals</h2>
+      </div>
+      <a href="/shop" class="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#38e07b] hover:text-white transition-colors duration-300">
+        View All Products 
+        <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+      </a>
+    </div>
 
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <% newArrivals.forEach(product => { 
+          const v = product.variant;
+          const image = v?.images?.[0]?.url || "/images/placeholder.png"; 
+      %>
+      <div class="group flex flex-col rounded-3xl bg-[#0a0a0a] p-4 border border-white/5 hover:border-[#22c55e]/30 transition-all duration-300 relative">
+        
+        <a href="/product/<%= product._id %>" class="flex flex-col flex-1 z-10">
+          <div class="relative aspect-square overflow-hidden rounded-2xl bg-[#111111]">
+            <img src="<%= image %>" alt="<%= product.name %>" class="h-full w-full object-cover group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="mt-4 flex flex-col flex-1">
+            <h3 class="text-lg font-bold text-white truncate"><%= product.name %></h3>
+            <p class="text-sm text-gray-400"><%= product.category?.name %></p>
+          </div>
+        </a>
+
+        <div class="mt-auto pt-4 z-20">
+          <div class="mb-4 text-center"> <% if(v.appliedOffer > 0){ %>
+              <span class="text-xs line-through text-gray-500">₹<%= v.basePrice.toLocaleString('en-IN') %></span>
+            <% } %>
+            <div class="text-xl font-bold text-[#22c55e]">₹<%= v.finalPrice.toLocaleString('en-IN') %></div>
+          </div>
+
+          <div class="z-20">
+            <a href="/product/<%= product._id %>" 
+               class="block w-full py-2.5 bg-zinc-900 border border-white/10 text-[#38e07b] text-center text-[10px] font-bold rounded-xl hover:bg-[#38e07b] hover:text-black hover:border-[#38e07b] transition-all duration-300 uppercase tracking-widest">
+                Discover More
+            </a>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
     <!-- Benefits Strip -->
-    <section class="border-y border-[#29382f] bg-[#111714]">
+    <section class="mb-20  border-y border-[#29382f] bg-[#111714]">
         <div class="mx-auto flex max-w-[1440px] flex-wrap justify-center gap-8 px-4 py-12 md:justify-between md:px-10">
             <div class="flex items-center gap-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary">
@@ -330,7 +251,7 @@
             </div>
         </div>
     </section>
-    <!-- Newsletter -->
+    <!-- Newsletter
     <section class="mx-auto max-w-[1440px] px-4 py-20 md:px-10">
         <div class="relative overflow-hidden rounded-3xl bg-primary px-6 py-16 text-center md:px-12 lg:text-left">
             <div
@@ -347,18 +268,18 @@
                         <input
                             class="w-full rounded-full border-2 border-[#111714]/10 bg-white/50 px-6 py-3 text-[#111714] placeholder-[#111714]/50 backdrop-blur-sm focus:border-[#111714] focus:outline-none focus:ring-0"
                             placeholder="Enter your email" type="email" />
-                        <!-- <button
+                        <button
                             class="whitespace-nowrap rounded-full bg-[#111714] px-8 py-3 font-bold text-white hover:bg-black transition-colors"
                             type="submit">
                             Subscribe
-                        </button> -->
+                        </button>
                     </form>
                     <p class="mt-3 text-xs text-[#111714]/60">By subscribing you agree to our Terms &amp; Conditions.
                     </p>
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 </main>
 <footer class="border-t border-[#29382f] bg-[#0d120f] pt-16 pb-8">
     <div class="mx-auto max-w-[1440px] px-4 md:px-10">

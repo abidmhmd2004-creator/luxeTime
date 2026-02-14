@@ -13,7 +13,7 @@ export const calculateBestOffer = ({ basePrice, product, category }) => {
 
   if (
     category?.offerValue > 0 &&
-    (!category.offerValue || category.offerExpiry > now)
+    (!category.offerExpiry || new Date(category.offerExpiry) > now)
   ) {
     categoryOffer = category.offerValue;
   }

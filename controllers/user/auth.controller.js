@@ -154,7 +154,7 @@ export const postLogin = asyncHandler(async (req, res) => {
     email: user.email,
   };
   // console.log(req.session.user.id);
-  return res.redirect("/home");
+  return res.redirect("/");
 });
 
 export const loadForgotPass = asyncHandler(async (req, res) => {
@@ -242,7 +242,7 @@ export const postResetPassword = asyncHandler(async (req, res) => {
 
   delete req.session.resetUserId;
 
-  return res.redirect("/home");
+  return res.redirect("/");
 });
 
 export const logout = (req, res) => {

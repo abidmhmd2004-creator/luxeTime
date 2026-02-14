@@ -7,6 +7,9 @@ import { creditWallet } from "../../helpers/wallet.helper.js";
 export const getOrders = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
   const { search } = req.query;
+  const page=parseInt(req.query.page)||1;
+  const limit=10;
+  const skip=(page-1)*limit;
 
   let filter = { user: userId };
 
@@ -16,12 +19,26 @@ export const getOrders = asyncHandler(async (req, res) => {
       $options: "i",
     };
   }
+
+  const totalOrders=await Order.countDocuments(filter);
+
   const orders = await Order.find(filter)
     .populate("items.product", "name")
     .populate("items.variant", "color images")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
 
-  res.render("user/orders", { orders, searchQuery: search || "" });
+    const totalPages=Math.ceil(totalOrders/limit);
+
+  res.render("user/orders", 
+    { 
+      orders, 
+      searchQuery: search || "" ,
+      currentPage: page,
+      totalPages,
+      totalOrders
+  });
 });
 
 export const getOrdersSucces = asyncHandler(async (req, res) => {

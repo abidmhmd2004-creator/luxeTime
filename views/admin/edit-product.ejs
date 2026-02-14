@@ -40,15 +40,8 @@
                                     <label
                                         class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Brand
                                         *</label>
-                                    <select name="brand" required
+                                    <input  name="brand" value="<%= product.brand %>" required
                                         class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                                        <option value="Rolex" <%=product.brand==='Rolex' ? 'selected' : '' %>>Rolex
-                                        </option>
-                                        <option value="Omega" <%=product.brand==='Omega' ? 'selected' : '' %>>Omega
-                                        </option>
-                                        <option value="Tissot" <%=product.brand==='Tissot' ? 'selected' : '' %>>Tissot
-                                        </option>
-                                    </select>
                                 </div>
                                 <div>
                                     <label
@@ -122,24 +115,6 @@
                                                     value="<%= variant.basePrice %>"
                                                     class="base-price-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                                             </div>
-                                            <!-- <div>
-                                                <label
-                                                    class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
-                                                    (%)</label>
-                                                <input type="number" name="variants[<%= index %>][offerPercentage]"
-                                                    value="<%= variant.offerPercentage || 0 %>"
-                                                    class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                                            </div> -->
-                                            <!-- <div>
-                                            <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
-                                                Expiry </label>
-                                                <div class="relative">
-                                                <input type="date" id="offerExpiry" name="offerExpiry"
-                                                    class="offerExpiry  w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white/60 outline-none">
-                                    
-                                                <i class="fa-solid fa-calendar-days  absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
-                                                </div>
-                                        </div> -->
                                             <div class="col-span-2">
                                                 <label
                                                     class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Final
@@ -220,35 +195,6 @@
                                         class="fa-solid fa-calendar-days  absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
                                 </div>
                             </div>
-
-                            <!-- <div>
-                                <label
-                                    class="block text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Base
-                                    Price (₹) <span class="text-red-500">*</span></label>
-                                <input type="number" placeholder="0.00"
-                                    class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white outline-none">
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">Total
-                                    Stock Quantity</label>
-                                <input type="number" value="0" readonly
-                                    class="w-full bg-black/40 border border-white/5 rounded-xl px-4 py-3 text-sm text-gray-500 cursor-not-allowed outline-none">
-                            </div> -->
-
-                            <!-- <div class="bg-black/20 rounded-2xl p-4 border border-white/5 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Stock Status</span>
-                            <span class="text-[10px] font-bold text-[#4ade80] uppercase">In Stock (Auto)</span>
-                        </div>
-                        <div class="flex items-center justify-between pt-2 border-t border-white/5">
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Low Stock Alert</span>
-                            <label class="relative inline-flex items-center cursor-pointer scale-90">
-                                <input type="checkbox" class="sr-only peer">
-                                <div class="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:bg-[#4ade80] peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
-                            </label>
-                        </div>
-                    </div> -->
                         </div>
                     </div>
 

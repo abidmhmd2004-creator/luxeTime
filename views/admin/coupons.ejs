@@ -103,17 +103,27 @@
 
             <div
                 class="bg-card p-5 rounded-2xl mb-8 border border-gray-800 flex justify-between items-center shadow-lg">
-                <div class="flex gap-4 items-center">
-                    <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-                        <input type="text" name="search" placeholder="Search coupons..."
-                            class="bg-black border border-gray-700 rounded-lg py-2 pl-9 pr-4 focus:outline-none focus:border-[#4ade80] w-64 text-xs">
-                    </div>
-                    <button type="submit"
-                        class="bg-[#4ade80] hover:bg-[#22c55e] text-black px-5 py-2 rounded-lg transition-all font-bold flex items-center gap-2 text-xs">
-                        Search
-                    </button>
+                <div class="flex items-center gap-3">
+                    <form method="GET" action="/admin/coupons" class="flex items-center gap-3">
+                        <div class="relative">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+                            <input type="text" name="search" value="<%= search || '' %>" placeholder="Search coupons..."
+                                class="bg-black border border-gray-700 rounded-lg py-2 pl-9 pr-4 focus:outline-none focus:border-[#4ade80] w-64 text-xs text-white">
+                        </div>
+                        <% if (search && search.trim().length> 0) { %>
+                            <a href="/admin/coupons"
+                                class="text-gray-500 hover:text-red-400 text-xs font-medium transition-colors flex items-center gap-1 border-l border-gray-700 pl-3 ml-1">
+                                <i class="fas fa-times-circle"></i>
+                                Clear
+                            </a>
+                            <% } %>
+                                <button type="submit"
+                                    class="bg-[#4ade80] hover:bg-[#22c55e] text-black px-5 py-2 rounded-lg transition-all font-bold flex items-center gap-2 text-xs">
+                                    Search
+                                </button>
+                    </form>
                 </div>
+
                 <button onclick="openModal()"
                     class="bg-[#4ade80] hover:bg-[#22c55e] text-black px-6 py-2 rounded-lg flex items-center gap-2 font-bold shadow-[0_0_15px_rgba(74,222,128,0.2)] transition-all text-xs">
                     <i class="fas fa-plus"></i> Add New Coupon
@@ -184,7 +194,7 @@
                                         </td>
                                         <td class="p-4 text-right space-x-2">
                                             <button
-                                                onclick="editCoupon('<%= coupon.id %>', '<%= coupon.name %>', '<%= coupon.code %>', <%= coupon.percentage %>, <%= coupon.minPurchase %>, <%= coupon.maxUsage %>, '<%= coupon.expiry %>', '<%= coupon.status %>')"
+                                                onclick="editCoupon('<%= coupon.id %>', '<%= coupon.name %>', '<%= coupon.code %>', '<%= coupon.percentage %>', '<%= coupon.minPurchase %>', '<%= coupon.maxUsage %>','<%= coupon.maxDiscount %>', '<%= coupon.expiry %>', '<%= coupon.status %>')"
                                                 class="hover:text-[#4ade80]">
                                                 <i class="fas fa-edit"></i>
                                                 <button onclick="deleteCoupon('<%= coupon._id %>')"
@@ -212,115 +222,168 @@
                         </div>
                         <% } %>
             </div>
+            <% if (coupons && coupons.length> 0) { %>
+                <div class="p-6 flex items-center justify-center bg-black/20 mt-4 rounded-2xl border border-gray-800">
+                    <nav id="paginationNav" class="flex items-center gap-3 justify-center">
 
-            <div id="addCouponModal"
-                class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                <div
-                    class="bg-[#161b1b] w-full max-w-2xl rounded-2xl border border-gray-800 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in zoom-in duration-200">
+                        <% if (currentPage> 1) { %>
+                            <a href="/admin/coupons?page=<%= currentPage - 1 %>&search=<%= search || '' %>"
+                                class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
+                                <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            </a>
+                            <% } %>
 
-                    <div
-                        class="px-8 py-3 border-b border-gray-800/50 flex justify-between items-center bg-gradient-to-r from-black/20 to-transparent">
-                        <div>
-                            <h2 id="modalTitle" class="text-lg font-bold text-white tracking-tight uppercase">Add New
-                                Coupon</h2>
-                            <div class="flex items-center gap-2 mt-0.5">
-                                <span class="h-1 w-1 rounded-full bg-[#4ade80]"></span>
-                                <p class="text-[9px] text-gray-500 uppercase tracking-widest font-medium">Coupon Portal
-                                </p>
+                                <div class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
+                                    <div
+                                        class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]">
+                                        <%= currentPage %>
+                                    </div>
+
+                                    <% if (currentPage < totalPages) { %>
+                                        <a href="/admin/coupons?page=<%= totalPages %>&search=<%= search || '' %>"
+                                            class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
+                                            <%= totalPages %>
+                                        </a>
+                                        <% } %>
+                                </div>
+
+                                <% if (currentPage < totalPages) { %>
+                                    <a href="/admin/coupons?page=<%= currentPage + 1 %>&search=<%= search || '' %>"
+                                        class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
+                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                    <% } %>
+
+                    </nav>
+                </div>
+                <% } %>
+
+                    <div id="addCouponModal"
+                        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                        <div
+                            class="bg-[#161b1b] w-full max-w-2xl rounded-2xl border border-gray-800 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden animate-in fade-in zoom-in duration-200">
+
+                            <div
+                                class="px-8 py-3 border-b border-gray-800/50 flex justify-between items-center bg-gradient-to-r from-black/20 to-transparent">
+                                <div>
+                                    <h2 id="modalTitle" class="text-lg font-bold text-white tracking-tight uppercase">
+                                        Add New
+                                        Coupon</h2>
+                                    <div class="flex items-center gap-2 mt-0.5">
+                                        <span class="h-1 w-1 rounded-full bg-[#4ade80]"></span>
+                                        <p class="text-[9px] text-gray-500 uppercase tracking-widest font-medium">Coupon
+                                            Portal
+                                        </p>
+                                    </div>
+                                </div>
+                                <button onclick="closeModal()"
+                                    class="group bg-gray-900/50 p-1.5 rounded-lg border border-gray-800 hover:border-red-500/50 transition-all">
+                                    <i class="fas fa-times text-gray-400 group-hover:text-red-500 text-sm"></i>
+                                </button>
+                            </div>
+
+                            <div class="px-8 pt-4 pb-8 max-h-[80vh] overflow-y-auto modal-body-scroll">
+                                <form id="couponForm" class="space-y-4" novalidate> <input type="hidden" id="couponId"
+                                        name="couponId">
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div class="space-y-1.5">
+                                            <label
+                                                class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Coupon
+                                                Name</label>
+                                            <input type="text" id="name" name="name" placeholder="e.g., Seasonal"
+                                                class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:ring-1 focus:ring-[#4ade80]/50 focus:border-[#4ade80] text-sm text-gray-200 transition-all">
+                                            <span id="nameError"
+                                                class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label
+                                                class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Coupon
+                                                Code</label>
+                                            <input type="text" id="code" name="code" placeholder="SAVE50"
+                                                class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:ring-1 focus:ring-[#4ade80]/50 focus:border-[#4ade80] text-sm text-[#4ade80] font-mono uppercase tracking-widest transition-all">
+                                            <span id="codeError"
+                                                class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div class="space-y-1.5">
+                                            <label
+                                                class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Offer
+                                                %</label>
+                                            <input type="number" id="offer" name="offer"
+                                                class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-300">
+                                            <span id="offerError"
+                                                class="text-[9px] text-red-500 ml-1 hidden italic">1-100
+                                                only</span>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label
+                                                class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Min.
+                                                Purchase</label>
+                                            <input type="number" id="minOrder" name="minOrder"
+                                                class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-200">
+                                            <span id="minOrderError"
+                                                class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div class="space-y-1.5">
+                                            <label
+                                                class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Max
+                                                Usage</label>
+                                            <input type="number" id="maxUsage" name="maxUsage"
+                                                class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-300">
+                                            <span id="maxUsageError"
+                                                class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label
+                                                class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Max.
+                                                Discount</label>
+                                            <input type="number" id="maxDiscount" name="maxDiscount"
+                                                class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-200">
+                                            <span id="maxDiscountError"
+                                                class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-end justify-between border-t border-gray-800/50">
+
+                                        <div class="space-y-1.5 flex-grow max-w-[300px]">
+                                            <label for="expiryDate"
+                                                class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">
+                                                Expires On
+                                            </label>
+                                            <div class="relative group cursor-pointer"
+                                                onclick="document.getElementById('expiryDate').showPicker()">
+                                                <input type="date" id="expiryDate" name="expiryDate"
+                                                    class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-300 appearance-none">
+                                                <i
+                                                    class="fas fa-calendar-alt absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 group-hover:text-[#4ade80] transition-colors pointer-events-none text-xs"></i>
+                                            </div>
+                                            <span id="expiryDateError"
+                                                class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
+                                        </div>
+
+                                        <div class="flex items-center gap-3">
+                                            <button type="button" onclick="closeModal()"
+                                                class="px-4 py-2 rounded-xl text-xs font-bold text-gray-500 hover:text-white transition-colors">
+                                                DISCARD
+                                            </button>
+                                            <button type="submit" id="submitBtn"
+                                                onclick="console.log('Direct click worked!')"
+                                                class="bg-[#4ade80] hover:bg-[#22c55e] text-black px-6 py-2 rounded-xl font-bold text-xs shadow-lg transition-all transform hover:-translate-y-0.5">
+                                                SAVE CHANGES
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <button onclick="closeModal()"
-                            class="group bg-gray-900/50 p-1.5 rounded-lg border border-gray-800 hover:border-red-500/50 transition-all">
-                            <i class="fas fa-times text-gray-400 group-hover:text-red-500 text-sm"></i>
-                        </button>
                     </div>
-
-                    <div class="px-8 pt-4 pb-8 max-h-[80vh] overflow-y-auto modal-body-scroll">
-                        <form id="couponForm" class="space-y-4" novalidate> <input type="hidden" id="couponId"
-                                name="couponId">
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div class="space-y-1.5">
-                                    <label
-                                        class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Coupon
-                                        Name</label>
-                                    <input type="text" id="name" name="name" placeholder="e.g., Seasonal"
-                                        class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:ring-1 focus:ring-[#4ade80]/50 focus:border-[#4ade80] text-sm text-gray-200 transition-all">
-                                    <span id="nameError"
-                                        class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label
-                                        class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Coupon
-                                        Code</label>
-                                    <input type="text" id="code" name="code" placeholder="SAVE50"
-                                        class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:ring-1 focus:ring-[#4ade80]/50 focus:border-[#4ade80] text-sm text-[#4ade80] font-mono uppercase tracking-widest transition-all">
-                                    <span id="codeError"
-                                        class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div class="space-y-1.5">
-                                    <label
-                                        class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Offer
-                                        %</label>
-                                    <input type="number" id="offer" name="offer"
-                                        class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-300">
-                                    <span id="offerError" class="text-[9px] text-red-500 ml-1 hidden italic">1-100
-                                        only</span>
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label
-                                        class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Min.
-                                        Purchase</label>
-                                    <input type="number" id="minOrder" name="minOrder"
-                                        class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-200">
-                                    <span id="minOrderError"
-                                        class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Max
-                                        Usage</label>
-                                    <input type="number" id="maxUsage" name="maxUsage"
-                                        class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-300">
-                                    <span id="maxUsageError"
-                                        class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label
-                                        class="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Expires
-                                        On</label>
-                                    <div class="relative group cursor-pointer"
-                                        onclick="document.getElementById('expiryDate').showPicker()">
-                                        <input type="date" id="expiryDate" name="expiryDate"
-                                            class="w-full bg-black/40 border border-gray-800 rounded-xl py-2 px-4 focus:outline-none focus:border-[#4ade80] text-sm text-gray-300">
-                                        <i
-                                            class="fas fa-calendar-alt absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 group-hover:text-[#4ade80] transition-colors pointer-events-none text-xs"></i>
-                                    </div>
-                                    <span id="expiryDateError"
-                                        class="text-[9px] text-red-500 ml-1 hidden italic">Required</span>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center justify-end pt-4 border-t border-gray-800/50">
-
-                                <div class="flex gap-3 items-center">
-                                    <button type="button" onclick="closeModal()"
-                                        class="px-4 py-2 rounded-xl text-xs font-bold text-gray-500 hover:text-white transition-colors">DISCARD</button>
-                                    <button type="submit" id="submitBtn"
-                                        class="bg-[#4ade80] hover:bg-[#22c55e] text-black px-6 py-2 rounded-xl font-bold text-xs shadow-lg transition-all transform hover:-translate-y-0.5">
-                                        SAVE CHANGES
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
 
         </main>
 
@@ -339,7 +402,7 @@
                 document.body.classList.add('modal-open');
             }
 
-            function editCoupon(id, name, code, offer, min, max, expiry, status) {
+            function editCoupon(id, name, code, offer, min, maxUsage, maxDiscount, expiry, status) {
                 document.getElementById('modalTitle').innerText = "Edit Coupon";
                 document.getElementById('submitBtn').innerText = "UPDATE COUPON";
 
@@ -348,7 +411,8 @@
                 document.getElementById('code').value = code;
                 document.getElementById('offer').value = offer;
                 document.getElementById('minOrder').value = min;
-                document.getElementById('maxUsage').value = max;
+                document.getElementById('maxUsage').value = maxUsage;
+                document.getElementById('maxDiscount').value = maxDiscount;
 
                 const date = new Date(expiry);
                 const formattedDate = date.toISOString().split('T')[0];
@@ -366,6 +430,7 @@
             // --- VALIDATION AND SUBMISSION ---
 
             document.addEventListener('DOMContentLoaded', function () {
+                console.log("Button clicked!");
                 const expiryInput = document.getElementById('expiryDate');
                 const today = new Date().toISOString().split('T')[0];
                 if (expiryInput) expiryInput.setAttribute('min', today);
@@ -380,6 +445,7 @@
                         { id: 'code', errorId: 'codeError' },
                         { id: 'minOrder', errorId: 'minOrderError' },
                         { id: 'maxUsage', errorId: 'maxUsageError' },
+                        { id: 'maxDiscount', errorId: 'maxDiscountError' },
                         { id: 'expiryDate', errorId: 'expiryDateError' }
                     ];
 
@@ -416,6 +482,7 @@
                         offer: Number(document.getElementById('offer').value),
                         minOrder: Number(document.getElementById('minOrder').value),
                         maxUsage: Number(document.getElementById('maxUsage').value),
+                        maxDiscount: Number(document.getElementById('maxDiscount').value),
                         expiryDate: document.getElementById('expiryDate').value,
                     };
 

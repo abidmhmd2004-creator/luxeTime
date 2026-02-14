@@ -2,17 +2,60 @@ import asyncHandler from "../../utils/asyncHandler.js";
 import Coupon from "../../models/coupon.model.js";
 
 export const getCouponPage = asyncHandler(async (req, res) => {
-  const coupons = await Coupon.find({ isDeleted: false }).sort({
-    createdAt: -1,
-  });
-  res.render("admin/coupons", { layout: "layouts/admin", coupons });
+
+  const page =parseInt(req.query.page)||1;
+  const search = req.query.search||"";
+  const limit=5;
+  const skip =(page-1)*limit;
+
+  const filter={isDeleted:false};
+
+  if(search){
+    filter.$or=[
+      {name:{$regex:search,$options:"i"}},
+      {code:{$regex:search,$options:"i"}}
+    ]
+  }
+
+  const totalCoupons = await Coupon.countDocuments(filter);
+
+  const coupons = await Coupon.find(filter)
+  .sort({createdAt: -1})
+  .skip(skip) 
+  .limit(limit)
+
+  const totalPages= Math.ceil(totalCoupons/limit)
+
+  res.render("admin/coupons",
+    { layout: "layouts/admin",
+      coupons,
+      currentPage:page,
+      search,
+      totalPages
+    });
 });
 
 export const addCoupon = asyncHandler(async (req, res) => {
-  const { name, code, offer, minOrder, maxUsage, expiryDate, isActive } =
-    req.body;
+  const {
+    name,
+    code,
+    offer,
+    minOrder,
+    maxUsage,
+    maxDiscount,
+    expiryDate,
+    isActive,
+  } = req.body;
 
-  if (!name || !code || !offer || !minOrder || !maxUsage || !expiryDate) {
+  if (
+    !name ||
+    !code ||
+    !offer ||
+    !minOrder ||
+    !maxDiscount ||
+    !maxUsage ||
+    !expiryDate
+  ) {
     return res.status(400).json({
       success: false,
       message: "All fields are required",
@@ -51,6 +94,7 @@ export const addCoupon = asyncHandler(async (req, res) => {
     percentage: offer,
     minPurchase: minOrder,
     maxUsage,
+    maxDiscount,
     expiry: expiryDate,
     isListed: true,
   });
@@ -63,8 +107,16 @@ export const addCoupon = asyncHandler(async (req, res) => {
 
 export const editCoupon = asyncHandler(async (req, res) => {
   const { couponId } = req.params;
-  const { name, code, offer, minOrder, maxUsage, expiryDate, isActive } =
-    req.body;
+  const {
+    name,
+    code,
+    offer,
+    minOrder,
+    maxUsage,
+    maxDiscount,
+    expiryDate,
+    isActive,
+  } = req.body;
 
   const coupon = await Coupon.findOne({ _id: couponId, isDeleted: false });
 
@@ -86,6 +138,7 @@ export const editCoupon = asyncHandler(async (req, res) => {
   coupon.percentage = offer;
   coupon.minPurchase = minOrder;
   coupon.maxUsage = maxUsage;
+  coupon.maxDiscount = maxDiscount;
   coupon.expiry = expiryDate;
 
   await coupon.save();

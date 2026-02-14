@@ -5,7 +5,6 @@ import Product from "../../models/product.model.js";
 import Variant from "../../models/variant.model.js";
 import Order from "../../models/order.model.js";
 import Wallet from "../../models/wallet.model.js";
-import Razorpay from "razorpay";
 import { validateCartForCheckout } from "../../helpers/cartValidate.js";
 import razorpay from "../../config/razorpay.js";
 import Coupon from "../../models/coupon.model.js";
@@ -48,6 +47,7 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
 
   let subtotal = 0;
   let totalDiscount = 0;
+  let finalTotal = 0;
 
   for (const item of cart.items) {
     const product = item.product;
@@ -63,7 +63,7 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
     variant.appliedOffer = appliedOffer;
 
     const baseTotal = variant.basePrice * item.quantity;
-    const finalTotal = finalPrice * item.quantity;
+    finalTotal = finalPrice * item.quantity;
 
     subtotal += finalTotal;
     totalDiscount += baseTotal - finalTotal;
@@ -71,9 +71,10 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
 
   const appliedCoupon = req.session.appliedCoupon || null;
   const couponDiscount = appliedCoupon ? appliedCoupon.discountAmount : 0;
-
+  const shipping = subtotal >= 5000 ? 0 : 50;
   const tax = Math.round((subtotal - couponDiscount) * 0.18);
-  const total = subtotal - couponDiscount + tax;
+  const total = subtotal - couponDiscount + tax + shipping;
+
   res.render("user/checkout", {
     cart,
     addresses,
@@ -82,6 +83,7 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
     summary: {
       subtotal,
       totalDiscount,
+      shipping,
       couponDiscount,
       tax,
       total,
@@ -126,7 +128,7 @@ export const addAddressCheckout = asyncHandler(async (req, res) => {
   }
 
   if (isDefault) {
-    await Address.updateMany({ user: userId }, { $set: { isDefault: false } });
+    await Address. Many({ user: userId }, { $set: { isDefault: false } });
   }
 
   await Address.create({
@@ -177,7 +179,14 @@ export const applyCoupon = asyncHandler(async (req, res) => {
   if (coupon.useCount >= coupon.maxUsage) {
     return res.json({
       success: false,
-      message: "Couponn usage limit exceeded",
+      message: "Coupon usage limit exceeded",
+    });
+  }
+
+  if (coupon.usedBy.includes(userId)) {
+    return res.json({
+      success: false,
+      message: "You have already used this coupon",
     });
   }
 
@@ -199,7 +208,11 @@ export const applyCoupon = asyncHandler(async (req, res) => {
     });
   }
 
-  const discountAmount = Math.round((subtotal * coupon.percentage) / 100);
+  let discountAmount = Math.round((subtotal * coupon.percentage) / 100);
+
+  if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
+    discountAmount = coupon.maxDiscount;
+  }
 
   req.session.appliedCoupon = {
     couponId: coupon._id,
@@ -298,6 +311,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
   }
 
   let subtotal = 0;
+  let basetotal = 0;
   let discount = 0;
   let tax = 0;
   let totalAmount = 0;
@@ -335,8 +349,8 @@ export const placeOrder = asyncHandler(async (req, res) => {
     });
 
     const itemFinalTotal = finalPrice * item.quantity;
-
     subtotal += itemFinalTotal;
+    basetotal += variant.basePrice * item.quantity;
 
     orderItems.push({
       product: product._id,
@@ -355,10 +369,11 @@ export const placeOrder = asyncHandler(async (req, res) => {
     const coupon = await Coupon.findById(appliedCoupon.couponId);
 
     if (
-      !coupon ||
-      coupon.expiry < new Date() ||
-      coupon.useCount >= coupon.maxUsage ||
-      subtotal < coupon.minPurchase
+      (!coupon ||
+        coupon.expiry < new Date() ||
+        coupon.useCount >= coupon.maxUsage ||
+        subtotal < coupon.minPurchase,
+      coupon.usedBy.includes(userId))
     ) {
       req.session.appliedCoupon = null;
       return res.status(400).json({
@@ -369,8 +384,10 @@ export const placeOrder = asyncHandler(async (req, res) => {
     couponDiscount = appliedCoupon.discountAmount;
   }
 
-  tax = Math.round((subtotal - discount) * 0.18);
-  totalAmount = subtotal - discount - couponDiscount + tax;
+  const shipping = subtotal >= 5000 ? 0 : 50;
+  discount = basetotal - subtotal;
+  tax = Math.round((subtotal - couponDiscount) * 0.18);
+  totalAmount = subtotal - couponDiscount + tax + shipping;
 
   if (paymentMethod === "WALLET") {
     const wallet = await Wallet.findOne({ user: userId });
@@ -414,6 +431,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
   if (appliedCoupon) {
     await Coupon.findByIdAndUpdate(appliedCoupon.couponId, {
       $inc: { useCount: 1 },
+      $addToSet: { usedBy: userId },
     });
 
     req.session.appliedCoupon = null;

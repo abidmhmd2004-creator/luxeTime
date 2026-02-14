@@ -16,7 +16,7 @@
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #1a1d1b;
+        background: #313834;
         border-radius: 10px;
     }
 </style>
@@ -126,15 +126,32 @@
                                 onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
                         </label>
 
-                        <label
-                            class="payment-card flex items-center justify-between p-4 bg-[#121513] border border-white/5 rounded-xl cursor-pointer transition-all">
-                            <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-truck-fast text-zinc-500 text-sm"></i>
-                                <span class="text-xs font-bold">Cash on Delivery</span>
-                            </div>
-                            <input type="radio" name="paymentMethod" value="COD"
-                                onchange="handleSelection(this, '.payment-card')" class="accent-[#22c55e] w-4 h-4">
-                        </label>
+                        <% const isCodDisabled=summary.total> 10000; %>
+
+                            <label class="payment-card flex flex-col p-4 bg-[#121513] border border-white/5 rounded-xl transition-all 
+        <%= isCodDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-white/10' %>">
+
+                                <div class="flex items-center justify-between w-full">
+                                    <div class="flex items-center gap-3">
+                                        <i
+                                            class="fa-solid fa-truck-fast <%= isCodDisabled ? 'text-zinc-700' : 'text-zinc-500' %> text-sm"></i>
+                                        <span class="text-xs font-bold">Cash on Delivery</span>
+                                    </div>
+
+                                    <input type="radio" name="paymentMethod" value="COD" <%=isCodDisabled ? 'disabled'
+                                        : '' %>
+                                    onchange="handleSelection(this, '.payment-card')"
+                                    class="accent-[#22c55e] w-4 h-4">
+                                </div>
+
+                                <% if (isCodDisabled) { %>
+                                    <div
+                                        class="mt-2 flex items-center gap-1.5 text-[10px] text-orange-500/80 font-medium uppercase tracking-wider">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                        Not available for orders above ₹10,000
+                                    </div>
+                                    <% } %>
+                            </label>
                     </div>
                 </div>
             </div>
@@ -220,7 +237,7 @@
 
                                 <div class="flex justify-between text-zinc-500">
                                     <span>Shipping</span>
-                                    <span class="text-[#22c55e]">Free</span>
+                                    <span class="text-[#22c55e]">₹<%= summary.shipping.toLocaleString() %></span>
                                 </div>
 
                                 <div class="flex justify-between text-lg font-black border-t border-white/5 pt-3">
@@ -261,38 +278,40 @@
             </div>
 
             <div class="p-4 max-h-[300px] overflow-y-auto space-y-3 custom-scrollbar">
-                <% if (locals.coupons && coupons.length > 0) { %>
-    <% coupons.forEach(coupon => { %>
-        <% const isApplied = locals.appliedCouponCode === coupon.code; %>
-        
-        <div onclick="selectCoupon('<%= coupon.code %>')"
-            class="group relative border <%= isApplied ? 'border-[#22c55e]/50 bg-[#22c55e]/5' : 'border-white/5 bg-white/[0.02]' %> p-4 rounded-xl cursor-pointer hover:border-[#22c55e]/50 hover:bg-[#22c55e]/5 transition-all">
-            
-            <div class="flex justify-between items-start">
-                <span class="bg-[#22c55e]/10 text-[#22c55e] px-2 py-1 rounded text-[10px] font-mono font-bold border border-[#22c55e]/20 tracking-wider uppercase">
-                    <%= coupon.code %>
-                </span>
-                <span class="text-[#22c55e] text-[11px] font-black">
-                    <%= coupon.percentage %>% OFF
-                </span>
-            </div>
-            
-            <div class="flex justify-between items-center mt-2">
-                <h4 class="text-[11px] font-bold text-gray-200 uppercase">
-                    <%= coupon.name %>
-                </h4>
-                <% if (isApplied) { %>
-                    <span class="text-[9px] text-[#22c55e] font-bold uppercase tracking-tighter">Applied</span>
-                <% } %>
-            </div>
-        </div>
-    <% }) %>
+                <% if (locals.coupons && coupons.length> 0) { %>
+                    <% coupons.forEach(coupon=> { %>
+                        <% const isApplied=locals.appliedCouponCode===coupon.code; %>
 
-                            <% } else { %>
-                                <div class="text-center py-8">
-                                    <p class="text-zinc-500 text-[10px] font-bold uppercase">No coupons found</p>
+                            <div onclick="selectCoupon('<%= coupon.code %>')"
+                                class="group relative border <%= isApplied ? 'border-[#22c55e]/50 bg-[#22c55e]/5' : 'border-white/5 bg-white/[0.02]' %> p-4 rounded-xl cursor-pointer hover:border-[#22c55e]/50 hover:bg-[#22c55e]/5 transition-all">
+
+                                <div class="flex justify-between items-start">
+                                    <span
+                                        class="bg-[#22c55e]/10 text-[#22c55e] px-2 py-1 rounded text-[10px] font-mono font-bold border border-[#22c55e]/20 tracking-wider uppercase">
+                                        <%= coupon.code %>
+                                    </span>
+                                    <span class="text-[#22c55e] text-[11px] font-black">
+                                        <%= coupon.percentage %>% OFF
+                                    </span>
                                 </div>
-                                <% } %>
+
+                                <div class="flex justify-between items-center mt-2">
+                                    <h4 class="text-[11px] font-bold text-gray-200 uppercase">
+                                        <%= coupon.name %>
+                                    </h4>
+                                    <% if (isApplied) { %>
+                                        <span
+                                            class="text-[9px] text-[#22c55e] font-bold uppercase tracking-tighter">Applied</span>
+                                        <% } %>
+                                </div>
+                            </div>
+                            <% }) %>
+
+                                <% } else { %>
+                                    <div class="text-center py-8">
+                                        <p class="text-zinc-500 text-[10px] font-bold uppercase">No coupons found</p>
+                                    </div>
+                                    <% } %>
             </div>
         </div>
     </div>
@@ -394,24 +413,24 @@
             }, 300);
         }
 
-       function selectCoupon(code) {
-    const input = document.getElementById('couponInput');
-    input.value = code;
+        function selectCoupon(code) {
+            const input = document.getElementById('couponInput');
+            input.value = code;
 
-    // Visual feedback for the input field
-    input.classList.add('border-[#22c55e]');
-    setTimeout(() => input.classList.remove('border-[#22c55e]'), 1000);
+            // Visual feedback for the input field
+            input.classList.add('border-[#22c55e]');
+            setTimeout(() => input.classList.remove('border-[#22c55e]'), 1000);
 
-    // Dynamic UI Update: Highlight the clicked card immediately
-    document.querySelectorAll('#userModalContent [onclick^="selectCoupon"]').forEach(card => {
-        card.classList.remove('border-[#22c55e]/50', 'bg-[#22c55e]/5');
-        card.classList.add('border-white/5');
-    });
+            // Dynamic UI Update: Highlight the clicked card immediately
+            document.querySelectorAll('#userModalContent [onclick^="selectCoupon"]').forEach(card => {
+                card.classList.remove('border-[#22c55e]/50', 'bg-[#22c55e]/5');
+                card.classList.add('border-white/5');
+            });
 
-    const selectedCard = event.currentTarget;
-    selectedCard.classList.add('border-[#22c55e]/50', 'bg-[#22c55e]/5');
-    selectedCard.classList.remove('border-white/5');
-}
+            const selectedCard = event.currentTarget;
+            selectedCard.classList.add('border-[#22c55e]/50', 'bg-[#22c55e]/5');
+            selectedCard.classList.remove('border-white/5');
+        }
         function toggleModal(show) {
             const modal = document.getElementById('addressModal');
             const content = document.getElementById('modalContent');
@@ -727,4 +746,18 @@
                 });
             }
         });
+
+        function handleSelection(input, cardClass) {
+            const allCards = document.querySelectorAll(cardClass);
+            allCards.forEach(card => {
+                card.classList.remove('border-[#22c55e]', 'bg-[#22c55e]/5');
+                card.classList.add('border-white/5');
+            });
+
+            if (input.checked) {
+                const selectedCard = input.closest(cardClass);
+                selectedCard.classList.add('border-[#22c55e]', 'bg-[#22c55e]/5');
+                selectedCard.classList.remove('border-white/5');
+            }
+        }
     </script>

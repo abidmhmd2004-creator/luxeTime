@@ -83,7 +83,7 @@ export const verifyOtp = asyncHandler(async (req, res) => {
     await Otp.deleteMany({ userId });
     delete req.session.otp;
 
-    return res.redirect("/home");
+    return res.redirect("/");
   }
   if (purpose === "forgot-password") {
     req.session.resetUserId = userId;

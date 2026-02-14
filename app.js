@@ -70,9 +70,7 @@ app.set("layout", "layouts/user");
 app.use("/", checkBlockedUser, checkUser, userRoutes);
 app.use("/admin", adminRoutes);
 
-app.get("/", (req, res) => {
-  res.redirect("/home");
-});
+
 app.get("/admin", (req, res) => {
   res.redirect("/admin/login");
 });

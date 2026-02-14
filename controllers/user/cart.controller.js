@@ -13,6 +13,7 @@ export const getCart = asyncHandler(async (req, res) => {
     })
     .populate("items.variant");
 
+  let basesubtotal = 0;
   let subtotal = 0;
   let removedItems = false;
 
@@ -51,16 +52,15 @@ export const getCart = asyncHandler(async (req, res) => {
 
       item.variant.finalPrice = finalPrice;
       item.variant.appliedOffer = appliedOffer;
+      basesubtotal += variant.basePrice * item.quantity;
       subtotal += finalPrice * item.quantity;
     }
   }
-
+  const shipping = subtotal >= 5000 ? 0 : 50;
   const taxRate = 0.18;
   const tax = Math.round(subtotal * taxRate);
-  const shipping = 0;
-  const discount = 0;
-
-  const total = subtotal + tax - discount;
+  const total = subtotal + tax + shipping;
+  const discount = basesubtotal - subtotal;
 
   res.render("user/cart", {
     cart,
@@ -206,32 +206,33 @@ export const removeFromCart = asyncHandler(async (req, res) => {
 export const updateQty = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
   const { variantId, change } = req.body;
-
-  const cart = await Cart.findOne({ user: userId });
   const MAX_QTY = 10;
 
+  const cart = await Cart.findOne({ user: userId });
+
   if (!cart) {
-    return res.status(404).json({
-      message: "Cart not found",
-    });
+    return res.status(404).json({ message: "Cart not found" });
   }
 
   const item = cart.items.find((i) => i.variant.toString() === variantId);
 
   if (!item) {
-    return res.status(404).json({
-      message: "Item not found",
-    });
+    return res.status(404).json({ message: "Item not found" });
   }
+
   const variant = await Variant.findById(variantId);
+  const product = await Product.findById(item.product).populate("category");
+
+  if (!variant || !product) {
+    return res.status(400).json({ message: "Product unavailable" });
+  }
 
   const newQty = item.quantity + change;
 
   if (newQty < 1) {
-    return res.status(400).json({
-      message: "Minimum qauntity is 1",
-    });
+    return res.status(400).json({ message: "Minimum quantity is 1" });
   }
+
   if (newQty > MAX_QTY) {
     return res.json({
       success: false,
@@ -240,13 +241,50 @@ export const updateQty = asyncHandler(async (req, res) => {
   }
 
   if (newQty > variant.stock) {
-    return res.status(400).json({
-      message: "Stock limit reached",
-    });
+    return res.status(400).json({ message: "Stock limit reached" });
   }
 
   item.quantity = newQty;
   await cart.save();
 
-  res.json({ success: true });
+  const { finalPrice } = calculateBestOffer({
+    basePrice: variant.basePrice,
+    product,
+    category: product.category,
+  });
+
+  let subtotal = 0;
+
+  const populatedCart = await Cart.findOne({ user: userId })
+    .populate({
+      path: "items.product",
+      populate: { path: "category" },
+    })
+    .populate("items.variant");
+
+  for (const cartItem of populatedCart.items) {
+    const { finalPrice } = calculateBestOffer({
+      basePrice: cartItem.variant.basePrice,
+      product: cartItem.product,
+      category: cartItem.product.category,
+    });
+
+    subtotal += finalPrice * cartItem.quantity;
+  }
+
+  const shipping = subtotal >= 5000 ? 0 : 50;
+  const tax = Math.round(subtotal * 0.18);
+  const total = subtotal + tax + shipping;
+
+  res.json({
+    success: true,
+    quantity: item.quantity,
+    itemSubtotal: finalPrice * item.quantity,
+    subtotal,
+    shipping,
+    tax,
+    total,
+    basePrice: variant.basePrice,
+    finalPrice,
+  });
 });
