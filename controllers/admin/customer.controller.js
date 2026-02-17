@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import User from "../../models/user.model.js";
-import asyncHandler from "../../utils/asyncHandler.js";
+import mongoose from 'mongoose';
+import User from '../../models/user.model.js';
+import asyncHandler from '../../utils/asyncHandler.js';
 
 export const getCustomers = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -10,18 +10,18 @@ export const getCustomers = asyncHandler(async (req, res) => {
 
   const { search, status } = req.query;
 
-  const filter = { role: "user" };
+  const filter = { role: 'user' };
 
   if (search) {
     filter.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { email: { $regex: search, $options: "i" } },
+      { name: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } },
     ];
   }
 
-  if (status == "Active") {
+  if (status == 'Active') {
     filter.isBlocked = false;
-  } else if (status == "Blocked") {
+  } else if (status == 'Blocked') {
     filter.isBlocked = true;
   }
 
@@ -29,13 +29,10 @@ export const getCustomers = asyncHandler(async (req, res) => {
 
   const totalPages = Math.ceil(totalUsers / limit);
 
-  const users = await User.find(filter)
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit);
+  const users = await User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
-  res.render("admin/customers", {
-    layout: "layouts/admin",
+  res.render('admin/customers', {
+    layout: 'layouts/admin',
     users,
     totalPages,
     currentPage: page,
@@ -52,8 +49,8 @@ export const toggleCustomerStatus = asyncHandler(async (req, res) => {
   const user = await User.findById(userId);
 
   if (!user) {
-    req.flash("error", "User not found");
-    return res.redirect("/admin/customers");
+    req.flash('error', 'User not found');
+    return res.redirect('/admin/customers');
   }
 
   user.isBlocked = !user.isBlocked;
@@ -64,17 +61,15 @@ export const toggleCustomerStatus = asyncHandler(async (req, res) => {
   // console.log("blocked")
 
   if (user.isBlocked) {
-    const session = mongoose.connection.collection("user_sessions");
+    const session = mongoose.connection.collection('user_sessions');
 
-    await session.deleteMany({ "session.user.id": userId });
+    await session.deleteMany({ 'session.user.id': userId });
   }
 
   req.flash(
-    "success",
-    user.isBlocked
-      ? "User blocked successfully"
-      : "User unblocked successfully",
+    'success',
+    user.isBlocked ? 'User blocked successfully' : 'User unblocked successfully'
   );
 
-  return res.redirect("/admin/customers");
+  return res.redirect('/admin/customers');
 });

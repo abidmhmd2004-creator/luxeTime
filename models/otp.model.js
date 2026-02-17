@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const otpSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   otp: {
@@ -25,4 +25,4 @@ const otpSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Otp", otpSchema);
+export default mongoose.model('Otp', otpSchema);

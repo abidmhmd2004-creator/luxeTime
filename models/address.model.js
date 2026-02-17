@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const addressSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
       index: true,
     },
@@ -52,13 +52,13 @@ const addressSchema = new mongoose.Schema(
 
     country: {
       type: String,
-      default: "India",
+      default: 'India',
     },
 
     addressType: {
       type: String,
-      enum: ["Home", "Office", "Other"],
-      default: "Home",
+      enum: ['Home', 'Office', 'Other'],
+      default: 'Home',
     },
 
     isDefault: {
@@ -66,7 +66,7 @@ const addressSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestaps: true },
+  { timestaps: true }
 );
 
-export default mongoose.model("Address", addressSchema);
+export default mongoose.model('Address', addressSchema);

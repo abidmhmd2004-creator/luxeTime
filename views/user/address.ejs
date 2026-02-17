@@ -1,550 +1,639 @@
 <div class="h-full w-full px-4 sm:px-6 py-6">
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-5">
+    <%- include('../partials/sidebar') %>
 
-    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-5 ">
+    <main class="flex-1 space-y-5">
+      <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0"
+      >
+        <div>
+          <h1 class="text-2xl font-bold text-white">My Addresses</h1>
+          <p class="text-sm text-neutral-400 mt-1">Manage your saved delivery addresses</p>
+        </div>
 
-        <%- include('../partials/sidebar') %>
+        <button
+          type="button"
+          onclick="document.getElementById('addAddressModal').classList.remove('hidden');"
+          class="flex items-center space-x-2 px-4 py-2.5 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20"
+        >
+          <span class="material-symbols-outlined text-base">add</span>
+          <span>Add New Address</span>
+        </button>
+      </div>
 
-            <main class="flex-1 space-y-5">
-                <div
-                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
-                    <div>
-                        <h1 class="text-2xl font-bold text-white">My Addresses</h1>
-                        <p class="text-sm text-neutral-400 mt-1">Manage your saved delivery addresses</p>
-                    </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <% if (address.length===0) { %>
+        <p class="text-neutral-400">No addresses added yet.</p>
+        <% } %>
+        <% address.forEach(addr=> { %>
 
-                    <button type="button"
-                        onclick="document.getElementById('addAddressModal').classList.remove('hidden');"
-                        class="flex items-center space-x-2 px-4 py-2.5 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
-                        <span class="material-symbols-outlined text-base">add</span>
-                        <span>Add New Address</span>
-                    </button>
-                </div>
+        <div
+          class="bg-dark-green rounded-xl p-5 shadow-xl space-y-3 border border-yellow-500/50 relative"
+        >
+          <span
+            class="bg-yellow-500/20 text-yellow-500 text-xs font-semibold px-2 py-0.5 rounded-full inline-block"
+          >
+            <%= (addr.addressType||"Home").toUpperCase() %>
+          </span>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div class="absolute top-4 right-4 flex space-x-2 text-neutral-400">
+            <button type="button" class="edit-btn" data-address="<%- JSON.stringify(addr) %>">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
 
-                    <% if (address.length===0) { %>
-                        <p class="text-neutral-400">No addresses added yet.</p>
-                        <% } %>
-                            <% address.forEach(addr=> { %>
+            <button
+              type="button"
+              onclick="conformDeleteAddress('<%=addr._id %>')"
+              class="hover:text-red-400 transition"
+            >
+              <span class="material-symbols-outlined text-base">delete</span>
+            </button>
+          </div>
 
-                                <div
-                                    class="bg-dark-green rounded-xl p-5 shadow-xl space-y-3 border border-yellow-500/50 relative">
+          <div class="pt-2 text-white">
+            <h3 class="font-bold text-base"><%= addr.fullName %></h3>
+            <p class="text-neutral-300 text-sm leading-relaxed">
+              <%= addr.streetAddress %><br />
+              <%= addr.city %>,
+              <%= addr.state %>
+              <%= addr.pincode %>
+            </p>
+          </div>
 
+          <div class="flex items-center space-x-2 text-sm text-neutral-300 pt-2">
+            <span class="material-symbols-outlined text-sm text-yellow-500">call</span>
+            <span>
+              <%= addr.phone %>
+            </span>
+          </div>
+        </div>
+        <% }) %>
+      </div>
 
-                                    <span
-                                        class="bg-yellow-500/20 text-yellow-500 text-xs font-semibold px-2 py-0.5 rounded-full inline-block">
-                                        <%= (addr.addressType||"Home").toUpperCase() %>
-                                    </span>
-
-                                    <div class="absolute top-4 right-4 flex space-x-2 text-neutral-400">
-
-                                        <button type="button" class="edit-btn"
-                                            data-address='<%- JSON.stringify(addr) %>'>
-                                            <span class="material-symbols-outlined">edit</span>
-                                        </button>
-
-
-
-                                        <button type="button" onclick="conformDeleteAddress('<%=addr._id %>')"
-                                            class="hover:text-red-400 transition">
-                                            <span class="material-symbols-outlined text-base">delete</span>
-                                        </button>
-                                    </div>
-
-                                    <div class="pt-2 text-white">
-                                        <h3 class="font-bold text-base">
-                                            <%= addr.fullName %>
-                                        </h3>
-                                        <p class="text-neutral-300 text-sm leading-relaxed">
-                                            <%= addr.streetAddress %><br>
-                                                <%= addr.city %>, <%= addr.state %>
-                                                        <%= addr.pincode %>
-                                        </p>
-                                    </div>
-
-                                    <div class="flex items-center space-x-2 text-sm text-neutral-300 pt-2">
-                                        <span class="material-symbols-outlined text-sm text-yellow-500">call</span>
-                                        <span>
-                                            <%= addr.phone %>
-                                        </span>
-
-                                    </div>
-
-                                </div>
-                                <% }) %>
-                </div>
-
-
-
-
-    </div>
-
-    <div class="flex items-center justify-center  space-x-4 mt-8 text-sm">
-
+      <div class="flex items-center justify-center space-x-4 mt-8 text-sm">
         <% if (currentPage>1) { %>
-            <a href="/address?page=<%= currentPage-1 %>"
-                class="flex items-center space-x-1 px-3 py-2 rounded-lg text-neutral-300 hover:bg-dark-green/50 hover:text-white transition-colors duration-200">
-                <span class="material-symbols-outlined text-base">arrow_back</span>
-                <span>Prev</span>
-            </a>
-            <% } else { %>
-                <span class="flex items-center space-x-1 px-3 py-2 text-neutral-600 cursor-not-allowed">
-                    <span class="material-symbols-outlined text-base">arrow_back</span>
-                    <span>Prev</span>
-                </span>
-                <% } %>
+        <a
+          href="/address?page=<%= currentPage-1 %>"
+          class="flex items-center space-x-1 px-3 py-2 rounded-lg text-neutral-300 hover:bg-dark-green/50 hover:text-white transition-colors duration-200"
+        >
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          <span>Prev</span>
+        </a>
+        <% } else { %>
+        <span class="flex items-center space-x-1 px-3 py-2 text-neutral-600 cursor-not-allowed">
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          <span>Prev</span>
+        </span>
+        <% } %>
 
-                    <span
-                        class="px-4 py-2 rounded-lg font-semibold bg-primary/20 text-primary border border-primary/50">
-                        Page <%=currentPage %> of <%= totalPages %>
-                    </span>
+        <span
+          class="px-4 py-2 rounded-lg font-semibold bg-primary/20 text-primary border border-primary/50"
+        >
+          Page <%=currentPage %> of <%= totalPages %>
+        </span>
 
-                    <% if(currentPage<totalPages){ %>
-                        <a href="/address?page=<%= currentPage +1 %>"
-                            class="flex items-center space-x-1 px-3 py-2 rounded-lg text-neutral-300 hover:bg-dark-green/50 hover:text-white transition-colors duration-200">
-                            <span>Next</span>
-                            <span class="material-symbols-outlined text-base">arrow_forward</span>
-                        </a>
-                        <% } else { %>
-                            <span class="flex items-center space-x-1 px-3 py-2 text-neutral-600 cursor-not-allowed">
-                                <span>Next</span>
-                                <span class="material-symbols-outlined text-base">arrow_forward</span>
-                            </span>
-                            <% } %>
-
-    </div>
+        <% if(currentPage<totalPages){ %>
+        <a
+          href="/address?page=<%= currentPage +1 %>"
+          class="flex items-center space-x-1 px-3 py-2 rounded-lg text-neutral-300 hover:bg-dark-green/50 hover:text-white transition-colors duration-200"
+        >
+          <span>Next</span>
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </a>
+        <% } else { %>
+        <span class="flex items-center space-x-1 px-3 py-2 text-neutral-600 cursor-not-allowed">
+          <span>Next</span>
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </span>
+        <% } %>
+      </div>
     </main>
-
+  </div>
 </div>
 
-</div>
+<div
+  id="addAddressModal"
+  class="fixed inset-0 z-50 bg-black/70 flex items-center justify-center hidden"
+>
+  <div class="bg-black/80 rounded-xl shadow-2xl w-full max-w-xl mx-4 my-6">
+    <div class="p-4 border-b border-white/10 flex justify-between items-center">
+      <h2 class="text-lg font-bold text-white">Add New Address</h2>
+      <button
+        type="button"
+        class="text-neutral-400 hover:text-white transition"
+        onclick="document.getElementById('addAddressModal').classList.add('hidden');"
+      >
+        <span class="material-symbols-outlined text-xl">close</span>
+      </button>
+    </div>
 
-
-<div id="addAddressModal" class="fixed inset-0 z-50 bg-black/70 flex items-center justify-center hidden">
-    <div class="bg-black/80 rounded-xl shadow-2xl w-full max-w-xl mx-4 my-6">
-        <div class="p-4 border-b border-white/10 flex justify-between items-center">
-            <h2 class="text-lg font-bold text-white">Add New Address</h2>
-            <button type="button" class="text-neutral-400 hover:text-white transition"
-                onclick="document.getElementById('addAddressModal').classList.add('hidden');">
-                <span class="material-symbols-outlined text-xl">close</span>
-            </button>
+    <form action="/add-address" method="POST">
+      <div class="p-4 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >Full Name</span
+            >
+            <input
+              type="text"
+              id="addFullName"
+              name="fullName"
+              placeholder="John Doe"
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+            <p id="addFullNameError" class="text-xs text-red-400 mt-1 hidden"></p>
+          </div>
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >Mobile Number</span
+            >
+            <input
+              type="tel"
+              id="addMobileNumber"
+              name="phone"
+              placeholder="+91 000 000-0000"
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm"
+            />
+            <p id="addMobileError" class="text-xs text-red-400 mt-1 hidden"></p>
+          </div>
         </div>
 
-        <form action="/add-address" method="POST">
-            <div class="p-4 space-y-4">
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Full
-                            Name</span>
-                        <input type="text" id="addFullName" name="fullName" placeholder="John Doe"
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                        <p id="addFullNameError" class="text-xs text-red-400 mt-1 hidden"></p>
-
-                    </div>
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Mobile
-                            Number</span>
-                        <input type="tel" id="addMobileNumber" name="phone" placeholder="+91 000 000-0000"
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0  pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm " />
-                        <p id="addMobileError" class="text-xs text-red-400 mt-1 hidden"></p>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <span
-                        class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Street
-                        Address</span>
-                    <input type="text" id="addAddress1" name="streetAddress" placeholder="Street address, house number"
-                        class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                    <p id="addStreetError" class="text-xs text-red-400 mt-1 hidden"></p>
-                </div>
-
-
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Pincode</span>
-                        <input type="text" id="addPincode" name="pincode" placeholder="10001"
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                        <p id="addPincodeError" class="text-xs text-red-400 mt-1 hidden">
-                            Invalid pincode
-                        </p>
-                    </div>
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">City</span>
-                        <input type="text" id="addCity" name="city" placeholder="City"
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                        <p id="addCityError" class="text-xs text-red-400 mt-1 hidden"></p>
-                    </div>
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">State</span>
-                        <input type="text" id="addState" name="state" placeholder="State"
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                        <p id="addStateError" class="text-xs text-red-400 mt-1 hidden"></p>
-                    </div>
-
-                </div>
-
-                <div class="space-y-3 pt-3">
-                    <label class="block text-sm font-medium text-neutral-300">Address Type</label>
-                    <div class="flex space-x-6 text-white text-sm">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="addressType" value="Home" checked
-                                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary" />
-                            <span>Home</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="addressType" value="Office"
-                                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary" />
-                            <span>Office</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="addressType" value="Other"
-                                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary" />
-                            <span>Other</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <label class="flex items-center space-x-2 cursor-pointer text-white text-sm">
-                        <input type="checkbox" name="isDefault"
-                            class="h-4 w-4 bg-transparent border-neutral-500 text-primary rounded focus:ring-primary checked:bg-primary checked:border-primary" />
-                        <span>Make this my default address</span>
-                    </label>
-                </div>
-
-            </div>
-
-            <div class="p-4 bg-dark-green rounded-b-xl flex justify-end space-x-3">
-                <button type="button" class="text-white px-4 py-2 rounded-lg hover:bg-white/10 transition"
-                    onclick="document.getElementById('addAddressModal').classList.add('hidden');">
-                    Cancel
-                </button>
-                <button type="submit"
-                    class="px-4 py-2 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
-                    Save Address
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-<div id="editAddressModal" class="fixed inset-0 z-50 bg-black/70 flex items-center justify-center hidden">
-    <div class="bg-black/80 rounded-xl shadow-2xl w-full max-w-xl mx-4 my-6">
-
-        <div class="p-4 border-b border-white/10 flex justify-between items-center">
-            <h2 class="text-lg font-bold text-white">Edit Address</h2>
-            <button type="button" class="text-neutral-400 hover:text-white transition" onclick="closeEditModal()">
-                <span class="material-symbols-outlined text-xl">close</span>
-            </button>
+        <div class="relative">
+          <span
+            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+            >Street Address</span
+          >
+          <input
+            type="text"
+            id="addAddress1"
+            name="streetAddress"
+            placeholder="Street address, house number"
+            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+          />
+          <p id="addStreetError" class="text-xs text-red-400 mt-1 hidden"></p>
         </div>
 
+        <div class="grid grid-cols-3 gap-4">
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >Pincode</span
+            >
+            <input
+              type="text"
+              id="addPincode"
+              name="pincode"
+              placeholder="10001"
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+            <p id="addPincodeError" class="text-xs text-red-400 mt-1 hidden">Invalid pincode</p>
+          </div>
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >City</span
+            >
+            <input
+              type="text"
+              id="addCity"
+              name="city"
+              placeholder="City"
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+            <p id="addCityError" class="text-xs text-red-400 mt-1 hidden"></p>
+          </div>
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >State</span
+            >
+            <input
+              type="text"
+              id="addState"
+              name="state"
+              placeholder="State"
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+            <p id="addStateError" class="text-xs text-red-400 mt-1 hidden"></p>
+          </div>
+        </div>
 
-        <form id="editAddressForm" method="POST">
+        <div class="space-y-3 pt-3">
+          <label class="block text-sm font-medium text-neutral-300">Address Type</label>
+          <div class="flex space-x-6 text-white text-sm">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="addressType"
+                value="Home"
+                checked
+                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary"
+              />
+              <span>Home</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="addressType"
+                value="Office"
+                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary"
+              />
+              <span>Office</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="addressType"
+                value="Other"
+                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary"
+              />
+              <span>Other</span>
+            </label>
+          </div>
+        </div>
 
-            <div class="p-4 space-y-4">
+        <div class="pt-2">
+          <label class="flex items-center space-x-2 cursor-pointer text-white text-sm">
+            <input
+              type="checkbox"
+              name="isDefault"
+              class="h-4 w-4 bg-transparent border-neutral-500 text-primary rounded focus:ring-primary checked:bg-primary checked:border-primary"
+            />
+            <span>Make this my default address</span>
+          </label>
+        </div>
+      </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Full
-                            Name</span>
-                        <input type="text" id="editFullName" name="fullName" required
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                    </div>
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Mobile
-                            Number</span>
-                        <input type="tel" id="editMobileNumber" name="phone" required
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <span
-                        class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Street
-                        Address</span>
-                    <input type="text" id="editAddress1" name="streetAddress" required
-                        class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                </div>
-
-
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">Pincode</span>
-                        <input type="text" id="editPincode" name="pincode" required
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                        <p id="editPincodeError" class="text-xs text-red-400 mt-1 hidden">
-                            Invalid pincode
-                        </p>
-                    </div>
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">City</span>
-                        <input type="text" id="editCity" name="city" required
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                    </div>
-                    <div class="relative">
-                        <span
-                            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider">State</span>
-                        <input type="text" id="editState" name="state" required
-                            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary" />
-                    </div>
-
-                </div>
-
-                <div class="space-y-3 pt-3">
-                    <label class="block text-sm font-medium text-neutral-300">Address Type</label>
-                    <div class="flex space-x-6 text-white text-sm">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="addressType" value="Home" class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary
-                            checked:bg-primary checked:border-primary" />
-                            <span>Home</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="addressType" value="Office" class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary
-                            checked:bg-primary checked:border-primary" />
-                            <span>Office</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="addressType" value="Other" class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary
-                            checked:bg-primary checked:border-primary" />
-                            <span>Other</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <label class="flex items-center space-x-2 cursor-pointer text-white text-sm">
-                        <input type="checkbox" name="isDefault" class="h-4 w-4 bg-transparent border-neutral-500 text-primary rounded focus:ring-primary
-                        checked:bg-primary checked:border-primary" />
-                        <span>Make this my default address</span>
-                    </label>
-                </div>
-
-            </div>
-
-            <div class="p-4 bg-dark-green rounded-b-xl flex justify-end space-x-3">
-                <button type="button" class="text-white px-4 py-2 rounded-lg hover:bg-white/10 transition"
-                    onclick="closeEditModal()">
-                    Cancel
-                </button>
-                <button type="submit"
-                    class="px-4 py-2 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
-                    Save Changes
-                </button>
-            </div>
-        </form>
-    </div>
+      <div class="p-4 bg-dark-green rounded-b-xl flex justify-end space-x-3">
+        <button
+          type="button"
+          class="text-white px-4 py-2 rounded-lg hover:bg-white/10 transition"
+          onclick="document.getElementById('addAddressModal').classList.add('hidden');"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20"
+        >
+          Save Address
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
+<div
+  id="editAddressModal"
+  class="fixed inset-0 z-50 bg-black/70 flex items-center justify-center hidden"
+>
+  <div class="bg-black/80 rounded-xl shadow-2xl w-full max-w-xl mx-4 my-6">
+    <div class="p-4 border-b border-white/10 flex justify-between items-center">
+      <h2 class="text-lg font-bold text-white">Edit Address</h2>
+      <button
+        type="button"
+        class="text-neutral-400 hover:text-white transition"
+        onclick="closeEditModal()"
+      >
+        <span class="material-symbols-outlined text-xl">close</span>
+      </button>
+    </div>
+
+    <form id="editAddressForm" method="POST">
+      <div class="p-4 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >Full Name</span
+            >
+            <input
+              type="text"
+              id="editFullName"
+              name="fullName"
+              required
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+          </div>
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >Mobile Number</span
+            >
+            <input
+              type="tel"
+              id="editMobileNumber"
+              name="phone"
+              required
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+          </div>
+        </div>
+
+        <div class="relative">
+          <span
+            class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+            >Street Address</span
+          >
+          <input
+            type="text"
+            id="editAddress1"
+            name="streetAddress"
+            required
+            class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+          />
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >Pincode</span
+            >
+            <input
+              type="text"
+              id="editPincode"
+              name="pincode"
+              required
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+            <p id="editPincodeError" class="text-xs text-red-400 mt-1 hidden">Invalid pincode</p>
+          </div>
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >City</span
+            >
+            <input
+              type="text"
+              id="editCity"
+              name="city"
+              required
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+          </div>
+          <div class="relative">
+            <span
+              class="absolute left-4 top-1 text-[8px] uppercase text-neutral-500 font-medium tracking-wider"
+              >State</span
+            >
+            <input
+              type="text"
+              id="editState"
+              name="state"
+              required
+              class="bg-[#0f1f17] text-white w-full rounded-lg border-0 bg-dark-green pt-4 pb-2 px-4 text-white shadow-sm ring-1 ring-inset ring-green-700/50 text-sm focus:ring-primary"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-3">
+          <label class="block text-sm font-medium text-neutral-300">Address Type</label>
+          <div class="flex space-x-6 text-white text-sm">
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="addressType"
+                value="Home"
+                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary"
+              />
+              <span>Home</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="addressType"
+                value="Office"
+                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary"
+              />
+              <span>Office</span>
+            </label>
+            <label class="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="addressType"
+                value="Other"
+                class="h-4 w-4 bg-transparent border-neutral-500 text-primary focus:ring-primary checked:bg-primary checked:border-primary"
+              />
+              <span>Other</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <label class="flex items-center space-x-2 cursor-pointer text-white text-sm">
+            <input
+              type="checkbox"
+              name="isDefault"
+              class="h-4 w-4 bg-transparent border-neutral-500 text-primary rounded focus:ring-primary checked:bg-primary checked:border-primary"
+            />
+            <span>Make this my default address</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="p-4 bg-dark-green rounded-b-xl flex justify-end space-x-3">
+        <button
+          type="button"
+          class="text-white px-4 py-2 rounded-lg hover:bg-white/10 transition"
+          onclick="closeEditModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20"
+        >
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script>
+  const addAddressForm = document.querySelector('form[action="/add-address"]');
 
-    const addAddressForm = document.querySelector('form[action="/add-address"]');
+  const fullName = document.getElementById('addFullName');
+  const phone = document.getElementById('addMobileNumber');
+  const street = document.getElementById('addAddress1');
+  const city = document.getElementById('addCity');
+  const state = document.getElementById('addState');
+  const pincode = document.getElementById('addPincode');
 
-    const fullName = document.getElementById("addFullName");
-    const phone = document.getElementById("addMobileNumber");
-    const street = document.getElementById("addAddress1");
-    const city = document.getElementById("addCity");
-    const state = document.getElementById("addState");
-    const pincode = document.getElementById("addPincode");
+  const errors = {
+    fullName: document.getElementById('addFullNameError'),
+    phone: document.getElementById('addMobileError'),
+    street: document.getElementById('addStreetError'),
+    city: document.getElementById('addCityError'),
+    state: document.getElementById('addStateError'),
+    pincode: document.getElementById('addPincodeError'),
+  };
 
-    const errors = {
-        fullName: document.getElementById("addFullNameError"),
-        phone: document.getElementById("addMobileError"),
-        street: document.getElementById("addStreetError"),
-        city: document.getElementById("addCityError"),
-        state: document.getElementById("addStateError"),
-        pincode: document.getElementById("addPincodeError")
-    };
+  function showError(input, errorEl, message) {
+    errorEl.textContent = message;
+    errorEl.classList.remove('hidden');
+    input.classList.add('ring-red-500');
+  }
 
-    function showError(input, errorEl, message) {
-        errorEl.textContent = message;
-        errorEl.classList.remove("hidden");
-        input.classList.add("ring-red-500");
+  function clearError(input, errorEl) {
+    errorEl.textContent = '';
+    errorEl.classList.add('hidden');
+    input.classList.remove('ring-red-500');
+  }
+
+  addAddressForm.addEventListener('submit', (e) => {
+    let isValid = true;
+
+    // Full Name
+    if (!/^[A-Za-z ]{3,}$/.test(fullName.value.trim())) {
+      showError(fullName, errors.fullName, 'Enter a valid full name');
+      isValid = false;
+    } else clearError(fullName, errors.fullName);
+
+    // Mobile Number (India)
+    if (!/^[6-9]\d{9}$/.test(phone.value.trim())) {
+      showError(phone, errors.phone, 'Enter a valid 10-digit mobile number');
+      isValid = false;
+    } else clearError(phone, errors.phone);
+
+    // Street Address
+    if (street.value.trim().length < 5) {
+      showError(street, errors.street, 'Street address is too short');
+      isValid = false;
+    } else clearError(street, errors.street);
+
+    // City
+    if (!/^[A-Za-z ]+$/.test(city.value.trim())) {
+      showError(city, errors.city, 'Enter a valid city');
+      isValid = false;
+    } else clearError(city, errors.city);
+
+    // State
+    if (!/^[A-Za-z ]+$/.test(state.value.trim())) {
+      showError(state, errors.state, 'Enter a valid state');
+      isValid = false;
+    } else clearError(state, errors.state);
+
+    // Pincode
+    if (!/^\d{6}$/.test(pincode.value.trim())) {
+      showError(pincode, errors.pincode, 'Invalid pincode');
+      isValid = false;
+    } else clearError(pincode, errors.pincode);
+
+    if (!isValid) {
+      e.preventDefault(); // ❌ stop form submit
     }
+  });
 
-    function clearError(input, errorEl) {
-        errorEl.textContent = "";
-        errorEl.classList.add("hidden");
-        input.classList.remove("ring-red-500");
-    }
+  const editModal = document.getElementById('editAddressModal');
+  const editForm = document.getElementById('editAddressForm');
 
-    addAddressForm.addEventListener("submit", (e) => {
-        let isValid = true;
+  function openEditAddressModal(addr) {
+    editModal.classList.remove('hidden');
+    editForm.action = `/edit-address/${addr._id}?_method=PATCH`;
 
-        // Full Name
-        if (!/^[A-Za-z ]{3,}$/.test(fullName.value.trim())) {
-            showError(fullName, errors.fullName, "Enter a valid full name");
-            isValid = false;
-        } else clearError(fullName, errors.fullName);
+    // fill inputs
+    document.getElementById('editFullName').value = addr.fullName || '';
+    document.getElementById('editMobileNumber').value = addr.phone || '';
+    document.getElementById('editAddress1').value = addr.streetAddress || '';
+    const editCity = (document.getElementById('editCity').value = addr.city || '');
+    const editState = (document.getElementById('editState').value = addr.state || '');
+    const editPincode = (document.getElementById('editPincode').value = addr.pincode || '');
+    const addPincode = document.getElementById('addPincode');
+    const addCity = document.getElementById('addCity');
+    const addState = document.getElementById('addState');
+    const addPincodeError = document.getElementById('addPincodeError');
+    const editPincodeError = document.getElementById('editPincodeError');
 
-        // Mobile Number (India)
-        if (!/^[6-9]\d{9}$/.test(phone.value.trim())) {
-            showError(phone, errors.phone, "Enter a valid 10-digit mobile number");
-            isValid = false;
-        } else clearError(phone, errors.phone);
-
-        // Street Address
-        if (street.value.trim().length < 5) {
-            showError(street, errors.street, "Street address is too short");
-            isValid = false;
-        } else clearError(street, errors.street);
-
-        // City
-        if (!/^[A-Za-z ]+$/.test(city.value.trim())) {
-            showError(city, errors.city, "Enter a valid city");
-            isValid = false;
-        } else clearError(city, errors.city);
-
-        // State
-        if (!/^[A-Za-z ]+$/.test(state.value.trim())) {
-            showError(state, errors.state, "Enter a valid state");
-            isValid = false;
-        } else clearError(state, errors.state);
-
-        // Pincode
-        if (!/^\d{6}$/.test(pincode.value.trim())) {
-            showError(pincode, errors.pincode, "Invalid pincode");
-            isValid = false;
-        } else clearError(pincode, errors.pincode);
-
-        if (!isValid) {
-            e.preventDefault(); // ❌ stop form submit
-        }
+    // radio buttons
+    document.querySelectorAll("input[name='addressType']").forEach((radio) => {
+      radio.checked = radio.value === addr.addressType;
     });
 
+    // default checkbox
+    document.querySelector("input[name='isDefault']").checked = !!addr.isDefault;
 
-    const editModal = document.getElementById("editAddressModal");
-    const editForm = document.getElementById("editAddressForm");
+    editModal.classList.remove('hidden');
+  }
 
-    function openEditAddressModal(addr) {
+  function closeEditModal() {
+    editModal.classList.add('hidden');
+  }
 
-        editModal.classList.remove("hidden");
-        editForm.action = `/edit-address/${addr._id}?_method=PATCH`;
-
-        // fill inputs
-        document.getElementById("editFullName").value = addr.fullName || "";
-        document.getElementById("editMobileNumber").value = addr.phone || "";
-        document.getElementById("editAddress1").value = addr.streetAddress || "";
-        const editCity = document.getElementById("editCity").value = addr.city || "";
-        const editState = document.getElementById("editState").value = addr.state || "";
-        const editPincode = document.getElementById("editPincode").value = addr.pincode || "";
-        const addPincode = document.getElementById("addPincode");
-        const addCity = document.getElementById("addCity");
-        const addState = document.getElementById("addState");
-        const addPincodeError = document.getElementById("addPincodeError");
-        const editPincodeError = document.getElementById("editPincodeError");
-
-
-
-        // radio buttons
-        document.querySelectorAll("input[name='addressType']")
-            .forEach(radio => {
-                radio.checked = radio.value === addr.addressType;
-            });
-
-        // default checkbox
-        document.querySelector("input[name='isDefault']").checked = !!addr.isDefault;
-
-        editModal.classList.remove("hidden");
-    }
-
-    function closeEditModal() {
-        editModal.classList.add("hidden");
-    }
-
-    document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const addr = JSON.parse(btn.dataset.address);
-            openEditAddressModal(addr);
-        });
+  document.querySelectorAll('.edit-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const addr = JSON.parse(btn.dataset.address);
+      openEditAddressModal(addr);
     });
+  });
 
-    function conformDeleteAddress(addressId) {
-        Swal.fire({
-            title: "Delete Address?",
-            text: "This address will be permanently removed.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#facc15",
-            cancelButtonColor: "#374151",
-            confirmButtonText: "Yes, delete",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`/delete-address/${addressId}`, {
-                    method: "delete"
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire("Deleted!", "Address removed.", "success")
-                                .then(() => location.reload());
-                        } else {
-                            Swal.fire("Error", "Failed to delete address", "error");
-                        }
-                    })
-            }
+  function conformDeleteAddress(addressId) {
+    Swal.fire({
+      title: 'Delete Address?',
+      text: 'This address will be permanently removed.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#facc15',
+      cancelButtonColor: '#374151',
+      confirmButtonText: 'Yes, delete',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`/delete-address/${addressId}`, {
+          method: 'delete',
         })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              Swal.fire('Deleted!', 'Address removed.', 'success').then(() => location.reload());
+            } else {
+              Swal.fire('Error', 'Failed to delete address', 'error');
+            }
+          });
+      }
+    });
+  }
+
+  addPincode.addEventListener('input', async () => {
+    if (addPincode.value.length !== 6) {
+      addPincodeError.classList.add('hidden');
+
+      return;
     }
 
+    const res = await fetch(`https://api.postalpincode.in/pincode/${addPincode.value}`);
+    const data = await res.json();
 
-    addPincode.addEventListener("input", async () => {
-        if (addPincode.value.length !== 6) {
-            addPincodeError.classList.add("hidden");
+    if (data[0].Status === 'Success') {
+      addCity.value = data[0].PostOffice[0].District;
+      addState.value = data[0].PostOffice[0].State;
+      addPincodeError.classList.add('hidden');
+    } else {
+      addCity.value = '';
+      addState.value = '';
+      addPincodeError.classList.remove('hidden');
+    }
+  });
 
-            return;
-        }
+  editPincode.addEventListener('input', async () => {
+    if (editPincode.value.length !== 6) {
+      editPincodeError.classList.add('hidden');
+      return;
+    }
 
-        const res = await fetch(
-            `https://api.postalpincode.in/pincode/${addPincode.value}`
-        );
-        const data = await res.json();
+    const res = await fetch(`https://api.postalpincode.in/pincode/${editPincode.value}`);
+    const data = await res.json();
 
-        if (data[0].Status === "Success") {
-            addCity.value = data[0].PostOffice[0].District;
-            addState.value = data[0].PostOffice[0].State;
-            addPincodeError.classList.add("hidden");
-
-        } else {
-            addCity.value = "";
-            addState.value = "";
-            addPincodeError.classList.remove("hidden");
-
-        }
-    });
-
-    editPincode.addEventListener("input", async () => {
-        if (editPincode.value.length !== 6) {
-            editPincodeError.classList.add("hidden");
-            return;
-        }
-
-        const res = await fetch(
-            `https://api.postalpincode.in/pincode/${editPincode.value}`
-        );
-        const data = await res.json();
-
-        if (data[0].Status === "Success") {
-            editCity.value = data[0].PostOffice[0].District;
-            editState.value = data[0].PostOffice[0].State;
-            editPincodeError.classList.add("hidden");
-
-        } else {
-            editCity.value = "";
-            editState.value = "";
-            editPincodeError.classList.remove("hidden");
-
-        }
-    });
+    if (data[0].Status === 'Success') {
+      editCity.value = data[0].PostOffice[0].District;
+      editState.value = data[0].PostOffice[0].State;
+      editPincodeError.classList.add('hidden');
+    } else {
+      editCity.value = '';
+      editState.value = '';
+      editPincodeError.classList.remove('hidden');
+    }
+  });
 </script>

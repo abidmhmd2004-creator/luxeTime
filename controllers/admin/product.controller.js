@@ -1,7 +1,7 @@
-import asyncHandler from "../../utils/asyncHandler.js";
-import Category from "../../models/category.model.js";
-import Product from "../../models/product.model.js";
-import Variant from "../../models/variant.model.js";
+import asyncHandler from '../../utils/asyncHandler.js';
+import Category from '../../models/category.model.js';
+import Product from '../../models/product.model.js';
+import Variant from '../../models/variant.model.js';
 
 export const getProductPage = asyncHandler(async (req, res) => {
   const page = req.query.page || 1;
@@ -12,17 +12,15 @@ export const getProductPage = asyncHandler(async (req, res) => {
   const filter = {
     isDeleted: false,
   };
-  if (typeof search === "string" && search.trim() !== "") {
-    filter.name = { $regex: search.trim(), $options: "i" };
+  if (typeof search === 'string' && search.trim() !== '') {
+    filter.name = { $regex: search.trim(), $options: 'i' };
   }
 
   const products = await Product.find(filter)
-    .populate("category", "name")
+    .populate('category', 'name')
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
-  // .populate("category", "name")
-  // .lean();
 
   for (let product of products) {
     const variants = await Variant.find({
@@ -37,12 +35,8 @@ export const getProductPage = asyncHandler(async (req, res) => {
     product.minPrice = null;
 
     if (variants.length > 0) {
-      product.bestOffer = Math.max(
-        ...variants.map((v) => v.offerPercentage || 0),
-      );
-      product.minPrice = Math.min(
-        ...variants.map((v) => v.finalPrice ?? v.basePrice),
-      );
+      product.bestOffer = Math.max(...variants.map((v) => v.offerPercentage || 0));
+      product.minPrice = Math.min(...variants.map((v) => v.finalPrice ?? v.basePrice));
     }
   }
 
@@ -50,8 +44,8 @@ export const getProductPage = asyncHandler(async (req, res) => {
 
   const totalPages = Math.ceil(totalProducts / limit);
 
-  res.render("admin/products", {
-    layout: "layouts/admin",
+  res.render('admin/products', {
+    layout: 'layouts/admin',
     products,
     currentPage: Number(page),
     totalPages,
@@ -62,7 +56,7 @@ export const getProductPage = asyncHandler(async (req, res) => {
 export const getaddProducts = asyncHandler(async (req, res) => {
   const categories = await Category.find({ isListed: true });
 
-  res.render("admin/add-products", { categories, layout: "layouts/admin" });
+  res.render('admin/add-products', { categories, layout: 'layouts/admin' });
 });
 
 export const postAddProducts = asyncHandler(async (req, res) => {
@@ -80,23 +74,14 @@ export const postAddProducts = asyncHandler(async (req, res) => {
     variants,
   } = req.body;
 
-  // console.log(variants);
-
   if (!name || !name.trim()) {
     return res.status(400).json({
       success: false,
-      message: "Product name is required",
+      message: 'Product name is required',
     });
   }
 
-  if (!variants || typeof variants !== "object") {
-    return res.status(400).json({
-      success: false,
-      message: "At least one variant is required",
-    });
-  }
-
-  const existing = await Product.findOne({
+   const existing = await Product.findOne({
     name: name.trim(),
     isDeleted: false,
   });
@@ -104,14 +89,46 @@ export const postAddProducts = asyncHandler(async (req, res) => {
   if (existing) {
     return res.status(400).json({
       success: false,
-      message: "Prodct already exists",
+      message: 'Prodct already exists',
     });
   }
+
+  if (!description || description.trim().length < 10) {
+    return res.status(400).json({
+      success: false,
+      message: 'Description must be at least 10 characters',
+    });
+  }
+
+  if (description.length > 1000) {
+    return res.status(400).json({
+      success: false,
+      message: 'Description is too long',
+    });
+  }
+
+  if (!variants || typeof variants !== 'object') {
+    return res.status(400).json({
+      success: false,
+      message: 'At least one variant is required',
+    });
+  }
+
+  if (offerPercentage < 0 || offerPercentage > 90) {
+    return res.status(400).json({ message: 'Offer should be between 0 and 90' });
+  }
+
+  if (offerPercentage > 0 && !offerExpiry) {
+    return res.status(400).json({ message: 'Offer expiry date required when offer is applied' });
+  }
+
+  if (offerExpiry && new Date(offerExpiry) < new Date()) {
+    return res.status(400).json({ message: 'Please set a future expiry date' });
+  }
+
   for (let i = 0; i < variants.length; i++) {
     const v = variants[i];
-    const files = req.files.filter(
-      (file) => file.fieldname === `variantImages_${i}`,
-    );
+    const files = req.files.filter((file) => file.fieldname === `variantImages_${i}`);
 
     if (files.length < 3) {
       return res.status(400).json({
@@ -135,14 +152,14 @@ export const postAddProducts = asyncHandler(async (req, res) => {
     if (!color) {
       return res.status(400).json({
         success: false,
-        message: "Variant color is required",
+        message: 'Variant color is required',
       });
     }
 
     if (colorSet.has(color)) {
       return res.status(400).json({
         success: false,
-        message: "Duplicate variant color :${v.color}",
+        message: 'Duplicate variant color :${v.color}',
       });
     }
     colorSet.add(color);
@@ -161,15 +178,13 @@ export const postAddProducts = asyncHandler(async (req, res) => {
       strapType,
       movementType,
     },
-    isActive: isListed === "on",
+    isActive: isListed === 'on',
   });
 
   for (let i = 0; i < variants.length; i++) {
     const v = variants[i];
 
-    const files = req.files.filter(
-      (file) => file.fieldname === `variantImages_${i}`,
-    );
+    const files = req.files.filter((file) => file.fieldname === `variantImages_${i}`);
     const basePrice = Number(v.basePrice);
 
     const finalPrice = basePrice - (basePrice * offer) / 100;
@@ -190,7 +205,7 @@ export const postAddProducts = asyncHandler(async (req, res) => {
 
   return res.status(201).json({
     success: true,
-    message: "Product added successfully",
+    message: 'Product added successfully',
   });
 });
 
@@ -201,7 +216,7 @@ export const productDetails = asyncHandler(async (req, res) => {
   if (!product) {
     return res.status(404).json({
       success: false,
-      message: "Product not found",
+      message: 'Product not found',
     });
   }
 
@@ -230,11 +245,11 @@ export const geteditProduct = asyncHandler(async (req, res) => {
     isDeleted: false,
   });
 
-  res.render("admin/edit-product", {
+  res.render('admin/edit-product', {
     product,
     categories,
     variants,
-    layout: "layouts/admin",
+    layout: 'layouts/admin',
   });
 });
 
@@ -244,6 +259,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
   const {
     name,
     category,
+    brand,
     description,
     offerPercentage,
     offerExpiry,
@@ -254,21 +270,29 @@ export const postEditProduct = asyncHandler(async (req, res) => {
     variants,
   } = req.body;
 
-  //   console.log(offerPercentage);
-
-  //   console.log(offerExpiry);
-
   if (!name || !name.trim()) {
     return res.status(400).json({
       success: false,
-      message: "Product name is required",
+      message: 'Product name is required',
     });
   }
-  if (!variants || typeof variants !== "object") {
+  if (!variants || typeof variants !== 'object') {
     return res.status(400).json({
       success: false,
-      message: "At least on variant is required",
+      message: 'At least on variant is required',
     });
+  }
+
+  if (offerPercentage < 0 || offerPercentage > 90) {
+    return res.status(400).json({ message: 'Offer should be between 0 and 90' });
+  }
+
+  if (offerPercentage > 0 && !offerExpiry) {
+    return res.status(400).json({ message: 'Offer expiry date required when offer is applied' });
+  }
+
+  if (offerExpiry && new Date(offerExpiry) < new Date()) {
+    return res.status(400).json({ message: 'Please set a future expiry date' });
   }
 
   for (let i = 0; i < variants.length; i++) {
@@ -288,7 +312,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
       if (!color) {
         return res.status(400).json({
           success: false,
-          message: "Variant color is required",
+          message: 'Variant color is required',
         });
       }
 
@@ -307,6 +331,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
     await Product.findByIdAndUpdate(id, {
       name,
       category,
+      brand,
       description,
       offerPercentage: offer,
       offerExpiry,
@@ -315,7 +340,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
         strapType,
         movementType,
       },
-      isActive: isListed === "on",
+      isActive: isListed === 'on',
     });
 
     const submittedVariantIds = variants
@@ -323,17 +348,12 @@ export const postEditProduct = asyncHandler(async (req, res) => {
       .flat()
       .filter(Boolean);
 
-    // await Variant.deleteMany({
-    //     product: id,
-    //     _id: { $nin: submittedVariantIds }
-    // });
-
     await Variant.updateMany(
       {
         product: id,
         _id: { $nin: submittedVariantIds },
       },
-      { isActive: false, isDeleted: true },
+      { isActive: false, isDeleted: true }
     );
 
     const basePrice = Number(v.basePrice);
@@ -341,9 +361,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
 
     const finalPrice = Math.round(basePrice - (basePrice * offer) / 100);
 
-    const files = req.files.filter(
-      (file) => file.fieldname === `variantImages_${i}`,
-    );
+    const files = req.files.filter((file) => file.fieldname === `variantImages_${i}`);
 
     let keptImages = req.body[`existingImages_${i}`] || [];
 
@@ -396,7 +414,7 @@ export const postEditProduct = asyncHandler(async (req, res) => {
 
     const existingDeletedVariant = await Variant.findOne({
       product: id,
-      color: new RegExp(`^${v.color}$`, "i"),
+      color: new RegExp(`^${v.color}$`, 'i'),
       isDeleted: true,
     });
 
@@ -422,17 +440,15 @@ export const postEditProduct = asyncHandler(async (req, res) => {
       finalPrice,
       images: finalImages,
     });
-    // console.log(variants)
   }
 
   res.json({
     success: true,
-    message: "Product updated successfully",
+    message: 'Product updated successfully',
   });
 });
 
 export const softDeleteProduct = asyncHandler(async (req, res) => {
-  // console.log("getting controller")
   const { id } = req.params;
 
   await Product.findByIdAndUpdate(id, {
@@ -442,6 +458,6 @@ export const softDeleteProduct = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: "Category soft deleted",
+    message: 'Category soft deleted',
   });
 });

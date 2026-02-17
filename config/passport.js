@@ -1,7 +1,7 @@
-import passport from "passport";
-import GooleStratergy from "passport-google-oauth20";
-import User from "../models/user.model.js";
-import dotenv from "dotenv";
+import passport from 'passport';
+import GooleStratergy from 'passport-google-oauth20';
+import User from '../models/user.model.js';
+import dotenv from 'dotenv';
 dotenv.config();
 
 passport.use(
@@ -9,7 +9,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: '/auth/google/callback',
     },
 
     async (accessToken, refreshToken, profile, done) => {
@@ -41,8 +41,8 @@ passport.use(
       } catch (err) {
         return done(err, null);
       }
-    },
-  ),
+    }
+  )
 );
 
 passport.serializeUser((user, done) => {

@@ -1,78 +1,57 @@
-import asyncHandler from "../../utils/asyncHandler.js";
-import Coupon from "../../models/coupon.model.js";
+import asyncHandler from '../../utils/asyncHandler.js';
+import Coupon from '../../models/coupon.model.js';
 
 export const getCouponPage = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const search = req.query.search || '';
+  const limit = 5;
+  const skip = (page - 1) * limit;
 
-  const page =parseInt(req.query.page)||1;
-  const search = req.query.search||"";
-  const limit=5;
-  const skip =(page-1)*limit;
+  const filter = { isDeleted: false };
 
-  const filter={isDeleted:false};
-
-  if(search){
-    filter.$or=[
-      {name:{$regex:search,$options:"i"}},
-      {code:{$regex:search,$options:"i"}}
-    ]
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { code: { $regex: search, $options: 'i' } },
+    ];
   }
 
   const totalCoupons = await Coupon.countDocuments(filter);
 
-  const coupons = await Coupon.find(filter)
-  .sort({createdAt: -1})
-  .skip(skip) 
-  .limit(limit)
+  const coupons = await Coupon.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
-  const totalPages= Math.ceil(totalCoupons/limit)
+  const totalPages = Math.ceil(totalCoupons / limit);
 
-  res.render("admin/coupons",
-    { layout: "layouts/admin",
-      coupons,
-      currentPage:page,
-      search,
-      totalPages
-    });
+  res.render('admin/coupons', {
+    layout: 'layouts/admin',
+    coupons,
+    currentPage: page,
+    search,
+    totalPages,
+  });
 });
 
 export const addCoupon = asyncHandler(async (req, res) => {
-  const {
-    name,
-    code,
-    offer,
-    minOrder,
-    maxUsage,
-    maxDiscount,
-    expiryDate,
-    isActive,
-  } = req.body;
+  const { name, code, offer, minOrder, maxUsage, maxDiscount, expiryDate, isActive } = req.body;
 
-  if (
-    !name ||
-    !code ||
-    !offer ||
-    !minOrder ||
-    !maxDiscount ||
-    !maxUsage ||
-    !expiryDate
-  ) {
+  if (!name || !code || !offer || !minOrder || !maxDiscount || !maxUsage || !expiryDate) {
     return res.status(400).json({
       success: false,
-      message: "All fields are required",
+      message: 'All fields are required',
     });
   }
 
   if (offer <= 0 || offer > 100) {
     return res.status(400).json({
       success: false,
-      message: "Offer percentage must be between 1 and 100",
+      message: 'Offer percentage must be between 1 and 100',
     });
   }
 
   if (new Date(expiryDate) <= new Date()) {
     return res.status(400).json({
       success: false,
-      message: "Expiry date must be in the future",
+      message: 'Expiry date must be in the future',
     });
   }
 
@@ -84,7 +63,7 @@ export const addCoupon = asyncHandler(async (req, res) => {
   if (existingCoupen) {
     return res.status(409).json({
       success: false,
-      message: "Coupen code already exists",
+      message: 'Coupen code already exists',
     });
   }
 
@@ -101,36 +80,27 @@ export const addCoupon = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     success: true,
-    message: "coupen created successfully",
+    message: 'coupen created successfully',
   });
 });
 
 export const editCoupon = asyncHandler(async (req, res) => {
   const { couponId } = req.params;
-  const {
-    name,
-    code,
-    offer,
-    minOrder,
-    maxUsage,
-    maxDiscount,
-    expiryDate,
-    isActive,
-  } = req.body;
+  const { name, code, offer, minOrder, maxUsage, maxDiscount, expiryDate, isActive } = req.body;
 
   const coupon = await Coupon.findOne({ _id: couponId, isDeleted: false });
 
   if (!coupon) {
     return res.json({
       success: false,
-      message: "Coupon not found",
+      message: 'Coupon not found',
     });
   }
 
   if (new Date(expiryDate) <= new Date()) {
     return res.json({
       success: false,
-      message: "Expiry date must be in the future.",
+      message: 'Expiry date must be in the future.',
     });
   }
 
@@ -145,7 +115,7 @@ export const editCoupon = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: "Coupon updated successfully",
+    message: 'Coupon updated successfully',
   });
 });
 
@@ -157,7 +127,7 @@ export const toggleCouponStatus = asyncHandler(async (req, res) => {
   if (!coupon || coupon.isDeleted) {
     return res.json({
       success: false,
-      message: "Coupon not found",
+      message: 'Coupon not found',
     });
   }
 
@@ -166,7 +136,7 @@ export const toggleCouponStatus = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: `Coupon ${coupon.isListed ? "Listed" : "Unlisted"} successfully`,
+    message: `Coupon ${coupon.isListed ? 'Listed' : 'Unlisted'} successfully`,
   });
 });
 
@@ -178,7 +148,7 @@ export const deleteCoupon = asyncHandler(async (req, res) => {
   if (!coupon) {
     return res.json({
       success: false,
-      message: "Coupon not found.",
+      message: 'Coupon not found.',
     });
   }
 
@@ -187,6 +157,6 @@ export const deleteCoupon = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: "Coupon deleted successfully",
+    message: 'Coupon deleted successfully',
   });
 });

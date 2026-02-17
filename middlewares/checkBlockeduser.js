@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+import User from '../models/user.model.js';
 
 export const checkBlockedUser = async (req, res, next) => {
   try {
@@ -12,15 +12,15 @@ export const checkBlockedUser = async (req, res, next) => {
 
     if (!user || user.isBlocked) {
       req.session.user = null;
-      req.flash("error", "Your account is blocked by admin!");
+      req.flash('error', 'Your account is blocked by admin!');
 
-      return res.redirect("/login");
+      return res.redirect('/login');
     }
     next();
   } catch (err) {
     console.log(err);
     req.session.user = null;
 
-    return res.redirect("/login");
+    return res.redirect('/login');
   }
 };

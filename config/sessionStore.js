@@ -1,17 +1,17 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
-import session from "express-session";
-import MongoStore from "connect-mongo";
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 export const userSession = session({
-  name: "luxetime.user.sid",
+  name: 'luxetime.user.sid',
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
-    collectionName: "sessions",
+    collectionName: 'sessions',
   }),
   cookie: {
     httpOnly: true,
@@ -21,13 +21,13 @@ export const userSession = session({
 });
 
 export const adminSession = session({
-  name: "luxetime.admin.sid",
+  name: 'luxetime.admin.sid',
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI,
-    collectionName: "sessions",
+    collectionName: 'sessions',
   }),
   cookie: {
     httpOnly: true,

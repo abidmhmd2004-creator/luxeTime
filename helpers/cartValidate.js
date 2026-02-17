@@ -4,7 +4,7 @@ export const validateCartForCheckout = (cart) => {
   if (!cart || cart.items.length === 0) {
     return {
       valid: false,
-      errors: ["Your cart is empty"],
+      errors: ['Your cart is empty'],
     };
   }
 
@@ -13,7 +13,7 @@ export const validateCartForCheckout = (cart) => {
     const variant = item.variant;
 
     if (!product) {
-      errors.push("A product in your cart no longer exists");
+      errors.push('A product in your cart no longer exists');
       continue;
     }
 
@@ -33,9 +33,7 @@ export const validateCartForCheckout = (cart) => {
     }
 
     if (variant.stock < item.quantity) {
-      errors.push(
-        `Only ${variant.stock} left for ${product.name}. Please update your cart`,
-      );
+      errors.push(`Only ${variant.stock} left for ${product.name}. Please update your cart`);
     }
     if (product.category && !product.category.isListed) {
       errors.push(`${product.name} category is unavailable`);

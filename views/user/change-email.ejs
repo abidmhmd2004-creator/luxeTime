@@ -1,91 +1,104 @@
 <div class="w-full max-w-sm md:max-w-md mx-auto">
-
-    <div class="bg-card-dark mt-6 rounded-xl p-8 shadow-2xl space-y-5 text-center">
-
-        <div class="flex flex-col items-center space-y-3">
-            <span class="material-symbols-outlined text-4xl text-primary">mail</span>
-            <h2 class="text-xl font-bold text-white">Change Email Address</h2>
-            <p class="text-sm text-neutral-400">
-                Enter your new email address below.
-            </p>
-        </div>
-
-        <form action="/change-email/?_method=PATCH" method="POST" id="emailForm" class="space-y-4">
-
-            <!-- Flash alerts -->
-            <%- include('../partials/alerts') %>
-
-                <div class="relative">
-                    <span
-                        class="absolute left-10 top-1.5 text-[10px] uppercase text-neutral-500 font-medium tracking-wider">Current
-                        Email</span>
-
-                    <label for="currentEmail" class="sr-only">Current Email</label>
-                    <input type="email" id="currentEmail" name="currentEmail" value="<%= user.email %>" disabled
-                        class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-neutral-500 placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm cursor-not-allowed" />
-
-                    <span
-                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">drafts</span>
-                </div>
-
-                <div class="relative">
-                    <span
-                        class="absolute left-10 top-1.5 text-[10px] uppercase text-neutral-500 font-medium tracking-wider">New
-                        Email Address</span>
-
-                    <label for="newEmail" class="sr-only">New Email Address</label>
-                    <input type="email" id="newEmail" name="newEmail"
-                        class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-white placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm focus:ring-primary" />
-
-                    <span
-                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg">alternate_email</span>
-                    <p class="mt-1 text-xs text-red-500 hidden" id="emailErr"></p>
-
-                </div>
-
-                <button type="submit"
-                    class="w-full px-5 py-3 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20 mt-6">
-                    Update Email
-                </button>
-        </form>
-
-        <div class="pt-2">
-            <a href="/profile"
-                class="text-sm text-neutral-400 hover:text-white transition flex items-center justify-center space-x-1">
-                <span class="material-symbols-outlined text-base">arrow_back</span>
-                <span>Back to Profile</span>
-            </a>
-        </div>
+  <div class="bg-card-dark mt-6 rounded-xl p-8 shadow-2xl space-y-5 text-center">
+    <div class="flex flex-col items-center space-y-3">
+      <span class="material-symbols-outlined text-4xl text-primary">mail</span>
+      <h2 class="text-xl font-bold text-white">Change Email Address</h2>
+      <p class="text-sm text-neutral-400">Enter your new email address below.</p>
     </div>
+
+    <form action="/change-email/?_method=PATCH" method="POST" id="emailForm" class="space-y-4">
+      <!-- Flash alerts -->
+      <%- include('../partials/alerts') %>
+
+      <div class="relative">
+        <span
+          class="absolute left-10 top-1.5 text-[10px] uppercase text-neutral-500 font-medium tracking-wider"
+          >Current Email</span
+        >
+
+        <label for="currentEmail" class="sr-only">Current Email</label>
+        <input
+          type="email"
+          id="currentEmail"
+          name="currentEmail"
+          value="<%= user.email %>"
+          disabled
+          class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-neutral-500 placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm cursor-not-allowed"
+        />
+
+        <span
+          class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg"
+          >drafts</span
+        >
+      </div>
+
+      <div class="relative">
+        <span
+          class="absolute left-10 top-1.5 text-[10px] uppercase text-neutral-500 font-medium tracking-wider"
+          >New Email Address</span
+        >
+
+        <label for="newEmail" class="sr-only">New Email Address</label>
+        <input
+          type="email"
+          id="newEmail"
+          name="newEmail"
+          class="w-full rounded-lg border-0 bg-black/40 pt-5 pb-2.5 pl-10 pr-4 text-white placeholder:text-neutral-500 shadow-sm ring-1 ring-inset ring-green-700/50 sm:text-sm focus:ring-primary"
+        />
+
+        <span
+          class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-lg"
+          >alternate_email</span
+        >
+        <p class="mt-1 text-xs text-red-500 hidden" id="emailErr"></p>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full px-5 py-3 rounded-lg bg-primary text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20 mt-6"
+      >
+        Update Email
+      </button>
+    </form>
+
+    <div class="pt-2">
+      <a
+        href="/profile"
+        class="text-sm text-neutral-400 hover:text-white transition flex items-center justify-center space-x-1"
+      >
+        <span class="material-symbols-outlined text-base">arrow_back</span>
+        <span>Back to Profile</span>
+      </a>
+    </div>
+  </div>
 </div>
 
 <script>
+  const emailForm = document.getElementById('emailForm');
+  emailForm.addEventListener('click', (e) => {
+    let valid = true;
 
-    const emailForm = document.getElementById("emailForm");
-    emailForm.addEventListener(('click'), (e) => {
-        let valid = true;
+    const email = document.getElementById('newEmail');
+    const emailErr = document.getElementById('emailErr');
 
-        const email = document.getElementById("newEmail");
-        const emailErr = document.getElementById("emailErr");
+    emailErr.classList.add('hidden');
 
-        emailErr.classList.add("hidden");
+    emailErr.textContent = '';
 
-        emailErr.textContent = "";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        // EMAIL VALIDATION
-        if (email.value.trim() === "") {
-            emailErr.textContent = "Email is required";
-            emailErr.classList.remove("hidden");
-            valid = false;
-        } else if (!emailRegex.test(email.value.trim())) {
-            emailErr.textContent = "Enter a valid email address";
-            emailErr.classList.remove("hidden");
-            valid = false;
-        }
-        if (!valid) {
-            e.preventDefault();
-        }
-    })
+    // EMAIL VALIDATION
+    if (email.value.trim() === '') {
+      emailErr.textContent = 'Email is required';
+      emailErr.classList.remove('hidden');
+      valid = false;
+    } else if (!emailRegex.test(email.value.trim())) {
+      emailErr.textContent = 'Enter a valid email address';
+      emailErr.classList.remove('hidden');
+      valid = false;
+    }
+    if (!valid) {
+      e.preventDefault();
+    }
+  });
 </script>

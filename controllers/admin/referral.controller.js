@@ -1,15 +1,15 @@
-import asyncHandler from "../../utils/asyncHandler.js";
+import asyncHandler from '../../utils/asyncHandler.js';
 
-import User from "../../models/user.model.js";
-import Wallet from "../../models/wallet.model.js";
+import User from '../../models/user.model.js';
+import Wallet from '../../models/wallet.model.js';
 
 export const getReferralManagement = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
   const skip = (page - 1) * limit;
 
-  const searchQuery = req.query.search || "";
-  const statusFilter = req.query.status || "";
+  const searchQuery = req.query.search || '';
+  const statusFilter = req.query.status || '';
 
   let filter = {
     referredBy: { $ne: null },
@@ -18,15 +18,12 @@ export const getReferralManagement = asyncHandler(async (req, res) => {
 
   if (searchQuery) {
     filter.$or = [
-      { name: { $regex: searchQuery, $options: "i" } },
-      { email: { $regex: searchQuery, $options: "i" } },
+      { name: { $regex: searchQuery, $options: 'i' } },
+      { email: { $regex: searchQuery, $options: 'i' } },
     ];
   }
 
-  const referredUsers = await User.find(filter)
-    .skip(skip)
-    .limit(limit)
-    .sort({ createdAt: -1 });
+  const referredUsers = await User.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 });
 
   const totalCount = await User.countDocuments(filter);
 
@@ -43,8 +40,7 @@ export const getReferralManagement = asyncHandler(async (req, res) => {
     const rewardAmount = 200;
     totalRewardAmount += rewardAmount;
 
-    let status = "Paid";
-
+    let status = 'Paid';
 
     referrals.push({
       referrerName: referrer.name,
@@ -56,8 +52,8 @@ export const getReferralManagement = asyncHandler(async (req, res) => {
     });
   }
 
-  res.render("admin/referral", {
-    layout: "layouts/admin",
+  res.render('admin/referral', {
+    layout: 'layouts/admin',
     referrals,
     totalReferrals: totalCount,
     totalRewardAmount,

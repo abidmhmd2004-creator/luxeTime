@@ -1,38 +1,38 @@
-import Otp from "../../models/otp.model.js";
-import User from "../../models/user.model.js";
-import Wallet from "../../models/wallet.model.js";
-import crypto from "crypto";
-import { createAndSendOtp } from "../../utils/otp.util.js";
-import asyncHandler from "../../utils/asyncHandler.js";
+import Otp from '../../models/otp.model.js';
+import User from '../../models/user.model.js';
+import Wallet from '../../models/wallet.model.js';
+import crypto from 'crypto';
+import { createAndSendOtp } from '../../utils/otp.util.js';
+import asyncHandler from '../../utils/asyncHandler.js';
 
 export const verifyOtp = asyncHandler(async (req, res) => {
   const { otp } = req.body;
   if (!req.session.otp) {
-    return res.send("Session expired");
+    return res.send('Session expired');
   }
 
   const { userId, purpose } = req.session.otp;
 
-  const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
+  const hashedOtp = crypto.createHash('sha256').update(otp).digest('hex');
 
   const otpRecord = await Otp.findOne({ userId, otp: hashedOtp });
 
   if (!otpRecord) {
-    req.flash("error", "Invalid OTP");
-    return res.redirect("/verify-otp");
+    req.flash('error', 'Invalid OTP');
+    return res.redirect('/verify-otp');
   }
   if (otpRecord.otp !== hashedOtp) {
-    req.flash("error", "Incorrect OTP");
-    return res.redirect("/verify-otp");
+    req.flash('error', 'Incorrect OTP');
+    return res.redirect('/verify-otp');
   }
 
   if (otpRecord.expiresAt < new Date()) {
     await Otp.deleteMany({ userId });
-    req.flash("error", "OTP expired");
-    return res.redirect("/verify-otp");
+    req.flash('error', 'OTP expired');
+    return res.redirect('/verify-otp');
   }
 
-  if (purpose === "signup") {
+  if (purpose === 'signup') {
     await User.findByIdAndUpdate(userId, {
       isVerified: true,
     });
@@ -48,13 +48,13 @@ export const verifyOtp = asyncHandler(async (req, res) => {
             $inc: { balance: 200 },
             $push: {
               transactions: {
-                type: "CREDIT",
+                type: 'CREDIT',
                 amount: 200,
-                reason: "Referral Bonus",
+                reason: 'Referral Bonus',
               },
             },
           },
-          { upsert: true, new: true },
+          { upsert: true, new: true }
         );
 
         const newUserWaller = await Wallet.findOneAndUpdate(
@@ -63,13 +63,13 @@ export const verifyOtp = asyncHandler(async (req, res) => {
             $inc: { balance: 100 },
             $push: {
               transactions: {
-                type: "CREDIT",
+                type: 'CREDIT',
                 amount: 100,
-                reason: "Welcome Referral Bonus",
+                reason: 'Welcome Referral Bonus',
               },
             },
           },
-          { upsert: true, new: true },
+          { upsert: true, new: true }
         );
       }
     }
@@ -83,25 +83,25 @@ export const verifyOtp = asyncHandler(async (req, res) => {
     await Otp.deleteMany({ userId });
     delete req.session.otp;
 
-    return res.redirect("/");
+    return res.redirect('/');
   }
-  if (purpose === "forgot-password") {
+  if (purpose === 'forgot-password') {
     req.session.resetUserId = userId;
     await Otp.deleteMany({ userId });
     delete req.session.otp;
 
-    return res.redirect("/reset-password");
+    return res.redirect('/reset-password');
   }
 
-  if (purpose === "change-email") {
+  if (purpose === 'change-email') {
     await User.findByIdAndUpdate(userId, {
       email: req.session.otp.email,
     });
     delete req.session.otp;
-    return res.redirect("/profile");
+    return res.redirect('/profile');
   }
 
-  res.redirect("/login");
+  res.redirect('/login');
 });
 
 export const resentOtp = async (req, res) => {
@@ -109,7 +109,7 @@ export const resentOtp = async (req, res) => {
     if (!req.session.otp) {
       return res.status(401).json({
         success: false,
-        message: "Session expired. Please try again.",
+        message: 'Session expired. Please try again.',
       });
     }
     const { userId, email, purpose } = req.session.otp;
@@ -119,14 +119,14 @@ export const resentOtp = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found",
+        message: 'User not found',
       });
     }
 
     if (!email) {
       return res.status(404).json({
         success: false,
-        message: "User email not found",
+        message: 'User email not found',
       });
     }
 
@@ -134,20 +134,20 @@ export const resentOtp = async (req, res) => {
 
     return res.json({
       success: true,
-      message: "OTP resent successfully",
+      message: 'OTP resent successfully',
     });
   } catch (err) {
-    if (err.message === "otp-cooldown") {
+    if (err.message === 'otp-cooldown') {
       return res.status(200).json({
         success: false,
-        message: "Please wait 60 seconds before resending OTP",
+        message: 'Please wait 60 seconds before resending OTP',
       });
     }
 
-    console.error("Resend OTP error:", err);
+    console.error('Resend OTP error:', err);
     return res.status(500).json({
       success: false,
-      message: "Unable to resend OTP. Please try again later.",
+      message: 'Unable to resend OTP. Please try again later.',
     });
   }
 };

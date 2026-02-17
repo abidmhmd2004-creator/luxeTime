@@ -1,257 +1,226 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
 
 <main class="flex-grow">
-
-    <!-- Hero Section -->
-    <section class="relative mx-auto max-w-[1440px] px-4 py-6 md:px-10">
-        <div class="overflow-hidden rounded-3xl bg-[#1c2e24]">
-            <div class="relative flex min-h-[500px] md:min-h-[600px] flex-col justify-end bg-cover bg-center p-8 md:p-16 lg:items-start"
-                data-alt="Close up of a luxury wrist watch on dark background"
-                style='background-image: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%), url("images/Cinematic\ Watch.jfif");'>
-                <div class="relative z-10 flex flex-col gap-4 max-w-2xl animate-fade-in-up">
-                    <span
-                        class="inline-block w-fit rounded-full bg-primary/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm border border-primary/20">New
-                        Collection</span>
-                    <h1 class="text-4xl font-black leading-tight tracking-tight text-white md:text-6xl lg:text-7xl">
-                        Find Your Perfect <span class="text-primary">Timepiece</span>
-                    </h1>
-                    <p class="max-w-md text-lg text-gray-300 md:text-xl">
-                        Discover luxury craftsmanship combined with modern aesthetics. Elevate your style today.
-                    </p>
-                    <div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-400 font-medium">
-                        <span class="flex items-center gap-1"><span
-                                class="material-symbols-outlined text-primary text-[18px]">local_shipping</span> Free
-                            Shipping</span>
-                        <span class="hidden md:inline">·</span>
-                        <span class="flex items-center gap-1"><span
-                                class="material-symbols-outlined text-primary text-[18px]">replay</span> 7-Day
-                            Returns</span>
-                        <span class="hidden md:inline">·</span>
-                        <span class="flex items-center gap-1"><span
-                                class="material-symbols-outlined text-primary text-[18px]">verified</span> 100%
-                            Authentic</span>
-                    </div>
-                    <div class="mt-6 flex flex-wrap gap-4">
-                        <button onclick="window.location.href='shop'"
-                            class="rounded-full bg-primary px-8 py-4 text-base font-bold text-black hover:bg-white transition-colors duration-300 shadow-[0_0_20px_rgba(56,224,123,0.3)]">
-                            Shop Watches
-                        </button>
-                        <!-- <button
+  <!-- Hero Section -->
+  <section class="relative mx-auto max-w-[1440px] px-4 py-6 md:px-10">
+    <div class="overflow-hidden rounded-3xl bg-[#1c2e24]">
+      <div
+        class="relative flex min-h-[500px] md:min-h-[600px] flex-col justify-end bg-cover bg-center p-8 md:p-16 lg:items-start"
+        data-alt="Close up of a luxury wrist watch on dark background"
+        style="
+          background-image: linear-gradient(
+              to right,
+              rgba(0, 0, 0, 0.8) 0%,
+              rgba(0, 0, 0, 0.3) 100%
+            ),
+            url('/images/Cinematic-Watch.jfif');
+        "
+      >
+        <div class="relative z-10 flex flex-col gap-4 max-w-2xl animate-fade-in-up">
+          <span
+            class="inline-block w-fit rounded-full bg-primary/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm border border-primary/20"
+            >New Collection</span
+          >
+          <h1
+            class="text-4xl font-black leading-tight tracking-tight text-white md:text-6xl lg:text-7xl"
+          >
+            Find Your Perfect <span class="text-primary">Timepiece</span>
+          </h1>
+          <p class="max-w-md text-lg text-gray-300 md:text-xl">
+            Discover luxury craftsmanship combined with modern aesthetics. Elevate your style today.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-4 text-sm text-gray-400 font-medium">
+            <span class="flex items-center gap-1"
+              ><span class="material-symbols-outlined text-primary text-[18px]"
+                >local_shipping</span
+              >
+              Free Shipping</span
+            >
+            <span class="hidden md:inline">·</span>
+            <span class="flex items-center gap-1"
+              ><span class="material-symbols-outlined text-primary text-[18px]">replay</span> 7-Day
+              Returns</span
+            >
+            <span class="hidden md:inline">·</span>
+            <span class="flex items-center gap-1"
+              ><span class="material-symbols-outlined text-primary text-[18px]">verified</span> 100%
+              Authentic</span
+            >
+          </div>
+          <div class="mt-6 flex flex-wrap gap-4">
+            <button
+              onclick="window.location.href='shop'"
+              class="rounded-full bg-primary px-8 py-4 text-base font-bold text-black hover:bg-white transition-colors duration-300 shadow-[0_0_20px_rgba(56,224,123,0.3)]"
+            >
+              Shop Watches
+            </button>
+            <!-- <button
                             class="rounded-full border border-white/20 bg-white/10 px-8 py-4 text-base font-bold text-white backdrop-blur-sm hover:bg-white/20 transition-colors">
                             View Lookbook
                         </button> -->
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </section>
-    <!-- Featured Collections (Cards with horizontal layout) -->
-   <section class="mx-auto max-w-[1440px] px-4 py-16 md:px-10">
+      </div>
+    </div>
+  </section>
+  <!-- Featured Collections (Cards with horizontal layout) -->
+  <section class="mx-auto max-w-[1440px] px-4 py-16 md:px-10">
     <h2 class="mb-8 text-3xl font-bold text-white md:text-4xl">Browse by Category</h2>
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <% categories.forEach(cat=> { %>
 
-        <% categories.forEach(cat => { %>
+      <div
+        class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12"
+      >
+        <!-- Background Image -->
+        <div
+          class="absolute inset-0 bg-cover bg-center opacity-60"
+          style="
+            background-image: url('<%= cat.name === 'Men' ? '/images/banner-watch.jfif' : '/images/banner-watch1.jfif' %>')"
+        ></div>
 
-            <div class="relative flex min-h-[300px] flex-col justify-center overflow-hidden rounded-3xl bg-[#1c2e24] p-8 md:p-12">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
 
-                <!-- Background Image -->
-                <div class="absolute inset-0 bg-cover bg-center opacity-60"
-                     style='background-image: url("<%= cat.name === "Men" ? "/images/banner watch.jfif" : "/images/banner watch (1).jfif" %>");'>
-                </div>
+        <div class="relative z-10 max-w-sm">
+          <h3 class="text-2xl font-bold text-white md:text-3xl">Shop By <%= cat.name %></h3>
 
-                <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
+          <p class="mt-2 text-gray-300">Discover our exclusive <%= cat.name %> collection.</p>
 
-                <div class="relative z-10 max-w-sm">
-                    <h3 class="text-2xl font-bold text-white md:text-3xl">
-                        Shop By <%= cat.name %>
-                    </h3>
-
-                    <p class="mt-2 text-gray-300">
-                        Discover our exclusive <%= cat.name %> collection.
-                    </p>
-
-                    <!-- IMPORTANT PART -->
-                    <a href="/shop?category=<%= cat._id %>"
-                       class="mt-6 inline-flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors">
-
-                        Explore Collection
-                        <span class="material-symbols-outlined text-base">arrow_forward</span>
-
-                    </a>
-                </div>
-
-            </div>
-
-        <% }) %>
-
-    </div>
-</section>
-    <!-- <section class="mx-auto max-w-[1440px] px-4 py-12 md:px-10">
-        <div class="mb-8 flex items-end justify-between">
-            <div>
-                <h2 class="text-3xl font-bold text-white md:text-4xl">Browse By Brands</h2>
-                <p class="mt-2 text-gray-400">Curated collections for every occasion</p>
-            </div>
-            <a class="hidden text-sm font-bold text-primary hover:text-white md:block" href="#">View All Brands
-                -&gt;</a>
-        </div> -->
-    <!-- <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5"> -->
-    <!-- Category Item 1 -->
-    <!-- <a class="group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-2xl bg-[#1c2e24]"
-                href="#">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    data-alt="Man wearing a luxury silver watch"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCyIBETJQo5_lqU4_xcQerlJCwTGWuk4A4BqU4w7TuaMcy8LesQ2YxlL1gPMP8L878qNL7P8Scswz4WIMQj2ZUDOE2_FW_31bQ9iOr7vkBbZZf3QTG7OI4tgW04MvCNB1NdXp1RLczSHgZi1O6jycoL5ahVi1xJjk8ntFGX4KqkwosXZNZaXjrv55rW0DtfHfCHR-VwGTLqnz_mSseAPOhegatTOOEoKRDsA3Y6gK-x5BrXnFKcPYKfbGsuDkbeM412c_Jj55J9u7kh");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Fastrak</h3>
-                </div>
-            </a> -->
-    <!-- Category Item 2 -->
-    <!-- <a class="group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-2xl bg-[#1c2e24]"
-                href="#">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    data-alt="Woman wearing elegant gold watch"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCDRRX9XZ9b3iQw0DYFswhJ83MlslVHzLRdm31KArXvJtokF4wnfo8ALSNG2AGRVsnEe0IGHubL-freKyMXiq1dnP4pCZMgzJ7FHiZJq28ZtFf92R6KqlWFVEx3KM-isaSt_TGT8IqyI_OGJJ2injr7nvXpeflY4Rg7qklt-950h4OmS-ZrwhNepZ0iAwmZ_nQMOMlmW0v6JBliWmbStk9yDR_Xz4ynUzK7VAOrIlqPQ8KDNspuslY9WZ8G3C54qjhaPEtnJhCdG_lQ");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Titan</h3>
-                </div>
-            </a> -->
-    <!-- Category Item 3 -->
-    <!-- <a class="group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-2xl bg-[#1c2e24]"
-                href="#">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    data-alt="Modern smartwatch with digital display"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDVzme7J0urH2HDG-Oypum_Jh_0hgHIlo9vVgzToyg6QrGY0XkzDbxWdTEGKr8hK-xO0I6KmhP05J-89MWMUh0n8mMc2AJKoRaer9OvX_5LjBg8MaNlGVYIWK1YtM1V2rE6472o4f5EPECfb8_JNj24tCL-89ll8y7hrITPj5oJE0exbEKNrGYmBuqL-zXtl0nQp8h2oBFgRfI8eO5kig_VTSWogVHPC-hSCLz9X91zNpljtuIfU_yLX2w3yUZHE0VPtZLJQTnmKQyo");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Apple</h3>
-                </div>
-            </a> -->
-    <!-- Category Item 4 -->
-    <!-- <a class="group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-2xl bg-[#1c2e24]"
-                href="#">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    data-alt="Luxury mechanical watch movement close up"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCEKV-G5tj1zesj0z2fRTklK8I9sIlWjgzN_E51jU1oC6XYoj3B8jRBBUhVK4U_0-1JzNCN_hry4gp7nTU2-dHjebCvVpjW0rlUaoZ-nXbMX00XGJPq9fSgh1Bw-I0I_EOKeIqmNxb3Fv7cwhwLdeevXygtUmlWkJscYMdUu8nEArqzH_9fOTV39-ELOpDHcEUCTaM8WFhpqbhv22o-qREx6Kd8bHkji9tehyrKzlQ23vn37f_1I5FcdVzR9TrqkGzaryAQlD_-niqR");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">Rolex</h3>
-                </div>
-            </a> -->
-    <!-- Category Item 5 -->
-    <!-- <a class="group relative flex aspect-[3/4] flex-col justify-end overflow-hidden rounded-2xl bg-[#1c2e24]"
-                href="#">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    data-alt="Watch collection boxes stacked"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDEbBNCXC9NARofqFrCEaKl3kOmZ5vA7Ssanar9jZzRsrSUY2Z3i5H07oyrl0cnTPqm5VTi8mEdAyj2xY2N_ZGciZtgjnDG894FVBqLFsk6ZUB6pxUJ8EPS9sPmk8A8GBpoenPjyLy9RD2GLrI52au_yhhD8nL9t5EEj1c1VYywYJevkSUsK9SJtNPhRbyOyhL_5aL2nIWfbydYaq4om2e6EsL8v-_skPSIOwFeKQqSofRPJ1R5eIq3Yyi3iD6I47sB5qw0T-X6W7Qr");'>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                <div class="relative p-4">
-                    <h3 class="text-lg font-bold text-white">More</h3>
-                </div>
-            </a>
-        </div>
-    </section> -->
-    <!-- Best Sellers / Trending -->
-<section class="bg-[#1c2e24]/30 py-16">
-  <div class="mx-auto max-w-[1440px] px-4 md:px-10">
-    
-    <div class="mb-10 flex items-end justify-between">
-      <div class="text-left">
-        <!-- <span class="text-sm font-bold uppercase tracking-widest text-[#22c55e]">Fresh Drops</span> -->
-        <h2 class="mt-2 text-3xl font-bold text-white md:text-4xl">New Arrivals</h2>
-      </div>
-      <a href="/shop" class="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#38e07b] hover:text-white transition-colors duration-300">
-        View All Products 
-        <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
-      </a>
-    </div>
-
-    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-      <% newArrivals.forEach(product => { 
-          const v = product.variant;
-          const image = v?.images?.[0]?.url || "/images/placeholder.png"; 
-      %>
-      <div class="group flex flex-col rounded-3xl bg-[#0a0a0a] p-4 border border-white/5 hover:border-[#22c55e]/30 transition-all duration-300 relative">
-        
-        <a href="/product/<%= product._id %>" class="flex flex-col flex-1 z-10">
-          <div class="relative aspect-square overflow-hidden rounded-2xl bg-[#111111]">
-            <img src="<%= image %>" alt="<%= product.name %>" class="h-full w-full object-cover group-hover:scale-105 transition duration-500">
-          </div>
-          <div class="mt-4 flex flex-col flex-1">
-            <h3 class="text-lg font-bold text-white truncate"><%= product.name %></h3>
-            <p class="text-sm text-gray-400"><%= product.category?.name %></p>
-          </div>
-        </a>
-
-        <div class="mt-auto pt-4 z-20">
-          <div class="mb-4 text-center"> <% if(v.appliedOffer > 0){ %>
-              <span class="text-xs line-through text-gray-500">₹<%= v.basePrice.toLocaleString('en-IN') %></span>
-            <% } %>
-            <div class="text-xl font-bold text-[#22c55e]">₹<%= v.finalPrice.toLocaleString('en-IN') %></div>
-          </div>
-
-          <div class="z-20">
-            <a href="/product/<%= product._id %>" 
-               class="block w-full py-2.5 bg-zinc-900 border border-white/10 text-[#38e07b] text-center text-[10px] font-bold rounded-xl hover:bg-[#38e07b] hover:text-black hover:border-[#38e07b] transition-all duration-300 uppercase tracking-widest">
-                Discover More
-            </a>
-          </div>
+          <!-- IMPORTANT PART -->
+          <a
+            href="/shop?category=<%= cat._id %>"
+            class="mt-6 inline-flex items-center gap-2 text-sm font-bold uppercase text-primary hover:text-white transition-colors"
+          >
+            Explore Collection
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </a>
         </div>
       </div>
+
       <% }) %>
     </div>
-  </div>
-</section>
-    <!-- Benefits Strip -->
-    <section class="mb-20  border-y border-[#29382f] bg-[#111714]">
-        <div class="mx-auto flex max-w-[1440px] flex-wrap justify-center gap-8 px-4 py-12 md:justify-between md:px-10">
-            <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary">
-                    <span class="material-symbols-outlined text-[24px]">local_shipping</span>
-                </div>
-                <div>
-                    <h4 class="font-bold text-white">Free Shipping</h4>
-                    <p class="text-sm text-gray-400">On all orders over ₹200</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary">
-                    <span class="material-symbols-outlined text-[24px]">assignment_return</span>
-                </div>
-                <div>
-                    <h4 class="font-bold text-white">Easy Returns</h4>
-                    <p class="text-sm text-gray-400">30-day money back guarantee</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary">
-                    <span class="material-symbols-outlined text-[24px]">lock</span>
-                </div>
-                <div>
-                    <h4 class="font-bold text-white">Secure Checkout</h4>
-                    <p class="text-sm text-gray-400">100% protected payments</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary">
-                    <span class="material-symbols-outlined text-[24px]">verified_user</span>
-                </div>
-                <div>
-                    <h4 class="font-bold text-white">Authentic Quality</h4>
-                    <p class="text-sm text-gray-400">Certified premium materials</p>
-                </div>
-            </div>
+  </section>
+  <section class="bg-[#1c2e24]/30 py-16">
+    <div class="mx-auto max-w-[1440px] px-4 md:px-10">
+      <div class="mb-10 flex items-end justify-between">
+        <div class="text-left">
+          <!-- <span class="text-sm font-bold uppercase tracking-widest text-[#22c55e]">Fresh Drops</span> -->
+          <h2 class="mt-2 text-3xl font-bold text-white md:text-4xl">New Arrivals</h2>
         </div>
-    </section>
-    <!-- Newsletter
+        <a
+          href="/shop"
+          class="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#38e07b] hover:text-white transition-colors duration-300"
+        >
+          View All Products
+          <span
+            class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1"
+            >arrow_forward</span
+          >
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <% newArrivals.forEach(product=> { const v = product.variant; const image =
+        v?.images?.[0]?.url || "/images/placeholder.png"; %>
+        <div
+          class="group flex flex-col rounded-3xl bg-[#0a0a0a] p-4 border border-white/5 hover:border-[#22c55e]/30 transition-all duration-300 relative"
+        >
+          <a href="/product/<%= product._id %>" class="flex flex-col flex-1 z-10">
+            <div class="relative aspect-square overflow-hidden rounded-2xl bg-[#111111]">
+              <img
+                src="<%= image %>"
+                alt="<%= product.name %>"
+                class="h-full w-full object-cover group-hover:scale-105 transition duration-500"
+              />
+            </div>
+            <div class="mt-4 flex flex-col flex-1">
+              <h3 class="text-lg font-bold text-white truncate"><%= product.name %></h3>
+              <p class="text-sm text-gray-400"><%= product.category?.name %></p>
+            </div>
+          </a>
+
+          <div class="mt-auto pt-4 z-20">
+            <div class="mb-4 text-center">
+              <% if(v.appliedOffer> 0){ %>
+              <span class="text-xs line-through text-gray-500"
+                >₹<%= v.basePrice.toLocaleString('en-IN') %></span
+              >
+              <% } %>
+              <div class="text-xl font-bold text-[#22c55e]">
+                ₹<%= v.finalPrice.toLocaleString('en-IN') %>
+              </div>
+            </div>
+
+            <div class="z-20">
+              <a
+                href="/product/<%= product._id %>"
+                class="block w-full py-2.5 bg-zinc-900 border border-white/10 text-[#38e07b] text-center text-[10px] font-bold rounded-xl hover:bg-[#38e07b] hover:text-black hover:border-[#38e07b] transition-all duration-300 uppercase tracking-widest"
+              >
+                Discover More
+              </a>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+  <!-- Benefits Strip -->
+  <section class="mb-20 border-y border-[#29382f] bg-[#111714]">
+    <div
+      class="mx-auto flex max-w-[1440px] flex-wrap justify-center gap-8 px-4 py-12 md:justify-between md:px-10"
+    >
+      <div class="flex items-center gap-4">
+        <div
+          class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary"
+        >
+          <span class="material-symbols-outlined text-[24px]">local_shipping</span>
+        </div>
+        <div>
+          <h4 class="font-bold text-white">Free Shipping</h4>
+          <p class="text-sm text-gray-400">On all orders over ₹200</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div
+          class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary"
+        >
+          <span class="material-symbols-outlined text-[24px]">assignment_return</span>
+        </div>
+        <div>
+          <h4 class="font-bold text-white">Easy Returns</h4>
+          <p class="text-sm text-gray-400">30-day money back guarantee</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div
+          class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary"
+        >
+          <span class="material-symbols-outlined text-[24px]">lock</span>
+        </div>
+        <div>
+          <h4 class="font-bold text-white">Secure Checkout</h4>
+          <p class="text-sm text-gray-400">100% protected payments</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div
+          class="flex h-12 w-12 items-center justify-center rounded-full bg-[#1c2e24] text-primary"
+        >
+          <span class="material-symbols-outlined text-[24px]">verified_user</span>
+        </div>
+        <div>
+          <h4 class="font-bold text-white">Authentic Quality</h4>
+          <p class="text-sm text-gray-400">Certified premium materials</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Newsletter
     <section class="mx-auto max-w-[1440px] px-4 py-20 md:px-10">
         <div class="relative overflow-hidden rounded-3xl bg-primary px-6 py-16 text-center md:px-12 lg:text-left">
             <div
@@ -282,63 +251,68 @@
     </section> -->
 </main>
 <footer class="border-t border-[#29382f] bg-[#0d120f] pt-16 pb-8">
-    <div class="mx-auto max-w-[1440px] px-4 md:px-10">
-        <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5 mb-16">
-            <div class="lg:col-span-2">
-                <div class="flex items-center gap-2 mb-6">
-                    <span class="material-symbols-outlined text-primary text-[28px]">watch</span>
-                    <h2 class="text-2xl font-bold text-white">LUXE TIME</h2>
-                </div>
-                <p class="max-w-xs text-gray-400">
-                    The destination for premium timepieces. We believe a watch is more than just a tool to tell time;
-                    it's a statement of legacy and style.
-                </p>
-                <div class="mt-6 flex gap-4">
-                    <a class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors"
-                        href="#">
-                        <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
-                            <path
-                                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z">
-                            </path>
-                        </svg>
-                    </a>
-                    <a class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors"
-                        href="#">
-                        <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z">
-                            </path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h4 class="mb-6 font-bold text-white">Shop</h4>
-                <ul class="flex flex-col gap-4 text-sm text-gray-400">
-                    <li><a class="hover:text-primary transition-colors" href="#">Men's Watches</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Women's Watches</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Kids Watches</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="mb-6 font-bold text-white">Support</h4>
-                <ul class="flex flex-col gap-4 text-sm text-gray-400">
-                    <li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Order Status</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Shipping &amp; Returns</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Watch Care</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="mb-6 font-bold text-white">Company</h4>
-                <ul class="flex flex-col gap-4 text-sm text-gray-400">
-                    <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Stores</a></li>
-                </ul>
-            </div>
+  <div class="mx-auto max-w-[1440px] px-4 md:px-10">
+    <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5 mb-16">
+      <div class="lg:col-span-2">
+        <div class="flex items-center gap-2 mb-6">
+          <span class="material-symbols-outlined text-primary text-[28px]">watch</span>
+          <h2 class="text-2xl font-bold text-white">LUXE TIME</h2>
         </div>
-
+        <p class="max-w-xs text-gray-400">
+          The destination for premium timepieces. We believe a watch is more than just a tool to
+          tell time; it's a statement of legacy and style.
+        </p>
+        <div class="mt-6 flex gap-4">
+          <a
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors"
+            href="#"
+          >
+            <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
+              <path
+                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
+              ></path>
+            </svg>
+          </a>
+          <a
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors"
+            href="#"
+          >
+            <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 class="mb-6 font-bold text-white">Shop</h4>
+        <ul class="flex flex-col gap-4 text-sm text-gray-400">
+          <li><a class="hover:text-primary transition-colors" href="#">Men's Watches</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Women's Watches</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Kids Watches</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mb-6 font-bold text-white">Support</h4>
+        <ul class="flex flex-col gap-4 text-sm text-gray-400">
+          <li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Order Status</a></li>
+          <li>
+            <a class="hover:text-primary transition-colors" href="#">Shipping &amp; Returns</a>
+          </li>
+          <li><a class="hover:text-primary transition-colors" href="#">Watch Care</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mb-6 font-bold text-white">Company</h4>
+        <ul class="flex flex-col gap-4 text-sm text-gray-400">
+          <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Stores</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
 </footer>

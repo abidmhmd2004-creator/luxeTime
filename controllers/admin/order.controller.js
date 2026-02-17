@@ -1,8 +1,8 @@
-import asyncHandler from "../../utils/asyncHandler.js";
-import Order from "../../models/order.model.js";
-import User from "../../models/user.model.js";
-import Variant from "../../models/variant.model.js";
-import { creditWallet } from "../../helpers/wallet.helper.js";
+import asyncHandler from '../../utils/asyncHandler.js';
+import Order from '../../models/order.model.js';
+import User from '../../models/user.model.js';
+import Variant from '../../models/variant.model.js';
+import { creditWallet } from '../../helpers/wallet.helper.js';
 
 export const getOrdersPage = asyncHandler(async (req, res) => {
   const { search, orderStatus, paymentStatus, sort } = req.query;
@@ -13,34 +13,34 @@ export const getOrdersPage = asyncHandler(async (req, res) => {
 
   const filter = {};
 
-  if (search && search.trim() !== "") {
+  if (search && search.trim() !== '') {
     const users = await User.find({
-      name: { $regex: search, $options: "i" },
-    }).select("_id");
+      name: { $regex: search, $options: 'i' },
+    }).select('_id');
 
     filter.$or = [
-      { orderId: { $regex: search, $options: "i" } },
+      { orderId: { $regex: search, $options: 'i' } },
       { user: { $in: users.map((u) => u._id) } },
     ];
   }
 
-  if (orderStatus && orderStatus !== "ALL") {
+  if (orderStatus && orderStatus !== 'ALL') {
     filter.orderStatus = orderStatus;
   }
 
-  if (paymentStatus && paymentStatus !== "ALL") {
+  if (paymentStatus && paymentStatus !== 'ALL') {
     filter.paymentStatus = paymentStatus;
   }
 
   let sortQuery = { createdAt: -1 };
 
-  if (sort === "oldest") {
+  if (sort === 'oldest') {
     sortQuery = { createdAt: 1 };
   }
-  if (sort === "amount_high") {
+  if (sort === 'amount_high') {
     sortQuery = { totalAmount: -1 };
   }
-  if (sort === "amount_low") {
+  if (sort === 'amount_low') {
     sortQuery = { totalAmount: 1 };
   }
 
@@ -48,23 +48,23 @@ export const getOrdersPage = asyncHandler(async (req, res) => {
   const totalPages = Math.ceil(totalOrders / limit);
 
   const orders = await Order.find(filter)
-    .populate("user", "name email")
-    .populate("items.product", "name")
-    .populate("items.variant", "images")
+    .populate('user', 'name email')
+    .populate('items.product', 'name')
+    .populate('items.variant', 'images')
     .sort(sortQuery)
     .skip(skip)
     .limit(limit);
 
-  res.render("admin/order-managment", {
-    layout: "layouts/admin",
+  res.render('admin/order-managment', {
+    layout: 'layouts/admin',
     orders,
     currentPage: page,
     totalPages,
     query: {
-      search: search || "",
-      orderStatus: orderStatus || "ALL",
-      paymentStatus: paymentStatus || "ALL",
-      sort: sort || "newest",
+      search: search || '',
+      orderStatus: orderStatus || 'ALL',
+      paymentStatus: paymentStatus || 'ALL',
+      sort: sort || 'newest',
     },
   });
 });
@@ -73,13 +73,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
 
-  const allowedStatuses = [
-    "PENIDNG",
-    "CONFIRMED",
-    "SHIPPED",
-    "DELIVERED",
-    "CANCELLED",
-  ];
+  const allowedStatuses = ['PENIDNG', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
   if (!allowedStatuses.includes(status)) {
     return res.status(400).json({ success: false });
@@ -91,16 +85,16 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
     return res.status(404).json({ success: false });
   }
 
-  if (order.orderStatus === "DELIVERED" || order.orderStatus === "CANCELLED") {
+  if (order.orderStatus === 'DELIVERED' || order.orderStatus === 'CANCELLED') {
     return res.status(400).json({ success: false });
   }
 
   order.orderStatus = status;
 
-  if (status == "DELIVERED") {
+  if (status == 'DELIVERED') {
     order.deliveredAt = new Date();
-    if (order.paymentMethod === "COD" && order.paymentStatus !== "PAID") {
-      order.paymentStatus = "PAID";
+    if (order.paymentMethod === 'COD' && order.paymentStatus !== 'PAID') {
+      order.paymentStatus = 'PAID';
     }
   }
   await order.save();
@@ -112,16 +106,16 @@ export const getOrderDetailsPage = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
 
   const order = await Order.findById(orderId)
-    .populate("user", "name email phone")
-    .populate("items.product", "name")
-    .populate("items.variant", "color images");
+    .populate('user', 'name email phone')
+    .populate('items.product', 'name')
+    .populate('items.variant', 'color images');
 
   if (!order) {
-    return res.redirect("/admin/orders");
+    return res.redirect('/admin/orders');
   }
 
-  res.render("admin/order-details", {
-    layout: "layouts/admin",
+  res.render('admin/order-details', {
+    layout: 'layouts/admin',
     order,
   });
 });
@@ -133,8 +127,8 @@ export const updateReturnStatus = asyncHandler(async (req, res) => {
   if (!order) {
     return res.status(404).json({ success: false });
   }
-  const isApprove = action === "APPROVED";
-  const newItemStatus = isApprove ? "RETURNED" : "RETURN_REJECTED";
+  const isApprove = action === 'APPROVED';
+  const newItemStatus = isApprove ? 'RETURNED' : 'RETURN_REJECTED';
 
   if (itemId) {
     const item = order.items.id(itemId);
@@ -149,7 +143,7 @@ export const updateReturnStatus = asyncHandler(async (req, res) => {
         {
           $inc: { stock: item.quantity },
         },
-        { new: true },
+        { new: true }
       );
 
       const itemTotal = item.price * item.quantity;
@@ -159,13 +153,13 @@ export const updateReturnStatus = asyncHandler(async (req, res) => {
       await creditWallet({
         userId: order.user,
         amount: refundAmount,
-        reason: "Return approved refund",
+        reason: 'Return approved refund',
         orderId: order._id,
       });
     }
   } else {
     for (const item of order.items) {
-      if (item.itemStatus === "RETURN_REQUESTED") {
+      if (item.itemStatus === 'RETURN_REQUESTED') {
         item.itemStatus = newItemStatus;
 
         if (itemId && isApprove) {
@@ -177,24 +171,22 @@ export const updateReturnStatus = asyncHandler(async (req, res) => {
     }
   }
 
-  const activeReturns = order.items.some(
-    (i) => i.itemStatus === "RETURN_REQUESTED",
-  );
-  const allReturned = order.items.every((i) => i.itemStatus === "RETURNED");
+  const activeReturns = order.items.some((i) => i.itemStatus === 'RETURN_REQUESTED');
+  const allReturned = order.items.every((i) => i.itemStatus === 'RETURNED');
 
   if (!itemId && allReturned) {
-    order.orderStatus = "RETURNED";
+    order.orderStatus = 'RETURNED';
 
     const refundAmount = order.totalAmount;
 
     await creditWallet({
       userId: order.user,
       amount: refundAmount,
-      reason: "Full order return refund",
+      reason: 'Full order return refund',
       orderId: order._id,
     });
   } else if (!activeReturns) {
-    order.orderStatus = "DELIVERED";
+    order.orderStatus = 'DELIVERED';
   }
   await order.save();
 

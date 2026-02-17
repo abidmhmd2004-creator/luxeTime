@@ -1,410 +1,490 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  rel="stylesheet"
+/>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-    /* Custom style for the date picker to make the entire input clickable */
-    input[type="date"]::-webkit-calendar-picker-indicator {
-        background: transparent;
-        bottom: 0;
-        color: transparent;
-        cursor: pointer;
-        height: auto;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: auto;
-    }
+  /* Custom style for the date picker to make the entire input clickable */
+  input[type='date']::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+  }
 
-    #offerExpiry {
-        color-scheme: dark;
-    }
+  #offerExpiry {
+    color-scheme: dark;
+  }
 </style>
 
 <%- include('../partials/adminSidebar') %>
 
-    <main class="flex-1 p-8 overflow-y-auto bg-[#0d0f0d] min-h-screen">
-        <div class="flex items-center space-x-2 text-xs text-gray-500 mb-2">
-            <i class="fa-solid fa-house"></i> <span>/ Categories</span>
-        </div>
+<main class="flex-1 p-8 overflow-y-auto bg-[#0d0f0d] min-h-screen">
+  <div class="flex items-center space-x-2 text-xs text-gray-500 mb-2">
+    <i class="fa-solid fa-house"></i> <span>/ Categories</span>
+  </div>
 
-        <h2 class="text-3xl font-bold text-white tracking-tight">Watch Categories</h2>
-        <p class="text-sm text-gray-500 mb-8">Manage categories by gender.</p>
+  <h2 class="text-3xl font-bold text-white tracking-tight">Watch Categories</h2>
+  <p class="text-sm text-gray-500 mb-8">Manage categories by gender.</p>
 
-        <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 overflow-hidden shadow-xl">
-            <div class="p-6 flex flex-wrap items-center justify-between gap-4">
-                <div class="relative w-full max-sm:w-full sm:max-w-sm">
-                    <span class="absolute inset-y-0 left-4 flex items-center text-gray-500">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                    </span>
-                    <input type="text" id="searchInput" placeholder="Search categories..."
-                        class="w-full bg-[#0a0a0a] border-none text-sm text-white rounded-full py-2.5 pl-10 pr-4 focus:ring-1 focus:ring-[#4ade80] outline-none">
-                </div>
+  <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 overflow-hidden shadow-xl">
+    <div class="p-6 flex flex-wrap items-center justify-between gap-4">
+      <div class="relative w-full max-sm:w-full sm:max-w-sm">
+        <span class="absolute inset-y-0 left-4 flex items-center text-gray-500">
+          <i class="fa-solid fa-magnifying-glass text-xs"></i>
+        </span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search categories..."
+          class="w-full bg-[#0a0a0a] border-none text-sm text-white rounded-full py-2.5 pl-10 pr-4 focus:ring-1 focus:ring-[#4ade80] outline-none"
+        />
+      </div>
 
-                <div class="flex items-center space-x-3">
-                    <button id="clearSearchBtn"
-                        class="bg-[#1a1a1a] text-gray-400 px-6 py-2 rounded-full text-xs font-bold hover:text-white transition">Clear</button>
-                    <button onclick="toggleModal('categoryModal', true, 'Add')"
-                        class="bg-[#4ade80] text-black px-6 py-2 rounded-full text-xs font-bold flex items-center shadow-[0_0_15px_rgba(74,222,128,0.3)] hover:scale-105 transition-all">
-                        <i class="fa-solid fa-plus mr-2"></i> Add Category
-                    </button>
-                </div>
-            </div>
-
-            <table class="w-full text-left text-xs border-collapse">
-                <thead class="bg-black/20 text-gray-500 uppercase tracking-wider border-y border-white/5">
-                    <tr>
-                        <th class="px-6 py-4 font-semibold">Category Name</th>
-                        <th class="px-6 py-4 font-semibold">Description</th>
-                        <th class="px-6 py-4 font-semibold text-center">Offer</th>
-                        <th class="px-6 py-4 font-semibold text-center">Status</th>
-                        <th class="px-6 py-4 font-semibold text-right">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-white/5">
-                    <% if(categories.length===0) { %>
-                        <tr>
-                            <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">No categories found</td>
-                        </tr>
-                        <% } %>
-                            <% categories.forEach(category=> { %>
-                                <tr class="hover:bg-white/[0.02] transition group">
-                                    <td class="px-6 py-4 text-white font-bold text-sm">
-                                        <%= category.name %>
-                                    </td>
-                                    <td class="px-6 py-4 text-gray-400 max-w-xs truncate">
-                                        <%= category.description %>
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
-                                        <% if(category.offerValue> 0) { %>
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                                                <i class="fa-solid fa-tag mr-1 text-[8px]"></i>
-                                                <%= category.offerValue %>% OFF
-                                            </span>
-                                            <% } else { %>
-                                                <span class="text-gray-600 text-[10px]">No Offer</span>
-                                                <% } %>
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
-                                        <% if (category.isListed) { %>
-                                            <span
-                                                class="bg-[#14291d] text-[#4ade80] px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-[#4ade80]/10">
-                                                Listed
-                                            </span>
-                                            <% } else { %>
-                                                <span
-                                                    class="bg-red-900/10 text-red-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-red-500/10">
-                                                    Unlisted
-                                                </span>
-                                                <% } %>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <div class="flex items-center justify-end space-x-4">
-                                            <button onclick="openEditCategory(this)"
-                                                class="text-gray-500 hover:text-white transition"
-                                                data-id="<%= category._id %>" data-name="<%= category.name %>"
-                                                data-description="<%= category.description %>"
-                                                data-offer="<%= category.offerValue %>"
-                                                data-expiry="<%= category.offerExpiry ? category.offerExpiry.toISOString().split('T')[0] : '' %>">
-                                                <i class="fa-solid fa-pen text-sm"></i>
-                                            </button>
-
-                                            <button
-                                                onclick="toggleCategory('<%= category._id %>', <%= category.isListed %>)"
-                                                class="w-8 h-4 rounded-full relative inline-flex items-center transition <%= category.isListed ? 'bg-[#4ade80]' : 'bg-gray-600' %>">
-                                                <span
-                                                    class="w-3 h-3 bg-white rounded-full absolute shadow-sm transition <%= category.isListed ? 'translate-x-4.5' : 'translate-x-0.5' %>"></span>
-                                            </button>
-
-                                            <button onclick="deleteProduct('<%= category._id %>')"
-                                                class="text-gray-500 hover:text-red-500 transition">
-                                                <i class="fa-solid fa-trash text-sm"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <% }) %>
-                </tbody>
-            </table>
-
-            <div class="p-6 flex items-center justify-center bg-black/10">
-                <nav id="paginationNav" class="flex items-center gap-3">
-                    <% if (currentPage> 1) { %>
-                        <a href="/admin/categories?page=<%= currentPage - 1 %>"
-                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all">
-                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                        </a>
-                        <% } %>
-
-                            <div class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
-                                <div
-                                    class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]">
-                                    <%= currentPage %>
-                                </div>
-                                <% if (currentPage < totalPages) { %>
-                                    <a href="/admin/categories?page=<%= totalPages %>"
-                                        class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
-                                        <%= totalPages %>
-                                    </a>
-                                    <% } %>
-                            </div>
-
-                            <% if (currentPage < totalPages) { %>
-                                <a href="/admin/categories?page=<%= currentPage + 1 %>"
-                                    class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all">
-                                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                </a>
-                                <% } %>
-                </nav>
-            </div>
-        </div>
-    </main>
-
-    <div id="categoryModal"
-        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-all duration-300">
-        <div id="modalCard"
-            class="bg-[#0f110f] border border-white/10 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl transform scale-95 transition-all duration-300">
-            <div class="flex items-center justify-between px-6 py-5 border-b border-white/5">
-                <h3 id="modalTitle" class="text-base font-bold text-white tracking-tight text-emerald-400">Add Watch
-                    Category</h3>
-                <button onclick="toggleModal('categoryModal', false)" class="text-gray-500 hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <div class="p-6 space-y-5">
-                <input type="hidden" id="categoryId">
-
-                <div>
-                    <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Category
-                        Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" id="name" placeholder="e.g. Luxury Watches"
-                        class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none transition">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Category
-                        Description</label>
-                    <textarea rows="3" name="description" id="description" placeholder="Enter category details..."
-                        class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none transition resize-none"></textarea>
-                </div>
-
-                <div class="pt-4 border-t border-white/5">
-                    <h4 class="text-xs font-bold text-gray-400 mb-4 flex items-center uppercase tracking-widest">
-                        <i class="fa-solid fa-percent mr-2 text-emerald-500"></i> Category Offer
-                    </h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label
-                                class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Offer
-                                (%)</label>
-                            <input type="number" name="offerValue" id="offerValue" placeholder="e.g. 15"
-                                class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none">
-                        </div>
-                        <div>
-                            <label
-                                class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Expiry
-                                Date <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <input type="date" id="offerExpiry" name="offerExpiry"
-                                    class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none transition cursor-pointer">
-                                <i
-                                    class="fa-solid fa-calendar-days absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="px-6 py-5 flex justify-end space-x-3 bg-black/30">
-                <button onclick="toggleModal('categoryModal', false)"
-                    class="px-6 py-2.5 rounded-full text-xs font-bold text-gray-400 hover:text-white border border-white/5 hover:bg-white/5 transition">
-                    Cancel
-                </button>
-                <button id="submitBtn"
-                    class="px-8 py-2.5 rounded-full text-xs font-bold bg-[#4ade80] text-black shadow-[0_0_15px_rgba(74,222,128,0.2)] hover:shadow-[0_0_20px_rgba(74,222,128,0.4)] transition-all">
-                    Update Category
-                </button>
-            </div>
-        </div>
+      <div class="flex items-center space-x-3">
+        <button
+          id="clearSearchBtn"
+          class="bg-[#1a1a1a] text-gray-400 px-6 py-2 rounded-full text-xs font-bold hover:text-white transition"
+        >
+          Clear
+        </button>
+        <button
+          onclick="toggleModal('categoryModal', true, 'Add')"
+          class="bg-[#4ade80] text-black px-6 py-2 rounded-full text-xs font-bold flex items-center shadow-[0_0_15px_rgba(74,222,128,0.3)] hover:scale-105 transition-all"
+        >
+          <i class="fa-solid fa-plus mr-2"></i> Add Category
+        </button>
+      </div>
     </div>
 
-    <script>
-        function setMinDate() {
-            const dateInput = document.getElementById("offerExpiry");
-            const today = new Date().toISOString().split("T")[0];
-            dateInput.setAttribute("min", today);
-        }
+    <table class="w-full text-left text-xs border-collapse">
+      <thead class="bg-black/20 text-gray-500 uppercase tracking-wider border-y border-white/5">
+        <tr>
+          <th class="px-6 py-4 font-semibold">Category Name</th>
+          <th class="px-6 py-4 font-semibold">Description</th>
+          <th class="px-6 py-4 font-semibold text-center">Offer</th>
+          <th class="px-6 py-4 font-semibold text-center">Status</th>
+          <th class="px-6 py-4 font-semibold text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-white/5">
+        <% if(categories.length===0) { %>
+        <tr>
+          <td colspan="5" class="px-6 py-10 text-center text-gray-500 italic">
+            No categories found
+          </td>
+        </tr>
+        <% } %>
+        <% categories.forEach(category=> { %>
+        <tr class="hover:bg-white/[0.02] transition group">
+          <td class="px-6 py-4 text-white font-bold text-sm"><%= category.name %></td>
+          <td class="px-6 py-4 text-gray-400 max-w-xs truncate"><%= category.description %></td>
+          <td class="px-6 py-4 text-center">
+            <% if(category.offerValue> 0) { %>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+            >
+              <i class="fa-solid fa-tag mr-1 text-[8px]"></i>
+              <%= category.offerValue %>% OFF
+            </span>
+            <% } else { %>
+            <span class="text-gray-600 text-[10px]">No Offer</span>
+            <% } %>
+          </td>
+          <td class="px-6 py-4 text-center">
+            <% if (category.isListed) { %>
+            <span
+              class="bg-[#14291d] text-[#4ade80] px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-[#4ade80]/10"
+            >
+              Listed
+            </span>
+            <% } else { %>
+            <span
+              class="bg-red-900/10 text-red-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-red-500/10"
+            >
+              Unlisted
+            </span>
+            <% } %>
+          </td>
+          <td class="px-6 py-4 text-right">
+            <div class="flex items-center justify-end space-x-4">
+              <button
+                onclick="openEditCategory(this)"
+                class="text-gray-500 hover:text-white transition"
+                data-id="<%= category._id %>"
+                data-name="<%= category.name %>"
+                data-description="<%= category.description %>"
+                data-offer="<%= category.offerValue %>"
+                data-expiry="<%= category.offerExpiry ? category.offerExpiry.toISOString().split('T')[0] : '' %>"
+              >
+                <i class="fa-solid fa-pen text-sm"></i>
+              </button>
 
-        document.addEventListener("DOMContentLoaded", setMinDate);
+              <button
+                onclick="toggleCategory('<%= category._id %>', <%= category.isListed %>)"
+                class="w-8 h-4 rounded-full relative inline-flex items-center transition <%= category.isListed ? 'bg-[#4ade80]' : 'bg-gray-600' %>"
+              >
+                <span
+                  class="w-3 h-3 bg-white rounded-full absolute shadow-sm transition <%= category.isListed ? 'translate-x-4.5' : 'translate-x-0.5' %>"
+                ></span>
+              </button>
 
-        function clearCategoryForm() {
-            document.getElementById("categoryId").value = "";
-            document.getElementById("name").value = "";
-            document.getElementById("description").value = "";
-            document.getElementById("offerValue").value = "";
-            document.getElementById("offerExpiry").value = "";
-        }
+              <button
+                onclick="deleteProduct('<%= category._id %>')"
+                class="text-gray-500 hover:text-red-500 transition"
+              >
+                <i class="fa-solid fa-trash text-sm"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
 
-        function toggleModal(modalId, show, mode = "Add") {
-            const modal = document.getElementById(modalId);
-            const card = document.getElementById("modalCard");
-            const title = document.getElementById("modalTitle");
-            const submitBtn = document.getElementById("submitBtn");
+    <div class="p-6 flex items-center justify-center bg-black/10">
+      <nav id="paginationNav" class="flex items-center gap-3">
+        <% if (currentPage> 1) { %>
+        <a
+          href="/admin/categories?page=<%= currentPage - 1 %>"
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all"
+        >
+          <i class="fa-solid fa-arrow-left text-[10px]"></i>
+        </a>
+        <% } %>
 
-            if (show) {
-                if (mode === "Add") {
-                    clearCategoryForm();
-                    setMinDate();
-                } else {
-                    document.getElementById("offerExpiry").removeAttribute("min");
-                }
+        <div class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
+          <div
+            class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]"
+          >
+            <%= currentPage %>
+          </div>
+          <% if (currentPage < totalPages) { %>
+          <a
+            href="/admin/categories?page=<%= totalPages %>"
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold"
+          >
+            <%= totalPages %>
+          </a>
+          <% } %>
+        </div>
 
-                modal.classList.remove("hidden");
-                modal.classList.add("flex");
-                setTimeout(() => card.classList.replace("scale-95", "scale-100"), 10);
+        <% if (currentPage < totalPages) { %>
+        <a
+          href="/admin/categories?page=<%= currentPage + 1 %>"
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all"
+        >
+          <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+        <% } %>
+      </nav>
+    </div>
+  </div>
+</main>
 
-                title.innerText = `${mode} Watch Category`;
-                submitBtn.innerText = mode === "Add" ? "Add Category" : "Update Category";
-                document.body.style.overflow = "hidden";
-            } else {
-                card.classList.replace("scale-100", "scale-95");
-                setTimeout(() => {
-                    modal.classList.replace("flex", "hidden");
-                    document.body.style.overflow = "auto";
-                }, 200);
-            }
-        }
+<div
+  id="categoryModal"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 transition-all duration-300"
+>
+  <div
+    id="modalCard"
+    class="bg-[#0f110f] border border-white/10 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl transform scale-95 transition-all duration-300"
+  >
+    <div class="flex items-center justify-between px-6 py-5 border-b border-white/5">
+      <h3 id="modalTitle" class="text-base font-bold text-white tracking-tight text-emerald-400">
+        Add Watch Category
+      </h3>
+      <button
+        onclick="toggleModal('categoryModal', false)"
+        class="text-gray-500 hover:text-white transition"
+      >
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
 
-        // Close modal on outside click
-        document.getElementById("categoryModal").addEventListener("click", (e) => {
-            if (e.target.id === "categoryModal") toggleModal("categoryModal", false);
-        });
+    <div class="p-6 space-y-5">
+      <input type="hidden" id="categoryId" />
 
-        function openEditCategory(btn) {
-            document.getElementById("categoryId").value = btn.dataset.id;
-            document.getElementById("name").value = btn.dataset.name;
-            document.getElementById("description").value = btn.dataset.description || "";
-            document.getElementById("offerValue").value = btn.dataset.offer || "";
+      <div>
+        <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest"
+          >Category Name <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="e.g. Luxury Watches"
+          class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none transition"
+        />
+      </div>
 
-            // Handle Expiry
-            toggleModal("categoryModal", true, "Edit");
-            setTimeout(() => {
-                document.getElementById("offerExpiry").value = btn.dataset.expiry || "";
-            }, 50);
-        }
+      <div>
+        <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest"
+          >Category Description</label
+        >
+        <textarea
+          rows="3"
+          name="description"
+          id="description"
+          placeholder="Enter category details..."
+          class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none transition resize-none"
+        ></textarea>
+      </div>
 
-        document.getElementById("submitBtn").addEventListener("click", async () => {
-            const id = document.getElementById("categoryId").value;
-            const name = document.getElementById("name").value.trim();
-            const description = document.getElementById("description").value.trim();
-            const offerValue = document.getElementById("offerValue").value;
-            const offerExpiry = document.getElementById("offerExpiry").value;
+      <div class="pt-4 border-t border-white/5">
+        <h4
+          class="text-xs font-bold text-gray-400 mb-4 flex items-center uppercase tracking-widest"
+        >
+          <i class="fa-solid fa-percent mr-2 text-emerald-500"></i> Category Offer
+        </h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label
+              class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest"
+              >Offer (%)</label
+            >
+            <input
+              type="number"
+              name="offerValue"
+              id="offerValue"
+              placeholder="e.g. 15"
+              class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest"
+              >Expiry Date <span class="text-red-500">*</span></label
+            >
+            <div class="relative">
+              <input
+                type="date"
+                id="offerExpiry"
+                name="offerExpiry"
+                class="w-full bg-[#141a14] border border-white/5 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#4ade80] outline-none transition cursor-pointer"
+              />
+              <i
+                class="fa-solid fa-calendar-days absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            if (!name) return Swal.fire("Required", "Category name is missing", "warning");
-            if (offerValue && !offerExpiry) return Swal.fire("Required", "Please set an expiry date for the offer", "warning");
+    <div class="px-6 py-5 flex justify-end space-x-3 bg-black/30">
+      <button
+        onclick="toggleModal('categoryModal', false)"
+        class="px-6 py-2.5 rounded-full text-xs font-bold text-gray-400 hover:text-white border border-white/5 hover:bg-white/5 transition"
+      >
+        Cancel
+      </button>
+      <button
+        id="submitBtn"
+        class="px-8 py-2.5 rounded-full text-xs font-bold bg-[#4ade80] text-black shadow-[0_0_15px_rgba(74,222,128,0.2)] hover:shadow-[0_0_20px_rgba(74,222,128,0.4)] transition-all"
+      >
+        Update Category
+      </button>
+    </div>
+  </div>
+</div>
 
-            const url = id ? `/admin/categories/${id}` : "/admin/categories";
-            const method = id ? "PUT" : "POST";
+<script>
+  function setMinDate() {
+    const dateInput = document.getElementById('offerExpiry');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+  }
 
-            try {
-                const res = await fetch(url, {
-                    method,
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name, description, offerValue, offerExpiry })
-                });
+  document.addEventListener('DOMContentLoaded', setMinDate);
 
-                const data = await res.json();
-                if (!data.success) return Swal.fire("Error", data.message, "error");
+  function clearCategoryForm() {
+    document.getElementById('categoryId').value = '';
+    document.getElementById('name').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('offerValue').value = '';
+    document.getElementById('offerExpiry').value = '';
+  }
 
-                Swal.fire({ icon: "success", title: data.message, timer: 1200, showConfirmButton: false });
-                setTimeout(() => window.location.href = "/admin/categories", 1200);
-            } catch (err) {
-                Swal.fire("Error", "Something went wrong", "error");
-            }
-        });
+  function toggleModal(modalId, show, mode = 'Add') {
+    const modal = document.getElementById(modalId);
+    const card = document.getElementById('modalCard');
+    const title = document.getElementById('modalTitle');
+    const submitBtn = document.getElementById('submitBtn');
 
-        async function toggleCategory(id, status) {
-            const action = status ? "Unlist" : "List";
-            const confirm = await Swal.fire({
-                title: "Confirm Action",
-                text: `Do you want to ${action} this category?`,
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: '#4ade80',
-                confirmButtonText: `Yes, ${action}`
-            });
+    if (show) {
+      if (mode === 'Add') {
+        clearCategoryForm();
+        setMinDate();
+      } else {
+        document.getElementById('offerExpiry').removeAttribute('min');
+      }
 
-            if (!confirm.isConfirmed) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setTimeout(() => card.classList.replace('scale-95', 'scale-100'), 10);
 
-            const res = await fetch(`/admin/categories/toggle/${id}`, { method: "PATCH" });
-            const data = await res.json();
+      title.innerText = `${mode} Watch Category`;
+      submitBtn.innerText = mode === 'Add' ? 'Add Category' : 'Update Category';
+      document.body.style.overflow = 'hidden';
+    } else {
+      card.classList.replace('scale-100', 'scale-95');
+      setTimeout(() => {
+        modal.classList.replace('flex', 'hidden');
+        document.body.style.overflow = 'auto';
+      }, 200);
+    }
+  }
 
-            if (data.success) {
-                Swal.fire({ icon: "success", title: data.message, timer: 1000, showConfirmButton: false });
-                setTimeout(() => window.location.reload(), 1000);
-            }
-        }
+  // Close modal on outside click
+  document.getElementById('categoryModal').addEventListener('click', (e) => {
+    if (e.target.id === 'categoryModal') toggleModal('categoryModal', false);
+  });
 
-        async function deleteProduct(categoryId) {
-            const result = await Swal.fire({
-                title: "Permanent Delete?",
-                text: "This action cannot be undone",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#ef4444",
-                confirmButtonText: "Yes, delete it"
-            });
+  function openEditCategory(btn) {
+    document.getElementById('categoryId').value = btn.dataset.id;
+    document.getElementById('name').value = btn.dataset.name;
+    document.getElementById('description').value = btn.dataset.description || '';
+    document.getElementById('offerValue').value = btn.dataset.offer || '';
 
-            if (!result.isConfirmed) return;
+    // Handle Expiry
+    toggleModal('categoryModal', true, 'Edit');
+    setTimeout(() => {
+      document.getElementById('offerExpiry').value = btn.dataset.expiry || '';
+    }, 50);
+  }
 
-            const res = await fetch(`/admin/category/${categoryId}/delete`, { method: "PATCH" });
-            const data = await res.json();
+  document.getElementById('submitBtn').addEventListener('click', async () => {
+    const id = document.getElementById('categoryId').value;
+    const name = document.getElementById('name').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const offerValue = document.getElementById('offerValue').value;
+    const offerExpiry = document.getElementById('offerExpiry').value;
 
-            if (data.success) {
-                Swal.fire("Deleted!", "Category has been removed.", "success").then(() => location.reload());
-            }
-        }
+    const numericOffer = Number(offerValue) || 0;
 
-        // AJX Search Logic
-        let searchTimeout = null;
-        document.getElementById("searchInput").addEventListener("keyup", (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const value = e.target.value.trim();
-                loadCategories(1, value);
-            }, 300);
-        });
+    if (!name) return Swal.fire('Required', 'Category name is missing', 'warning');
+    if (numericOffer && !offerExpiry)
+      return Swal.fire('Required', 'Please set an expiry date for the offer', 'warning');
 
-        document.getElementById("clearSearchBtn").addEventListener("click", () => {
-            document.getElementById("searchInput").value = "";
-            loadCategories(1, "");
-        });
+    const url = id ? `/admin/categories/${id}` : '/admin/categories';
+    const method = id ? 'PUT' : 'POST';
 
-        async function loadCategories(page = 1, search = "") {
-            const res = await fetch(`/admin/categories/ajax?page=${page}&search=${search}`);
-            const data = await res.json();
-            renderTable(data.categories);
-        }
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description, offerValue, offerExpiry }),
+      });
 
-        function renderTable(categories) {
-            const tbody = document.querySelector("tbody");
-            tbody.innerHTML = categories.length ? "" : '<tr><td colspan="5" class="px-6 py-6 text-center text-gray-500">No categories found</td></tr>';
+      const data = await res.json();
+      if (!data.success) return Swal.fire('Error', data.message, 'error');
 
-            categories.forEach(category => {
-                tbody.innerHTML += `
+      Swal.fire({ icon: 'success', title: data.message, timer: 1200, showConfirmButton: false });
+      setTimeout(() => (window.location.href = '/admin/categories'), 1200);
+    } catch (err) {
+      Swal.fire('Error', 'Something went wrong', 'error');
+    }
+  });
+
+  async function toggleCategory(id, status) {
+    const action = status ? 'Unlist' : 'List';
+    const confirm = await Swal.fire({
+      title: 'Confirm Action',
+      text: `Do you want to ${action} this category?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#4ade80',
+      confirmButtonText: `Yes, ${action}`,
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    const res = await fetch(`/admin/categories/toggle/${id}`, { method: 'PATCH' });
+    const data = await res.json();
+
+    if (data.success) {
+      Swal.fire({ icon: 'success', title: data.message, timer: 1000, showConfirmButton: false });
+      setTimeout(() => window.location.reload(), 1000);
+    }
+  }
+
+  async function deleteProduct(categoryId) {
+    const result = await Swal.fire({
+      title: 'Permanent Delete?',
+      text: 'This action cannot be undone',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      confirmButtonText: 'Yes, delete it',
+    });
+
+    if (!result.isConfirmed) return;
+
+    const res = await fetch(`/admin/category/${categoryId}/delete`, { method: 'PATCH' });
+    const data = await res.json();
+
+    if (data.success) {
+      Swal.fire('Deleted!', 'Category has been removed.', 'success').then(() => location.reload());
+    }
+  }
+
+  // AJX Search Logic
+  let searchTimeout = null;
+  document.getElementById('searchInput').addEventListener('keyup', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      const value = e.target.value.trim();
+      loadCategories(1, value);
+    }, 300);
+  });
+
+  document.getElementById('clearSearchBtn').addEventListener('click', () => {
+    document.getElementById('searchInput').value = '';
+    loadCategories(1, '');
+  });
+
+  async function loadCategories(page = 1, search = '') {
+    const res = await fetch(`/admin/categories/ajax?page=${page}&search=${search}`);
+    const data = await res.json();
+    renderTable(data.categories);
+  }
+
+  function renderTable(categories) {
+    const tbody = document.querySelector('tbody');
+    tbody.innerHTML = categories.length
+      ? ''
+      : '<tr><td colspan="5" class="px-6 py-6 text-center text-gray-500">No categories found</td></tr>';
+
+    categories.forEach((category) => {
+      tbody.innerHTML += `
                 <tr class="hover:bg-white/[0.02] transition">
                     <td class="px-6 py-4 text-white font-bold text-sm">${category.name}</td>
-                    <td class="px-6 py-4 text-gray-400 max-w-xs truncate">${category.description || "-"}</td>
+                    <td class="px-6 py-4 text-gray-400 max-w-xs truncate">${
+                      category.description || '-'
+                    }</td>
                     <td class="px-6 py-4 text-center">
-                        ${category.offerValue > 0 ?
-                        `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                        ${
+                          category.offerValue > 0
+                            ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                                 <i class="fa-solid fa-tag mr-1 text-[8px]"></i>${category.offerValue}% OFF
-                            </span>` : `<span class="text-gray-600 text-[10px]">No Offer</span>`}
+                            </span>`
+                            : `<span class="text-gray-600 text-[10px]">No Offer</span>`
+                        }
                     </td>
                     <td class="px-6 py-4 text-center">
-                        <span class="${category.isListed ? 'bg-[#14291d] text-[#4ade80]' : 'bg-red-900/10 text-red-400'} px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-white/5">
+                        <span class="${
+                          category.isListed
+                            ? 'bg-[#14291d] text-[#4ade80]'
+                            : 'bg-red-900/10 text-red-400'
+                        } px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-white/5">
                             ${category.isListed ? 'Listed' : 'Unlisted'}
                         </span>
                     </td>
@@ -412,17 +492,27 @@
                         <div class="flex items-center justify-end space-x-4">
                             <button onclick="openEditCategory(this)" 
                                 data-id="${category._id}" data-name="${category.name}" 
-                                data-description="${category.description || ""}" 
+                                data-description="${category.description || ''}" 
                                 data-offer="${category.offerValue || 0}" 
-                                data-expiry="${category.offerExpiry ? new Date(category.offerExpiry).toISOString().split('T')[0] : ""}"
+                                data-expiry="${
+                                  category.offerExpiry
+                                    ? new Date(category.offerExpiry).toISOString().split('T')[0]
+                                    : ''
+                                }"
                                 class="text-gray-500 hover:text-white transition"><i class="fa-solid fa-pen text-sm"></i></button>
-                            <button onclick="toggleCategory('${category._id}', ${category.isListed})"
-                                class="w-8 h-4 rounded-full relative inline-flex items-center transition ${category.isListed ? 'bg-[#4ade80]' : 'bg-gray-600'}">
-                                <span class="w-3 h-3 bg-white rounded-full absolute shadow-sm transition ${category.isListed ? 'translate-x-4.5' : 'translate-x-0.5'}"></span>
+                            <button onclick="toggleCategory('${category._id}', ${
+        category.isListed
+      })"
+                                class="w-8 h-4 rounded-full relative inline-flex items-center transition ${
+                                  category.isListed ? 'bg-[#4ade80]' : 'bg-gray-600'
+                                }">
+                                <span class="w-3 h-3 bg-white rounded-full absolute shadow-sm transition ${
+                                  category.isListed ? 'translate-x-4.5' : 'translate-x-0.5'
+                                }"></span>
                             </button>
                         </div>
                     </td>
                 </tr>`;
-            });
-        }
-    </script>
+    });
+  }
+</script>

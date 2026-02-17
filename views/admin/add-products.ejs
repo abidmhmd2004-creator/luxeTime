@@ -1,421 +1,501 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
+/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <%- include('../partials/adminSidebar') %>
 
-    <main class="flex-1 p-3 overflow-y-auto bg-[#0d0f0d] min-h-screen text-gray-200">
-        <form id="addProductForm" method="POST" action="/admin/add-products">
-            <div class="max-w-[1200px] mx-auto mb-5">
-                <h2 class="text-2xl font-extrabold text-white tracking-tight">Create New Product</h2>
-                <a href="/admin/products"
-                    class="text-[12px] justify-end mr-8 uppercase font-bold text-gray-500 hover:text-[#4ade80] transition flex items-center mb-2 tracking-widest">
-                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Products
-                </a>
+<main class="flex-1 p-3 overflow-y-auto bg-[#0d0f0d] min-h-screen text-gray-200">
+  <form id="addProductForm" method="POST" action="/admin/add-products">
+    <div class="max-w-[1200px] mx-auto mb-5">
+      <h2 class="text-2xl font-extrabold text-white tracking-tight">Create New Product</h2>
+      <a
+        href="/admin/products"
+        class="text-[12px] justify-end mr-8 uppercase font-bold text-gray-500 hover:text-[#4ade80] transition flex items-center mb-2 tracking-widest"
+      >
+        <i class="fa-solid fa-arrow-left mr-2"></i> Back to Products
+      </a>
+    </div>
+
+    <div class="max-w-[1200px] mx-auto grid grid-cols-12 gap-4">
+      <div class="col-span-12 lg:col-span-8 space-y-6">
+        <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-4 shadow-xl">
+          <div class="flex items-center space-x-3 mb-5">
+            <div
+              class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]"
+            >
+              <i class="fa-solid fa-circle-info text-xs"></i>
             </div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Basic Information</h3>
+          </div>
 
-            <div class="max-w-[1200px] mx-auto grid grid-cols-12 gap-4">
-                <div class="col-span-12 lg:col-span-8 space-y-6">
-                    <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-4 shadow-xl">
-                        <div class="flex items-center space-x-3 mb-5">
-                            <div
-                                class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
-                                <i class="fa-solid fa-circle-info text-xs"></i>
-                            </div>
-                            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Basic Information</h3>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label
-                                    class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Product
-                                    Name *</label>
-                                <input type="text" name="name"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                            </div>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label
-                                        class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Brand
-                                        *</label>
-                                    <input name="brand" required
-                                        class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Category
-                                        *</label>
-                                    <select name="category" required
-                                        class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                                        <option value="">Select Category</option>
-                                        <% categories.forEach(cat=> { %>
-                                            <option value="<%= cat._id %>">
-                                                <%= cat.name %>
-                                            </option>
-                                            <% }) %>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Description</label>
-                                <textarea name="description" rows="3"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-3 text-sm text-white outline-none resize-none"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-3 shadow-xl">
-                        <div class="flex items-center space-x-3 mb-6">
-                            <div
-                                class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
-                                <i class="fa-solid fa-palette text-xs"></i>
-                            </div>
-                            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Style Variants</h3>
-                        </div>
-
-                        <div id="variantContainer" class="space-y-4">
-                            <div class="variant-card bg-black/40 rounded-xl p-5 border border-white/5 relative">
-                                <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
-                                    <h4 class="text-[9px] uppercase font-bold text-[#4ade80] tracking-[0.2em]">Variant
-                                        Configuration</h4>
-                                    <button type="button" onclick="removeVariant(this)"
-                                        class="text-red-500/50 hover:text-red-500 text-[9px] font-bold uppercase">
-                                        <i class="fa-solid fa-trash-can mr-1"></i> Remove
-                                    </button>
-                                </div>
-
-                                <div class="grid grid-cols-12 gap-3">
-                                    <div class="col-span-12 md:col-span-7 grid grid-cols-2 gap-3">
-                                        <div class="col-span-2">
-                                            <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Color
-                                                Name</label>
-                                            <input type="text" name="variants[0][color]"
-                                                class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                                        </div>
-                                        <div>
-                                            <label
-                                                class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Stock</label>
-                                            <input type="number" name="variants[0][stock]"
-                                                class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                                        </div>
-                                        <div>
-                                            <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Base
-                                                Price (₹)</label>
-                                            <input type="number" name="variants[0][basePrice]"
-                                                class="base-price-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                                        </div>
-                                        
-                                        <div class="col-span-2">
-                                            <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Final
-                                                Price</label>
-                                            <input type="text" readonly
-                                                class="final-price-display w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-[#4ade80] font-bold outline-none"
-                                                value="₹ 0.00">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-span-12 md:col-span-5">
-                                        <label class="block text-[9px] text-gray-500 mb-2 uppercase font-bold">Media
-                                            (Min 3 Images)</label>
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <div onclick="triggerUpload(this)"
-                                                class="aspect-square rounded-lg bg-[#141a14] border-2 border-dashed border-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-[#4ade80]/30 transition group">
-                                                <i
-                                                    class="fa-solid fa-image text-gray-600 group-hover:text-[#4ade80] text-sm mb-1"></i>
-                                                <span class="text-[7px] text-gray-500 uppercase font-bold">Add
-                                                    Image</span>
-                                            </div>
-                                            <div class="imagePreviewGrid grid grid-cols-2 gap-2"></div>
-                                        </div>
-                                        <input type="file" class="imagePicker hidden" accept="image/*">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="button" onclick="addNewVariant()"
-                            class="w-full mt-4 py-4 rounded-xl border border-dashed border-white/10 text-gray-500 hover:text-[#4ade80] transition flex items-center justify-center text-[10px] font-bold uppercase">
-                            <i class="fa-solid fa-plus mr-2"></i> Add Another Style Variant
-                        </button>
-                    </div>
-                </div>
-
-                <div class="col-span-12 lg:col-span-4 space-y-6">
-                    <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-6">
-                        <div class="flex items-center space-x-3 mb-6">
-                            <div
-                                class="w-8 h-8 rounded-lg bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
-                                <i class="fa-solid fa-tag text-sm"></i>
-                            </div>
-                            <h3 class="text-lg font-bold text-white font-bold">Offer</h3>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
-                                    (%)</label>
-                                <input type="number" name="offerPercentage"
-                                    class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
-                                    value="0">
-                            </div>
-                            <div>
-                                <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
-                                    Expiry </label>
-                                <div class="relative">
-                                    <input type="date" id="offerExpiry" name="offerExpiry"
-                                        class="offerExpiry  w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white/60 outline-none">
-
-                                    <i
-                                        class="fa-solid fa-calendar-days  absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
-                        <h3 class="text-sm font-bold text-white uppercase mb-5">Specifications</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Case Size
-                                    (mm)</label>
-                                <input type="text" name="caseSize"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Strap
-                                    Type</label>
-                                <input type="text" name="strapType"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Movement</label>
-                                <input type="text" name="movementType"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
-                        <h3 class="text-sm font-bold text-white uppercase mb-5">Product Visibility</h3>
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-[10px] text-white font-bold uppercase tracking-tight">List Product</p>
-                                <p class="text-[9px] text-gray-500 uppercase">Make visible to customers</p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" name="isListed" class="sr-only peer" checked>
-                                <div
-                                    class="w-11 h-6 bg-white/5 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-500 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4ade80] peer-checked:after:bg-black">
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+          <div class="space-y-4">
+            <div>
+              <label
+                class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest"
+                >Product Name *</label
+              >
+              <input
+                type="text"
+                name="name"
+                class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none"
+              />
             </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label
+                  class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest"
+                  >Brand *</label
+                >
+                <input
+                  name="brand"
+                  required
+                  class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest"
+                  >Category *</label
+                >
+                <select
+                  name="category"
+                  required
+                  class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none"
+                >
+                  <option value="">Select Category</option>
+                  <% categories.forEach(cat=> { %>
+                  <option value="<%= cat._id %>"><%= cat.name %></option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label
+                class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest"
+                >Description</label
+              >
+              <textarea
+                name="description"
+                rows="3"
+                class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-3 text-sm text-white outline-none resize-none"
+              ></textarea>
+            </div>
+          </div>
+        </div>
 
-            <div class="max-w-[500px] mx-auto flex justify-center py-10">
-                <button type="submit"
-                    class="bg-[#4ade80] text-black px-12 py-3 rounded-full text-[10px] font-extrabold uppercase hover:scale-105 transition-all">
-                    Publish Product
+        <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-3 shadow-xl">
+          <div class="flex items-center space-x-3 mb-6">
+            <div
+              class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]"
+            >
+              <i class="fa-solid fa-palette text-xs"></i>
+            </div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Style Variants</h3>
+          </div>
+
+          <div id="variantContainer" class="space-y-4">
+            <div class="variant-card bg-black/40 rounded-xl p-5 border border-white/5 relative">
+              <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
+                <h4 class="text-[9px] uppercase font-bold text-[#4ade80] tracking-[0.2em]">
+                  Variant Configuration
+                </h4>
+                <button
+                  type="button"
+                  onclick="removeVariant(this)"
+                  class="text-red-500/50 hover:text-red-500 text-[9px] font-bold uppercase"
+                >
+                  <i class="fa-solid fa-trash-can mr-1"></i> Remove
                 </button>
+              </div>
+
+              <div class="grid grid-cols-12 gap-3">
+                <div class="col-span-12 md:col-span-7 grid grid-cols-2 gap-3">
+                  <div class="col-span-2">
+                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold"
+                      >Color Name</label
+                    >
+                    <input
+                      type="text"
+                      name="variants[0][color]"
+                      class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold"
+                      >Stock</label
+                    >
+                    <input
+                      type="number"
+                      name="variants[0][stock]"
+                      class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold"
+                      >Base Price (₹)</label
+                    >
+                    <input
+                      type="number"
+                      name="variants[0][basePrice]"
+                      class="base-price-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
+                    />
+                  </div>
+
+                  <div class="col-span-2">
+                    <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold"
+                      >Final Price</label
+                    >
+                    <input
+                      type="text"
+                      readonly
+                      class="final-price-display w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-[#4ade80] font-bold outline-none"
+                      value="₹ 0.00"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-5">
+                  <label class="block text-[9px] text-gray-500 mb-2 uppercase font-bold"
+                    >Media (Min 3 Images)</label
+                  >
+                  <div class="grid grid-cols-2 gap-2">
+                    <div
+                      onclick="triggerUpload(this)"
+                      class="aspect-square rounded-lg bg-[#141a14] border-2 border-dashed border-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-[#4ade80]/30 transition group"
+                    >
+                      <i
+                        class="fa-solid fa-image text-gray-600 group-hover:text-[#4ade80] text-sm mb-1"
+                      ></i>
+                      <span class="text-[7px] text-gray-500 uppercase font-bold">Add Image</span>
+                    </div>
+                    <div class="imagePreviewGrid grid grid-cols-2 gap-2"></div>
+                  </div>
+                  <input type="file" class="imagePicker hidden" accept="image/*" />
+                </div>
+              </div>
             </div>
-        </form>
-    </main>
+          </div>
 
+          <button
+            type="button"
+            onclick="addNewVariant()"
+            class="w-full mt-4 py-4 rounded-xl border border-dashed border-white/10 text-gray-500 hover:text-[#4ade80] transition flex items-center justify-center text-[10px] font-bold uppercase"
+          >
+            <i class="fa-solid fa-plus mr-2"></i> Add Another Style Variant
+          </button>
+        </div>
+      </div>
 
-    <script>
-        // --- IMAGE LOGIC (Unchanged) ---
-        function triggerUpload(btn) {
-            btn.closest('.variant-card').querySelector('.imagePicker').click();
-        }
+      <div class="col-span-12 lg:col-span-4 space-y-6">
+        <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-6">
+          <div class="flex items-center space-x-3 mb-6">
+            <div
+              class="w-8 h-8 rounded-lg bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]"
+            >
+              <i class="fa-solid fa-tag text-sm"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white font-bold">Offer</h3>
+          </div>
 
-        document.addEventListener('change', function (e) {
-            if (e.target.classList.contains('imagePicker')) {
-                const file = e.target.files[0];
-                if (!file) return;
+          <div class="space-y-4">
+            <div>
+              <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold"
+                >Offer (%)</label
+              >
+              <input
+                type="number"
+                name="offerPercentage"
+                class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
+                value="0"
+              />
+            </div>
+            <div>
+              <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold"
+                >Offer Expiry
+              </label>
+              <div class="relative">
+                <input
+                  type="date"
+                  id="offerExpiry"
+                  name="offerExpiry"
+                  class="offerExpiry w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white/60 outline-none"
+                />
 
-                const card = e.target.closest('.variant-card');
-                const reader = new FileReader();
+                <i
+                  class="fa-solid fa-calendar-days absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                reader.onload = function (event) {
-                    Swal.fire({
-                        title: 'Crop Image',
-                        width: '450px',
-                        html: `
+        <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
+          <h3 class="text-sm font-bold text-white uppercase mb-5">Specifications</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold"
+                >Case Size (mm)</label
+              >
+              <input
+                type="text"
+                name="caseSize"
+                class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold"
+                >Strap Type</label
+              >
+              <input
+                type="text"
+                name="strapType"
+                class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none"
+              />
+            </div>
+            <div>
+              <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold"
+                >Movement</label
+              >
+              <input
+                type="text"
+                name="movementType"
+                class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
+          <h3 class="text-sm font-bold text-white uppercase mb-5">Product Visibility</h3>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] text-white font-bold uppercase tracking-tight">List Product</p>
+              <p class="text-[9px] text-gray-500 uppercase">Make visible to customers</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" name="isListed" class="sr-only peer" checked />
+              <div
+                class="w-11 h-6 bg-white/5 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-500 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#4ade80] peer-checked:after:bg-black"
+              ></div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-[500px] mx-auto flex justify-center py-10">
+      <button
+        type="submit"
+        class="bg-[#4ade80] text-black px-12 py-3 rounded-full text-[10px] font-extrabold uppercase hover:scale-105 transition-all"
+      >
+        Publish Product
+      </button>
+    </div>
+  </form>
+</main>
+
+<script>
+  // --- IMAGE LOGIC (Unchanged) ---
+  function triggerUpload(btn) {
+    btn.closest('.variant-card').querySelector('.imagePicker').click();
+  }
+
+  document.addEventListener('change', function (e) {
+    if (e.target.classList.contains('imagePicker')) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const card = e.target.closest('.variant-card');
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        Swal.fire({
+          title: 'Crop Image',
+          width: '450px',
+          html: `
                     <div class="p-1 overflow-hidden">
                         <img id="cropperTarget" src="${event.target.result}" style="max-width: 100%; max-height: 400px; display: block;">
                     </div>`,
-                        background: '#1A1D1A',
-                        confirmButtonColor: '#4ade80',
-                        confirmButtonText: 'Crop & Save',
-                        showCancelButton: true,
-                        cancelButtonColor: '#333',
-                        willOpen: () => {
-                            const image = document.getElementById('cropperTarget');
-                            window.cropper = new Cropper(image, {
-                                aspectRatio: 1,
-                                viewMode: 1,
-                                autoCropArea: 0.8
-                            });
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const canvas = window.cropper.getCroppedCanvas({ width: 800, height: 800 });
-                            canvas.toBlob((blob) => {
-                                if (!card.images) card.images = [];
-                                card.images.push(blob);
+          background: '#1A1D1A',
+          confirmButtonColor: '#4ade80',
+          confirmButtonText: 'Crop & Save',
+          showCancelButton: true,
+          cancelButtonColor: '#333',
+          willOpen: () => {
+            const image = document.getElementById('cropperTarget');
+            window.cropper = new Cropper(image, {
+              aspectRatio: 1,
+              viewMode: 1,
+              autoCropArea: 0.8,
+            });
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const canvas = window.cropper.getCroppedCanvas({ width: 800, height: 800 });
+            canvas.toBlob((blob) => {
+              if (!card.images) card.images = [];
+              card.images.push(blob);
 
-                                const previewGrid = card.querySelector('.imagePreviewGrid');
-                                const imgUrl = URL.createObjectURL(blob);
-                                const div = document.createElement("div");
-                                div.className = "relative aspect-square rounded-lg overflow-hidden border border-white/10 group";
-                                div.innerHTML = `
+              const previewGrid = card.querySelector('.imagePreviewGrid');
+              const imgUrl = URL.createObjectURL(blob);
+              const div = document.createElement('div');
+              div.className =
+                'relative aspect-square rounded-lg overflow-hidden border border-white/10 group';
+              div.innerHTML = `
                             <img src="${imgUrl}" class="w-full h-full object-cover">
                             <button type="button" class="absolute top-1 right-1 bg-red-600 p-1 rounded-full text-[8px]" onclick="removeImage(this)">
                                 <i class="fa-solid fa-xmark text-white"></i>
                             </button>`;
-                                previewGrid.appendChild(div);
-                            }, 'image/jpeg');
-                        }
-                        window.cropper.destroy();
-                    });
-                };
-                reader.readAsDataURL(file);
-                e.target.value = "";
-            }
+              previewGrid.appendChild(div);
+            }, 'image/jpeg');
+          }
+          window.cropper.destroy();
         });
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    }
+  });
 
-        function removeImage(btn) {
-            const card = btn.closest('.variant-card');
-            const previewItem = btn.closest('.relative');
-            const index = Array.from(previewItem.parentElement.children).indexOf(previewItem);
-            card.images.splice(index, 1);
-            previewItem.remove();
+  function removeImage(btn) {
+    const card = btn.closest('.variant-card');
+    const previewItem = btn.closest('.relative');
+    const index = Array.from(previewItem.parentElement.children).indexOf(previewItem);
+    card.images.splice(index, 1);
+    previewItem.remove();
+  }
+
+  // --- UPDATED PRICING & OFFER LOGIC ---
+
+  // Function to recalculate all prices
+  function updateAllPrices() {
+    const globalOffer =
+      parseInt(document.querySelector('input[name="offerPercentage"]').value) || 0;
+    const cards = document.querySelectorAll('.variant-card');
+
+    cards.forEach((card) => {
+      const basePriceInput = card.querySelector('.base-price-input');
+      const finalPriceDisplay = card.querySelector('.final-price-display');
+
+      const base = parseInt(basePriceInput.value) || 0;
+      const final = Math.round(base - (base * globalOffer) / 100);
+
+      finalPriceDisplay.value = `₹ ${final.toLocaleString()}`;
+    });
+  }
+
+  // Listen for changes in Base Prices
+  document.getElementById('variantContainer').addEventListener('input', function (e) {
+    if (e.target.classList.contains('base-price-input')) {
+      updateAllPrices();
+    }
+  });
+
+  // Listen for changes in the Global Offer input
+  document
+    .querySelector('input[name="offerPercentage"]')
+    .addEventListener('input', updateAllPrices);
+
+  // --- VARIANT MANAGEMENT (Unchanged) ---
+  function addNewVariant() {
+    const container = document.getElementById('variantContainer');
+    const cards = container.querySelectorAll('.variant-card');
+    const index = cards.length;
+
+    const clone = cards[0].cloneNode(true);
+
+    clone.querySelectorAll('input').forEach((input) => {
+      if (input.name && input.name.includes('variants')) {
+        input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
+      }
+      if (input.type === 'number' || input.type === 'text') {
+        // Don't clear readonly final price, updateAllPrices will handle it
+        if (!input.classList.contains('final-price-display')) {
+          input.value = '';
         }
+      }
+    });
 
-        // --- UPDATED PRICING & OFFER LOGIC ---
+    clone.querySelector('.imagePreviewGrid').innerHTML = '';
+    clone.images = [];
+    container.appendChild(clone);
+    updateAllPrices(); // Initialize price for new variant
+  }
 
-        // Function to recalculate all prices
-        function updateAllPrices() {
-            const globalOffer = parseInt(document.querySelector('input[name="offerPercentage"]').value) || 0;
-            const cards = document.querySelectorAll('.variant-card');
+  function removeVariant(btn) {
+    if (document.querySelectorAll('.variant-card').length > 1)
+      btn.closest('.variant-card').remove();
+    else Swal.fire('Error', 'Need at least one variant', 'warning');
+  }
 
-            cards.forEach(card => {
-                const basePriceInput = card.querySelector('.base-price-input');
-                const finalPriceDisplay = card.querySelector('.final-price-display');
+  // --- SUBMISSION ---
+  document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const cards = document.querySelectorAll('.variant-card');
 
-                const base = parseInt(basePriceInput.value) || 0;
-                const final = Math.round(base - (base * globalOffer / 100));
+    if (!validateForm()) return;
 
-                finalPriceDisplay.value = `₹ ${final.toLocaleString()}`;
-            });
-        }
-
-        // Listen for changes in Base Prices
-        document.getElementById('variantContainer').addEventListener('input', function (e) {
-            if (e.target.classList.contains('base-price-input')) {
-                updateAllPrices();
-            }
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      if (card.images) {
+        card.images.forEach((blob) => {
+          formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
         });
+      }
+    }
 
-        // Listen for changes in the Global Offer input
-        document.querySelector('input[name="offerPercentage"]').addEventListener('input', updateAllPrices);
+    Swal.fire({
+      title: 'Adding product...',
+      text: 'Please wait',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
 
+    try {
+      const res = await fetch('/admin/add-products', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.success) {
+        Swal.fire('Success', data.message, 'success').then(
+          () => (window.location.href = '/admin/products')
+        );
+      } else {
+        Swal.fire('Error', data.message, 'error');
+      }
+    } catch (err) {
+      Swal.fire('Error', 'Server error', 'error');
+    }
+  });
 
-        // --- VARIANT MANAGEMENT (Unchanged) ---
-        function addNewVariant() {
-            const container = document.getElementById("variantContainer");
-            const cards = container.querySelectorAll(".variant-card");
-            const index = cards.length;
+  function validateForm() {
+    const cards = document.querySelectorAll('.variant-card');
+    const offer = parseInt(document.querySelector('input[name="offerPercentage"]').value) || 0;
 
-            const clone = cards[0].cloneNode(true);
+    if (offer < 0 || offer > 99) {
+      Swal.fire('Error', 'Offer must be between 0 and 99%', 'error');
+      return false;
+    }
 
-            clone.querySelectorAll("input").forEach(input => {
-                if (input.name && input.name.includes("variants")) {
-                    input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
-                }
-                if (input.type === "number" || input.type === "text") {
-                    // Don't clear readonly final price, updateAllPrices will handle it
-                    if (!input.classList.contains('final-price-display')) {
-                        input.value = "";
-                    }
-                }
-            });
+    for (let i = 0; i < cards.length; i++) {
+      const base = parseInt(cards[i].querySelector('.base-price-input').value) || 0;
+      if (base <= 0) {
+        Swal.fire('Error', `Variant ${i + 1}: Base price must be greater than 0`, 'error');
+        return false;
+      }
 
-            clone.querySelector(".imagePreviewGrid").innerHTML = "";
-            clone.images = [];
-            container.appendChild(clone);
-            updateAllPrices(); // Initialize price for new variant
-        }
-
-        function removeVariant(btn) {
-            if (document.querySelectorAll('.variant-card').length > 1) btn.closest('.variant-card').remove();
-            else Swal.fire("Error", "Need at least one variant", "warning");
-        }
-
-        // --- SUBMISSION ---
-        document.getElementById("addProductForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const cards = document.querySelectorAll('.variant-card');
-
-            if (!validateForm()) return;
-
-            for (let i = 0; i < cards.length; i++) {
-                const card = cards[i];
-                if (card.images) {
-                    card.images.forEach(blob => {
-                        formData.append(`variantImages_${i}`, blob, `variant${i}.jpg`);
-                    });
-                }
-            }
-
-            Swal.fire({
-                title: "Adding product...",
-                text: "Please wait",
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
-
-            try {
-                const res = await fetch("/admin/add-products", { method: "POST", body: formData });
-                const data = await res.json();
-                if (data.success) {
-                    Swal.fire("Success", data.message, "success").then(() => window.location.href = "/admin/products");
-                } else {
-                    Swal.fire("Error", data.message, "error");
-                }
-            } catch (err) {
-                Swal.fire("Error", "Server error", "error");
-            }
-        });
-
-        function validateForm() {
-            const cards = document.querySelectorAll('.variant-card');
-            const offer = parseInt(document.querySelector('input[name="offerPercentage"]').value) || 0;
-
-            if (offer < 0 || offer > 99) {
-                Swal.fire("Error", "Offer must be between 0 and 99%", "error");
-                return false;
-            }
-
-            for (let i = 0; i < cards.length; i++) {
-                const base = parseInt(cards[i].querySelector('.base-price-input').value) || 0;
-                if (base <= 0) {
-                    Swal.fire("Error", `Variant ${i + 1}: Base price must be greater than 0`, "error");
-                    return false;
-                }
-
-                // Image validation
-                if (!cards[i].images || cards[i].images.length < 3) {
-                    Swal.fire("Error", `Variant ${i + 1}: Please upload at least 3 images`, "error");
-                    return false;
-                }
-            }
-            return true;
-        }
-    </script>
+      // Image validation
+      if (!cards[i].images || cards[i].images.length < 3) {
+        Swal.fire('Error', `Variant ${i + 1}: Please upload at least 3 images`, 'error');
+        return false;
+      }
+    }
+    return true;
+  }
+</script>

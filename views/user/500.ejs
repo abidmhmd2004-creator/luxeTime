@@ -1,74 +1,77 @@
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
 <style>
-    /* Custom colors to complement Tailwind */
-    .bg-dark-black {
-        background-color: #0d1310;
+  /* Custom colors to complement Tailwind */
+  .bg-dark-black {
+    background-color: #0d1310;
+  }
+
+  .bg-primary {
+    background-color: #38a169;
+  }
+
+  @keyframes pulse-red {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.2;
     }
 
-    .bg-primary {
-        background-color: #38a169;
+    50% {
+      transform: scale(1.1);
+      opacity: 0.4;
     }
+  }
 
-    @keyframes pulse-red {
-
-        0%,
-        100% {
-            transform: scale(1);
-            opacity: 0.2;
-        }
-
-        50% {
-            transform: scale(1.1);
-            opacity: 0.4;
-        }
-    }
-
-    /* .animate-error { animation: pulse-red 3s infinite ease-in-out; } */
+  /* .animate-error { animation: pulse-red 3s infinite ease-in-out; } */
 </style>
-</head>
 
-<body class="bg-dark-black min-h-screen text-white flex items-center justify-center font-sans p-6 overflow-hidden">
+<body
+  class="bg-dark-black min-h-screen text-white flex items-center justify-center font-sans p-6 overflow-hidden"
+>
+  <div class="relative text-center space-y-8 max-w-2xl w-full">
+    <h1
+      class="absolute inset-0 flex items-center justify-center text-[150px] md:text-[250px] font-black text-white/[0.03] tracking-tighter select-none pointer-events-none -z-10"
+    >
+      500
+    </h1>
 
-    <div class="relative text-center space-y-8 max-w-2xl w-full">
-
-        <h1
-            class="absolute inset-0 flex items-center justify-center text-[150px] md:text-[250px] font-black text-white/[0.03] tracking-tighter select-none pointer-events-none -z-10">
-            500
-        </h1>
-
-        <div class="relative flex justify-center items-center h-30">
-            <!-- <span class="material-symbols-outlined text-[120px] text-red-500 absolute animate-error">
+    <div class="relative flex justify-center items-center h-30">
+      <!-- <span class="material-symbols-outlined text-[120px] text-red-500 absolute animate-error">
                 history_toggle_off
             </span> -->
-            <span class="material-symbols-outlined text-7xl text-red-600 relative z-10">
-                warning
-            </span>
-        </div>
-
-        <div class="space-y-4 relative z-10">
-            <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight uppercase">
-                Internal Server Error
-            </h2>
-            <p class="text-neutral-400 max-w-md mx-auto leading-relaxed text-sm md:text-base">
-                The clock stopped unexpectedly. Our servers encountered a glitch while processing your request.
-                Don't worry, our watchmakers have been notified.
-            </p>
-        </div>
-
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 relative z-10">
-            <button onclick="window.location.reload()"
-                class="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-3 rounded-xl bg-primary text-black font-bold hover:bg-green-500 transition-all active:scale-95 shadow-lg shadow-green-900/20">
-                <span class="material-symbols-outlined text-xl">refresh</span>
-                <span>Try Refreshing</span>
-            </button>
-
-            <a href="/home"
-                class="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-3 rounded-xl border border-neutral-800 text-neutral-400 font-bold hover:bg-neutral-900 hover:text-white transition-all active:scale-95">
-                <span class="material-symbols-outlined text-xl">home</span>
-                <span>Back to Home</span>
-            </a>
-        </div>
-
+      <span class="material-symbols-outlined text-7xl text-red-600 relative z-10"> warning </span>
     </div>
+
+    <div class="space-y-4 relative z-10">
+      <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight uppercase">
+        Internal Server Error
+      </h2>
+      <p class="text-neutral-400 max-w-md mx-auto leading-relaxed text-sm md:text-base">
+        The clock stopped unexpectedly. Our servers encountered a glitch while processing your
+        request. Don't worry, our watchmakers have been notified.
+      </p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 relative z-10">
+      <button
+        onclick="window.location.reload()"
+        class="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-3 rounded-xl bg-primary text-black font-bold hover:bg-green-500 transition-all active:scale-95 shadow-lg shadow-green-900/20"
+      >
+        <span class="material-symbols-outlined text-xl">refresh</span>
+        <span>Try Refreshing</span>
+      </button>
+
+      <a
+        href="/home"
+        class="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-3 rounded-xl border border-neutral-800 text-neutral-400 font-bold hover:bg-neutral-900 hover:text-white transition-all active:scale-95"
+      >
+        <span class="material-symbols-outlined text-xl">home</span>
+        <span>Back to Home</span>
+      </a>
+    </div>
+  </div>
+</body>

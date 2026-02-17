@@ -1,16 +1,16 @@
-import asyncHandler from "../../utils/asyncHandler.js";
-import Cart from "../../models/cart.model.js";
-import Address from "../../models/address.model.js";
-import Product from "../../models/product.model.js";
-import Variant from "../../models/variant.model.js";
-import Order from "../../models/order.model.js";
-import Wallet from "../../models/wallet.model.js";
-import { validateCartForCheckout } from "../../helpers/cartValidate.js";
-import razorpay from "../../config/razorpay.js";
-import Coupon from "../../models/coupon.model.js";
-import Category from "../../models/category.model.js";
-import { calculateBestOffer } from "../../helpers/calculateOffer.js";
-import { debitWallet } from "../../helpers/wallet.helper.js";
+import asyncHandler from '../../utils/asyncHandler.js';
+import Cart from '../../models/cart.model.js';
+import Address from '../../models/address.model.js';
+import Product from '../../models/product.model.js';
+import Variant from '../../models/variant.model.js';
+import Order from '../../models/order.model.js';
+import Wallet from '../../models/wallet.model.js';
+import { validateCartForCheckout } from '../../helpers/cartValidate.js';
+import razorpay from '../../config/razorpay.js';
+import Coupon from '../../models/coupon.model.js';
+import Category from '../../models/category.model.js';
+import { calculateBestOffer } from '../../helpers/calculateOffer.js';
+import { debitWallet } from '../../helpers/wallet.helper.js';
 
 export const getCheckoutPage = asyncHandler(async (req, res) => {
   const { retry, orderId } = req.query;
@@ -21,11 +21,11 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
   if (retry && orderId) {
     const order = await Order.findById(orderId);
 
-    if (!order || order.paymentStatus !== "FAILED") {
-      return res.redirect("/orders");
+    if (!order || order.paymentStatus !== 'FAILED') {
+      return res.redirect('/orders');
     }
 
-    return res.render("user/checkout", {
+    return res.render('user/checkout', {
       retry: true,
       order,
       addresses,
@@ -34,15 +34,15 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
   }
   const cart = await Cart.findOne({ user: req.session.user.id })
     .populate({
-      path: "items.product",
-      populate: { path: "category" },
+      path: 'items.product',
+      populate: { path: 'category' },
     })
-    .populate("items.variant");
+    .populate('items.variant');
 
   const result = validateCartForCheckout(cart);
 
   if (!result.valid) {
-    return res.redirect("/cart");
+    return res.redirect('/cart');
   }
 
   let subtotal = 0;
@@ -75,7 +75,7 @@ export const getCheckoutPage = asyncHandler(async (req, res) => {
   const tax = Math.round((subtotal - couponDiscount) * 0.18);
   const total = subtotal - couponDiscount + tax + shipping;
 
-  res.render("user/checkout", {
+  res.render('user/checkout', {
     cart,
     addresses,
     coupons,
@@ -96,27 +96,18 @@ export const addAddressCheckout = asyncHandler(async (req, res) => {
 
   const userId = req.session.user.id;
 
-  const {
-    fullName,
-    phone,
-    pincode,
-    streetAddress,
-    city,
-    state,
-    addressType,
-    isDefault,
-  } = req.body;
+  const { fullName, phone, pincode, streetAddress, city, state, addressType, isDefault } = req.body;
 
   if (!fullName || !phone || !pincode || !streetAddress || !city || !state) {
     return res.json({
       suucess: false,
-      message: "All feilds required",
+      message: 'All feilds required',
     });
   }
   if (!/^\d{6}$/.test(pincode)) {
     return res.json({
       success: false,
-      message: "Enter a indian pincode.",
+      message: 'Enter a indian pincode.',
     });
   }
   const addressCount = await Address.countDocuments({ user: userId });
@@ -128,7 +119,7 @@ export const addAddressCheckout = asyncHandler(async (req, res) => {
   }
 
   if (isDefault) {
-    await Address. Many({ user: userId }, { $set: { isDefault: false } });
+    await Address.Many({ user: userId }, { $set: { isDefault: false } });
   }
 
   await Address.create({
@@ -143,7 +134,7 @@ export const addAddressCheckout = asyncHandler(async (req, res) => {
     isDefault: isDefault ? true : false,
   });
 
-  return res.redirect("/checkout");
+  return res.redirect('/checkout');
 });
 
 export const applyCoupon = asyncHandler(async (req, res) => {
@@ -153,7 +144,7 @@ export const applyCoupon = asyncHandler(async (req, res) => {
   if (req.session.appliedCoupon) {
     return res.json({
       success: false,
-      message: "Coupon already applied",
+      message: 'Coupon already applied',
     });
   }
 
@@ -166,34 +157,34 @@ export const applyCoupon = asyncHandler(async (req, res) => {
   if (!coupon) {
     return res.json({
       success: false,
-      message: "Invalid coupon",
+      message: 'Invalid coupon',
     });
   }
 
   if (coupon.expiry < new Date()) {
     return res.json({
       success: false,
-      message: "Coupon is expired",
+      message: 'Coupon is expired',
     });
   }
   if (coupon.useCount >= coupon.maxUsage) {
     return res.json({
       success: false,
-      message: "Coupon usage limit exceeded",
+      message: 'Coupon usage limit exceeded',
     });
   }
 
   if (coupon.usedBy.includes(userId)) {
     return res.json({
       success: false,
-      message: "You have already used this coupon",
+      message: 'You have already used this coupon',
     });
   }
 
-  const cart = await Cart.findOne({ user: userId }).populate("items.variant");
+  const cart = await Cart.findOne({ user: userId }).populate('items.variant');
 
   if (!cart || cart.items.length === 0) {
-    return res.json({ success: false, message: "Your cart is empty" });
+    return res.json({ success: false, message: 'Your cart is empty' });
   }
 
   let subtotal = 0;
@@ -222,7 +213,7 @@ export const applyCoupon = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: "Coupon applied",
+    message: 'Coupon applied',
     discountAmount,
   });
 });
@@ -231,7 +222,7 @@ export const removeCoupon = asyncHandler(async (req, res) => {
   req.session.appliedCoupon = null;
   res.json({
     success: true,
-    message: "Coupon removed",
+    message: 'Coupon removed',
   });
 });
 
@@ -242,24 +233,20 @@ export const placeOrder = asyncHandler(async (req, res) => {
   if (orderId) {
     const order = await Order.findById(orderId);
 
-    if (
-      !order ||
-      order.paymentStatus !== "FAILED" ||
-      order.paymentMethod !== "RAZORPAY"
-    ) {
+    if (!order || order.paymentStatus !== 'FAILED' || order.paymentMethod !== 'RAZORPAY') {
       return res.status(400).json({
         success: false,
-        message: "Invalid retry attempt",
+        message: 'Invalid retry attempt',
       });
     }
     const razorpayOrder = await razorpay.orders.create({
       amount: order.totalAmount * 100,
-      currency: "INR",
+      currency: 'INR',
       receipt: order.orderId,
     });
 
     order.razorpayOrderId = razorpayOrder.id;
-    order.paymentStatus = "PENDING";
+    order.paymentStatus = 'PENDING';
     await order.save();
 
     return res.json({
@@ -277,24 +264,24 @@ export const placeOrder = asyncHandler(async (req, res) => {
   if (!addressId) {
     return res.status(400).json({
       success: false,
-      message: "Please select an address",
+      message: 'Please select an address',
     });
   }
   if (!paymentMethod) {
     return res.status(400).json({
       success: false,
-      message: "payment method required",
+      message: 'payment method required',
     });
   }
 
   const cart = await Cart.findOne({ user: userId })
-    .populate("items.product")
-    .populate("items.variant");
+    .populate('items.product')
+    .populate('items.variant');
 
   if (!cart || cart.items.length === 0) {
     return res.status(400).json({
       success: false,
-      message: "Your cart is empty",
+      message: 'Your cart is empty',
     });
   }
 
@@ -306,7 +293,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
   if (!address) {
     return res.status(400).json({
       success: false,
-      message: "Selected address is not available",
+      message: 'Selected address is not available',
     });
   }
 
@@ -378,7 +365,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
       req.session.appliedCoupon = null;
       return res.status(400).json({
         success: false,
-        message: "Applied coupoun is no longer valid",
+        message: 'Applied coupoun is no longer valid',
       });
     }
     couponDiscount = appliedCoupon.discountAmount;
@@ -389,21 +376,21 @@ export const placeOrder = asyncHandler(async (req, res) => {
   tax = Math.round((subtotal - couponDiscount) * 0.18);
   totalAmount = subtotal - couponDiscount + tax + shipping;
 
-  if (paymentMethod === "WALLET") {
+  if (paymentMethod === 'WALLET') {
     const wallet = await Wallet.findOne({ user: userId });
 
     if (!wallet || wallet.balance < totalAmount) {
       return res.status(400).json({
         success: false,
-        message: "Insufficient wallet balance",
+        message: 'Insufficient wallet balance',
       });
     }
   }
 
-  if (paymentMethod === "COD" && totalAmount > COD_LIMIT) {
+  if (paymentMethod === 'COD' && totalAmount > COD_LIMIT) {
     return res.status(400).json({
       success: false,
-      message: "Cash on Delivery not availble for this amount",
+      message: 'Cash on Delivery not availble for this amount',
     });
   }
 
@@ -425,7 +412,7 @@ export const placeOrder = asyncHandler(async (req, res) => {
     discount: couponDiscount,
     tax,
     totalAmount,
-    paymentStatus: "PENDING",
+    paymentStatus: 'PENDING',
   });
 
   if (appliedCoupon) {
@@ -437,15 +424,15 @@ export const placeOrder = asyncHandler(async (req, res) => {
     req.session.appliedCoupon = null;
   }
 
-  if (paymentMethod === "WALLET") {
+  if (paymentMethod === 'WALLET') {
     await debitWallet({
       userId,
       amount: totalAmount,
-      reason: "Order payment",
+      reason: 'Order payment',
       orderId: order._id,
     });
 
-    order.paymentStatus = "PAID";
+    order.paymentStatus = 'PAID';
     await order.save();
 
     for (const item of cart.items) {
@@ -458,13 +445,13 @@ export const placeOrder = asyncHandler(async (req, res) => {
 
     return res.json({
       success: true,
-      message: "Order placed using wallet",
+      message: 'Order placed using wallet',
       orderId: order._id,
       redirectUrl: `/order-success/${order._id}`,
     });
   }
 
-  if (paymentMethod === "COD") {
+  if (paymentMethod === 'COD') {
     for (const item of cart.items) {
       await Variant.findByIdAndUpdate(item.variant._id, {
         $inc: { stock: -item.quantity },
@@ -476,16 +463,16 @@ export const placeOrder = asyncHandler(async (req, res) => {
 
     return res.json({
       success: true,
-      message: "Order placed successfully",
+      message: 'Order placed successfully',
       orderId: order._id,
       redirectUrl: `/order-success/${order._id}`,
     });
   }
 
-  if (paymentMethod === "RAZORPAY") {
+  if (paymentMethod === 'RAZORPAY') {
     const razorpayOrder = await razorpay.orders.create({
       amount: totalAmount * 100,
-      currency: "INR",
+      currency: 'INR',
       receipt: order.orderId,
     });
 

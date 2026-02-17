@@ -1,486 +1,458 @@
-<link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,0,0" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script id="tailwind-config">
-    tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                colors: {
-                    "primary": "#38e07b",
-                    "background-dark": "#111714",
-                    "card-dark": "#1c2e24",
-                    "accent-dark": "#29382f"
-                },
-                fontFamily: {
-                    "display": ["Spline Sans", "sans-serif"],
-                    "body": ["Spline Sans", "sans-serif"],
-                }
-            },
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#38e07b",
+          "background-dark": "#111714",
+          "card-dark": "#1c2e24",
+          "accent-dark": "#29382f"
         },
-    }
+        fontFamily: {
+          "display": ["Spline Sans", "sans-serif"],
+          "body": ["Spline Sans", "sans-serif"],
+        }
+      },
+    },
+  }
 </script>
+
 <style>
-    body {
-        background-color: #111714;
-        color: white;
-        font-family: 'Spline Sans', sans-serif;
-        font-size: 13px;
-    }
+  body {
+    background-color: #111714;
+    color: white;
+    font-family: 'Spline Sans', sans-serif;
+    font-size: 13px;
+  }
 
-    .material-symbols-rounded {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
-        vertical-align: middle;
-    }
+  .material-symbols-rounded {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    vertical-align: middle;
+  }
 
-    .card-bg {
-        background: linear-gradient(145deg, #1c2e24, #111714);
-        border: 1px solid rgba(56, 224, 123, 0.1);
-    }
+  .card-bg {
+    background: linear-gradient(145deg, #1c2e24, #111714);
+    border: 1px solid rgba(56, 224, 123, 0.1);
+  }
 
-    .zoom-container {
-        position: relative;
-        overflow: hidden;
-        cursor: zoom-in;
-    }
+  .zoom-container {
+    position: relative;
+    overflow: hidden;
+    cursor: zoom-in;
+  }
 
-    .zoom-container img {
-        transition: transform 0.3s ease;
-        transform-origin: center center;
-    }
+  .zoom-container img {
+    transition: transform 0.3s ease;
+    transform-origin: center center;
+  }
 
-    /* Keeping your original zoom style but the JS will handle the origin */
-    .zoom-container:hover img {
-        transform: scale(1.8);
-    }
+  .zoom-container:hover img {
+    transform: scale(1.8);
+  }
 
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
-    }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
 
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #38e07b;
-        border-radius: 10px;
-    }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #38e07b;
+    border-radius: 10px;
+  }
 </style>
-</head>
 
 <main class="max-w-6xl mx-auto px-6 py-6">
-    <nav class="text-[9px] text-gray-500 mb-4 uppercase tracking-widest">
-        <a href="/" class="hover:text-primary transition-colors">Home</a> /
-        <a href="/shop" class="hover:text-primary transition-colors">Shop</a> /
-        <!-- <a href="/category/<%= product.category._id %>" class="hover:text-primary transition-colors">
-            <%= product.category.name %>
-        </a> /  -->
-        <span class="text-white">
-            <%= product.name %>
+  <nav class="text-[9px] text-gray-500 mb-4 uppercase tracking-widest">
+    <a href="/" class="hover:text-primary transition-colors">Home</a> /
+    <a href="/shop" class="hover:text-primary transition-colors">Shop</a> /
+    <span class="text-white">
+      <%= product.name %>
+    </span>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+    <div class="space-y-3">
+      <div id="mainImageContainer" class="zoom-container relative bg-zinc-900 rounded-xl overflow-hidden aspect-square border border-white/5 max-w-[450px] mx-auto lg:mx-0">
+        <span class="absolute top-4 left-4 bg-primary text-black text-[9px] font-bold px-2 py-0.5 rounded-full uppercase z-10">New Arrival</span>
+        <% const activeImg = defaultVariant.images.find(img => img.isPrimary) || defaultVariant.images[0]; %>
+        <img id="mainProductImage" src="<%= activeImg.url %>" class="w-full h-full object-cover">
+      </div>
+
+      <div class="grid grid-cols-4 py-2 gap-2 max-w-[450px] mx-auto lg:mx-0">
+        <% defaultVariant.images.forEach(img => { %>
+        <div class="aspect-square rounded-xl overflow-hidden border border-white/10 cursor-pointer opacity-80 hover:opacity-100 transition-all" onclick="document.getElementById('mainProductImage').src='<%= img.url %>'">
+          <img src="<%= img.url %>" class="w-full h-full object-cover">
+        </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <div class="flex flex-col pt-2">
+      <h1 class="text-2xl font-bold mb-1">
+        <%= product.name %>
+      </h1>
+      <p class="text-gray-400 text-xs mb-4">
+        <%= product.description %>
+      </p>
+
+      <div class="flex items-center gap-2 mb-4">
+        <div class="flex text-yellow-500 text-[10px]">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+        <span class="text-[9px] text-gray-500">(154 Reviews)</span>
+      </div>
+
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-2xl font-bold text-primary">₹<%= defaultVariant.finalPrice.toLocaleString() %></span>
+        <% if(defaultVariant.appliedOffer > 0) { %>
+        <span class="text-sm text-gray-500 line-through">₹<%= defaultVariant.basePrice.toLocaleString() %></span>
+        <span class="bg-red-500/10 text-red-500 text-[9px] font-bold px-1.5 py-0.5 rounded">
+          <%= defaultVariant.appliedOffer %>% OFF
         </span>
-    </nav>
+        <% } %>
+      </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+      <div class="mb-6">
+        <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-3">Select Color</p>
+        <div class="flex flex-wrap gap-2">
+          <% variants.forEach(v => { %>
+          <a href="/product/<%= product._id %>?variantId=<%= v._id %>" class="px-3 py-1.5 text-[10px] border <%= v._id.toString() === defaultVariant._id.toString() ? 'border-primary text-primary font-bold' : 'border-white/10 text-white font-medium' %> rounded hover:border-primary/50 transition">
+            <%= v.color.toUpperCase() %>
+          </a>
+          <% }) %>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Quantity</p>
+        <div class="inline-flex items-center bg-zinc-900 border border-white/10 rounded px-3 py-1.5">
+          <button class="text-gray-500 hover:text-white" onclick="changeQty('<%= defaultVariant._id %>', -1, <%= defaultVariant.stock %>)">-</button>
+          <span id="quantity-val-<%= defaultVariant._id %>" class="mx-4 text-xs font-bold">1</span>
+          <button class="text-gray-500 hover:text-white" onclick="changeQty('<%= defaultVariant._id %>', 1, <%= defaultVariant.stock %>)">+</button>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mb-6">
+        <button type="button" onclick="addToCart('<%= product._id %>','<%= defaultVariant._id %>')" class="rounded-xl flex-1 bg-primary text-black text-xs font-bold py-2.5 hover:bg-primary/90 transition flex items-center justify-center gap-2 <%= defaultVariant.stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' %>" <%= defaultVariant.stock <= 0 ? 'disabled' : '' %>>
+          <span class="material-symbols-rounded text-sm">shopping_bag</span>
+          <%= defaultVariant.stock <= 0 ? 'Out of Stock' : 'Add to Cart' %>
+        </button>
+
+        <button type="button" id="wishlistText" onclick="addToWishlist('<%= product._id %>','<%= defaultVariant._id %>')" class="flex-1 rounded-xl border border-white/20 text-white text-xs font-bold py-2.5 hover:bg-white/5 transition flex items-center justify-center gap-2">
+          <span id="wishlistIcon" class="material-symbols-rounded text-sm">favorite</span> Add to Wishlist
+        </button>
+      </div>
+
+      <div class="bg-white/5 border border-white/10 rounded-xl p-4 mb-6">
+        <div class="flex items-center gap-2 text-[10px] font-bold mb-3 uppercase tracking-wider">
+          <span class="material-symbols-rounded text-primary text-sm">verified</span> Technical Specifications
+        </div>
+        <div class="grid grid-cols-2 gap-y-2 text-[10px] text-gray-400">
+          <div class="flex items-center gap-2">
+            <div class="w-1 h-1 bg-primary rounded-full"></div> Dial: <%= product.specifications.caseSize %>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1 h-1 bg-primary rounded-full"></div> Strap: <%= product.specifications.strapType %>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1 h-1 bg-primary rounded-full"></div> Movement: <%= product.specifications.movementType %>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1 h-1 bg-primary rounded-full"></div> Warranty: 2 Years
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Delivery & Services</p>
         <div class="space-y-3">
-            <div id="mainImageContainer"
-                class="zoom-container relative bg-zinc-900 rounded-xl overflow-hidden aspect-square border border-white/5 max-w-[450px] mx-auto lg:mx-0">
-                <span
-                    class="absolute top-4 left-4 bg-primary text-black text-[9px] font-bold px-2 py-0.5 rounded-full uppercase z-10">New
-                    Arrival</span>
-                <% const activeImg=defaultVariant.images.find(img=> img.isPrimary) || defaultVariant.images[0]; %>
-                    <img id="mainProductImage" src="<%= activeImg.url %>" class="w-full h-full object-cover">
-            </div>
-
-            <div class="grid grid-cols-4 py-2 gap-2 max-w-[450px] mx-auto lg:mx-0">
-                <% defaultVariant.images.forEach(img=> { %>
-                    <div class="aspect-square rounded-xl overflow-hidden border border-white/10 cursor-pointer opacity-80 hover:opacity-100 transition-all"
-                        onclick="document.getElementById('mainProductImage').src='<%= img.url %>'">
-                        <img src="<%= img.url %>" class="w-full h-full object-cover">
-                    </div>
-                    <% }) %>
-            </div>
-        </div>
-
-        <div class="flex flex-col pt-2">
-            <h1 class="text-2xl font-bold mb-1">
-                <%= product.name %>
-            </h1>
-            <p class="text-gray-400 text-xs mb-4">
-                <%= product.description %>
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-rounded text-primary text-lg">local_shipping</span>
+            <p class="text-[10px] text-gray-400 leading-tight">
+              Free delivery by <span class="text-white font-bold">Mon, 18 Aug</span> if you order within 8 hrs 30 mins.
             </p>
-
-
-            <div class="flex items-center gap-2 mb-4">
-                <div class="flex text-yellow-500 text-[10px]">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                        class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                </div>
-                <span class="text-[9px] text-gray-500">(154 Reviews)</span>
-            </div>
-
-            <div class="flex items-center gap-3 mb-6">
-                <span class="text-2xl font-bold text-primary">₹<%= defaultVariant.finalPrice.toLocaleString() %></span>
-                <% if(defaultVariant.appliedOffer> 0) { %>
-                    <span class="text-sm text-gray-500 line-through">₹<%= defaultVariant.basePrice.toLocaleString() %>
-                    </span>
-                    <span class="bg-red-500/10 text-red-500 text-[9px] font-bold px-1.5 py-0.5 rounded">
-                        <%= defaultVariant.appliedOffer %>% OFF
-                    </span>
-                    <% } %>
-            </div>
-
-            <div class="mb-6">
-                <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-3">Select Color</p>
-                <div class="flex flex-wrap gap-2">
-                    <% variants.forEach(v=> { %>
-                        <a href="/product/<%= product._id %>?variantId=<%= v._id %>"
-                            class="px-3 py-1.5 text-[10px] border <%= v._id.toString() === defaultVariant._id.toString() ? 'border-primary text-primary font-bold' : 'border-white/10 text-white font-medium' %> rounded hover:border-primary/50 transition">
-                            <%= v.color.toUpperCase() %>
-                        </a>
-                        <% }) %>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">Quantity</p>
-                <div class="inline-flex items-center bg-zinc-900 border border-white/10 rounded px-3 py-1.5">
-                    <button class="text-gray-500 hover:text-white"
-                        onclick="changeQty('<%= defaultVariant._id %>', -1, <%= defaultVariant.stock %>)">-</button>
-                    <span id="quantity-val-<%= defaultVariant._id %>" class="mx-4 text-xs font-bold">1</span>
-                    <button class="text-gray-500 hover:text-white"
-                        onclick="changeQty('<%= defaultVariant._id %>', 1, <%= defaultVariant.stock %>)">+</button>
-                </div>
-            </div>
-
-            <div class="flex gap-3 mb-6">
-                <button type="button" onclick="addToCart('<%= product._id %>','<%= defaultVariant._id %>')"
-                    class="rounded-xl flex-1 bg-primary text-black text-xs font-bold py-2.5 hover:bg-primary/90 transition flex items-center justify-center gap-2 <%= defaultVariant.stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' %>"
-                    <%=defaultVariant.stock <=0 ? 'disabled' : '' %>>
-                    <span class="material-symbols-rounded text-sm">shopping_bag</span>
-                    <%= defaultVariant.stock <=0 ? 'Out of Stock' : 'Add to Cart' %>
-                </button>
-
-                <button type="button" id="wishlistText"
-                    onclick="addToWishlist('<%= product._id %>','<%= defaultVariant._id %>')"
-                    class="flex-1 rounded-xl border border-white/20 text-white text-xs font-bold py-2.5 hover:bg-white/5 transition flex items-center justify-center gap-2">
-                    <span id="wishlistIcon" class="material-symbols-rounded text-sm">favorite</span> Add to Wishlist
-                </button>
-            </div>
-
-            <div class="bg-white/5 border border-white/10 rounded-xl p-4 mb-6">
-                <div class="flex items-center gap-2 text-[10px] font-bold mb-3 uppercase tracking-wider">
-                    <span class="material-symbols-rounded text-primary text-sm">verified</span> Technical Specifications
-                </div>
-                <div class="grid grid-cols-2 gap-y-2 text-[10px] text-gray-400">
-                    <div class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-primary rounded-full"></div> Dial: <%= product.specifications.caseSize %>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-primary rounded-full"></div> Strap: <%= product.specifications.strapType
-                            %>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-primary rounded-full"></div> Movement: <%=
-                            product.specifications.movementType %>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-primary rounded-full"></div> Warranty: 2 Years
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Delivery & Services</p>
-                <div class="space-y-3">
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-rounded text-primary text-lg">local_shipping</span>
-                        <p class="text-[10px] text-gray-400 leading-tight">
-                            Free delivery by <span class="text-white font-bold">Mon, 18 Aug</span> if you order within 8
-                            hrs 30 mins.
-                        </p>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="material-symbols-rounded text-primary text-lg">payments</span>
-                        <p class="text-[10px] text-gray-400 leading-tight">
-                            Get flat <span class="text-white font-bold">₹500 off</span> on Axis Bank Credit Cards.
-                        </p>
-                    </div>
-                </div>
-            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-rounded text-primary text-lg">payments</span>
+            <p class="text-[10px] text-gray-400 leading-tight">
+              Get flat <span class="text-white font-bold">₹500 off</span> on Axis Bank Credit Cards.
+            </p>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="border-t border-white/5 pt-2">
+    <div class="flex gap-8 border-b border-white/5 mb-6 overflow-x-auto pb-3">
+      <button class="text-primary font-bold text-[10px] uppercase tracking-widest border-b border-primary pb-3">Specifications</button>
     </div>
 
-    <section class="border-t border-white/5 pt-2">
-        <div class="flex gap-8 border-b border-white/5 mb-6 overflow-x-auto pb-3">
-            <button
-                class="text-primary font-bold text-[10px] uppercase tracking-widest border-b border-primary pb-3">Specifications</button>
-            <!-- <button
-                class="text-gray-500 font-bold text-[10px] uppercase tracking-widest hover:text-white pb-3">Description</button> -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="md:col-span-2">
+        <h2 class="text-sm font-bold mb-4">Product Highlights</h2>
+        <div class="space-y-px rounded overflow-hidden border border-white/5">
+          <div class="grid grid-cols-2 bg-white/5 p-3">
+            <span class="text-gray-500 text-[10px]">Category</span>
+            <span class="text-white text-[10px]"><%= product.category?.name || "N/A" %></span>
+          </div>
+          <div class="grid grid-cols-2 bg-white/5 p-3">
+            <span class="text-gray-500 text-[10px]">Case Diameter</span>
+            <span class="text-white text-[10px]"><%= product.specifications.caseSize %></span>
+          </div>
+          <div class="grid grid-cols-2 bg-zinc-900/50 p-3">
+            <span class="text-gray-500 text-[10px]">Strap Type</span>
+            <span class="text-white text-[10px]"><%= product.specifications.strapType %></span>
+          </div>
+          <div class="grid grid-cols-2 bg-white/5 p-3">
+            <span class="text-gray-500 text-[10px]">Movement</span>
+            <span class="text-white text-[10px]"><%= product.specifications.movementType %></span>
+          </div>
         </div>
+      </div>
+      <div class="bg-primary/5 border border-primary/20 rounded-xl p-6 flex flex-col items-center text-center h-fit">
+        <p class="font-bold text-xs mb-1">Need help choosing?</p>
+        <p class="text-[9px] text-gray-400 mb-4">Our watch experts are available to guide you through the features of the <%= product.name %>.</p>
+        <button class="w-full bg-accent-dark py-2 rounded text-primary text-[10px] font-bold hover:bg-primary hover:text-black transition">Chat with Expert</button>
+      </div>
+    </div>
+  </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="md:col-span-2">
-                <h2 class="text-sm font-bold mb-4">Product Highlights</h2>
-                <div class="space-y-px rounded overflow-hidden border border-white/5">
-                    <div class="grid grid-cols-2 bg-white/5 p-3"><span class="text-gray-500 text-[10px]">
-                            Category</span><span class="text-white text-[10px]">
-                            <%= product.category?.name || "N/A" %>
-                        </span></div>
-                    <div class="grid grid-cols-2 bg-white/5 p-3"><span class="text-gray-500 text-[10px]">Case
-                            Diameter</span><span class="text-white text-[10px]">
-                            <%= product.specifications.caseSize %>
-                        </span></div>
-                    <div class="grid grid-cols-2 bg-zinc-900/50 p-3"><span class="text-gray-500 text-[10px]">Strap
-                            Type</span><span class="text-white text-[10px]">
-                            <%= product.specifications.strapType %>
-                        </span></div>
-                    <div class="grid grid-cols-2 bg-white/5 p-3"><span
-                            class="text-gray-500 text-[10px]">Movement</span><span class="text-white text-[10px]">
-                            <%= product.specifications.movementType %>
-                        </span></div>
-                </div>
-            </div>
-            <div
-                class="bg-primary/5 border border-primary/20 rounded-xl p-6 flex flex-col items-center text-center h-fit">
-                <p class="font-bold text-xs mb-1">Need help choosing?</p>
-                <p class="text-[9px] text-gray-400 mb-4">Our watch experts are available to guide you through the
-                    features of the <%= product.name %>.</p>
-                <button
-                    class="w-full bg-accent-dark py-2 rounded text-primary text-[10px] font-bold hover:bg-primary hover:text-black transition">Chat
-                    with Expert</button>
-            </div>
+  <section class="mt-16">
+    <div class="flex justify-between items-end mb-6">
+      <h2 class="text-xl font-bold">You Might Also Like</h2>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <% recommendations.forEach(rec => { %>
+      <% if (rec && rec.variant) { %>
+      <div class="card-bg rounded-lg p-3 group">
+        <div class="bg-zinc-900 rounded overflow-hidden mb-3 aspect-square relative">
+          <img src="<%= rec.variant.images[0]?.url %>" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <% if (rec.variant.appliedOffer > 0) { %>
+          <span class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+            <%= rec.variant.appliedOffer %>% OFF
+          </span>
+          <% } %>
         </div>
-    </section>
-    <section class="mt-16">
-        <div class="flex justify-between items-end mb-6">
-            <h2 class="text-xl font-bold">You Might Also Like</h2>
+        <h3 class="font-bold text-[11px] mb-1 truncate">
+          <%= rec.name %>
+        </h3>
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-primary font-bold text-xs">₹<%= rec.variant.finalPrice.toLocaleString() %></span>
+            <% if (rec.variant.appliedOffer > 0) { %>
+            <span class="block text-[9px] text-gray-500 line-through">₹<%= rec.variant.basePrice.toLocaleString() %></span>
+            <% } %>
+          </div>
+          <a href="/product/<%= rec._id %>" class="text-[9px] text-gray-500 uppercase font-bold border-b border-primary/30">View</a>
         </div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <% recommendations.forEach(rec=> { %>
-                <% if (rec && rec.variant) { %>
-                    <div class="card-bg rounded-lg p-3 group">
-                        <div class="bg-zinc-900 rounded overflow-hidden mb-3 aspect-square relative">
-                            <img src="<%= rec.variant.images[0]?.url %>"
-                                class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-                            <% if (rec.variant.appliedOffer> 0) { %>
-                                <span
-                                    class="absolute top-2 left-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
-                                    <%= rec.variant.appliedOffer %>% OFF
-                                </span>
-                                <% } %>
-                        </div>
-                        <h3 class="font-bold text-[11px] mb-1 truncate">
-                            <%= rec.name %>
-                        </h3>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-primary font-bold text-xs">
-                                    ₹<%= rec.variant.finalPrice.toLocaleString() %>
-                                </span>
-                                <% if (rec.variant.appliedOffer> 0) { %>
-                                    <span class="block text-[9px] text-gray-500 line-through">
-                                        ₹<%= rec.variant.basePrice.toLocaleString() %>
-                                    </span>
-                                    <% } %>
-                            </div>
-                            <a href="/product/<%= rec._id %>"
-                                class="text-[9px] text-gray-500 uppercase font-bold border-b border-primary/30">
-                                View
-                            </a>
-                        </div>
-                    </div>
-                    <% } %>
-                        <% }) %>
-        </div>
-    </section>
+      </div>
+      <% } %>
+      <% }) %>
+    </div>
+  </section>
 </main>
-<footer class="border-t border-[#29382f] bg-[#0d120f] pt-16 pb-8">
-    <div class="mx-auto max-w-[1440px] px-4 md:px-10">
-        <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5 mb-16">
-            <div class="lg:col-span-2">
-                <div class="flex items-center gap-2 mb-6">
-                    <span class="material-symbols-outlined text-primary text-[28px]">watch</span>
-                    <h2 class="text-2xl font-bold text-white">LUXE TIME</h2>
-                </div>
-                <p class="max-w-xs text-gray-400">
-                    The destination for premium timepieces. We believe a watch is more than just a tool to tell time;
-                    it's a statement of legacy and style.
-                </p>
-                <div class="mt-6 flex gap-4">
-                    <a class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors"
-                        href="#">
-                        <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
-                            <path
-                                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z">
-                            </path>
-                        </svg>
-                    </a>
-                    <a class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors"
-                        href="#">
-                        <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z">
-                            </path>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div>
-                <h4 class="mb-6 font-bold text-white">Shop</h4>
-                <ul class="flex flex-col gap-4 text-sm text-gray-400">
-                    <li><a class="hover:text-primary transition-colors" href="#">Men's Watches</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Women's Watches</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Kids Watches</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="mb-6 font-bold text-white">Support</h4>
-                <ul class="flex flex-col gap-4 text-sm text-gray-400">
-                    <li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Order Status</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Shipping &amp; Returns</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Watch Care</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="mb-6 font-bold text-white">Company</h4>
-                <ul class="flex flex-col gap-4 text-sm text-gray-400">
-                    <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
-                    <li><a class="hover:text-primary transition-colors" href="#">Stores</a></li>
-                </ul>
-            </div>
-        </div>
 
+<footer class="border-t border-[#29382f] bg-[#0d120f] pt-16 pb-8">
+  <div class="mx-auto max-w-[1440px] px-4 md:px-10">
+    <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5 mb-16">
+      <div class="lg:col-span-2">
+        <div class="flex items-center gap-2 mb-6">
+          <span class="material-symbols-outlined text-primary text-[28px]">watch</span>
+          <h2 class="text-2xl font-bold text-white">LUXE TIME</h2>
+        </div>
+        <p class="max-w-xs text-gray-400">
+          The destination for premium timepieces. We believe a watch is more than just a tool to tell time; it's a statement of legacy and style.
+        </p>
+        <div class="mt-6 flex gap-4">
+          <a class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors" href="#">
+            <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
+              <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
+            </svg>
+          </a>
+          <a class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1c2e24] text-white hover:bg-primary hover:text-black transition-colors" href="#">
+            <svg class="h-5 w-5 fill-current" viewbox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.85-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 class="mb-6 font-bold text-white">Shop</h4>
+        <ul class="flex flex-col gap-4 text-sm text-gray-400">
+          <li><a class="hover:text-primary transition-colors" href="#">Men's Watches</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Women's Watches</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Kids Watches</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mb-6 font-bold text-white">Support</h4>
+        <ul class="flex flex-col gap-4 text-sm text-gray-400">
+          <li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Order Status</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Shipping &amp; Returns</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Watch Care</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="mb-6 font-bold text-white">Company</h4>
+        <ul class="flex flex-col gap-4 text-sm text-gray-400">
+          <li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#">Stores</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
 </footer>
 
 <script>
+  // Image Zoom Feature
+  const container = document.getElementById('mainImageContainer');
+  const img = document.getElementById('mainProductImage');
+  container.addEventListener('mousemove', (e) => {
+    const rect = container.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    img.style.transformOrigin = `${x}px ${y}px`;
+  });
+  container.addEventListener('mouseleave', () => {
+    img.style.transformOrigin = 'center center';
+  });
 
-    // Image Zoom Feature
-    const container = document.getElementById('mainImageContainer');
-    const img = document.getElementById('mainProductImage');
-    container.addEventListener('mousemove', (e) => {
-        const rect = container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        img.style.transformOrigin = `${x}px ${y}px`;
-    });
-    container.addEventListener('mouseleave', () => {
-        img.style.transformOrigin = 'center center';
-    });
+  // Quantity Control
+  function changeQty(variantId, val, stock) {
+    const qtySpan = document.getElementById(`quantity-val-${variantId}`);
 
-    // Quantity Control
-    function changeQty(variantId, val, stock) {
-        const qtySpan = document.getElementById(`quantity-val-${variantId}`);
+    const MAX_QTY = 10;
+    let current = parseInt(qtySpan.innerText);
+    let next = current + val;
 
-        const MAX_QTY =10;
-        let current = parseInt(qtySpan.innerText);
-        let next = current + val;
-        
-        if(next<1){
-            Swal.fire({
-                icon:"warning",
-                title:"Minimum qunatity is 1",
-                timer:1200,
-                showConfirmButton:false
-            })
-            return ;
-        }
-        if(next >MAX_QTY){
-            Swal.fire({
-                icon:"warning",
-                title:`You can only by ${MAX_QTY} units`,
-                timer:1200,
-                showConfirmButton:false
-            })
-            return;
-        }
-        if(next >stock){
-            Swal.fire({
-                icon:"warning",
-                title:`Only ${stock} items available`,
-                timer:1200,
-                showConfirmButton:false
-            })
-            return;
-        }
-            qtySpan.innerText = next;
+    if (next < 1) {
+      Swal.fire({
+        icon: "warning",
+        title: "Minimum qunatity is 1",
+        timer: 1200,
+        showConfirmButton: false
+      })
+      return;
     }
+    if (next > MAX_QTY) {
+      Swal.fire({
+        icon: "warning",
+        title: `You can only by ${MAX_QTY} units`,
+        timer: 1200,
+        showConfirmButton: false
+      })
+      return;
+    }
+    if (next > stock) {
+      Swal.fire({
+        icon: "warning",
+        title: `Only ${stock} items available`,
+        timer: 1200,
+        showConfirmButton: false
+      })
+      return;
+    }
+    qtySpan.innerText = next;
+  }
 
 
-    function addToCart(productId, variantId) {
-        const quantity = parseInt(document.getElementById(`quantity-val-${variantId}`).innerText);
-        fetch("/cart/add", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                productId,
-                variantId,
-                quantity
-            })
+  function addToCart(productId, variantId) {
+    const quantity = parseInt(document.getElementById(`quantity-val-${variantId}`).innerText);
+    fetch("/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          productId,
+          variantId,
+          quantity
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Added to cart",
-                        text: "Item has been added to your cart",
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Added to cart",
+            text: "Item has been added to your cart",
+            showConfirmButton: false,
+            timer: 1500
+          })
 
-                    const cartCounte1 = document.getElementById("cartCount");
+          const cartCounte1 = document.getElementById("cartCount");
 
-                    if (cartCounte1) {
-                        cartCounte1.innerText = data.cartCount;
-                        cartCounte1.style.display = "flex"
-                    }
-                } else {
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Oops!",
-                        text: data.message || "Unable to add item"
-                    })
-                }
-            }).catch(() => {
-                Swal.fire({
-                    icon: "error",
-                    title: "error",
-                    text: "Something went wrong.Please try again."
-                })
-            })
-    }
-
-    async function addToWishlist(productId, variantId) {
-        try {
-            const res = await fetch("/wishlist/add", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ productId, variantId })
-            })
-
-            const data = await res.json();
-
-            if (!data.success) {
-                Swal.fire("Error", "Unable to add wishlist", "error");
-            }
-
-            document.getElementById("wishlistIcon").innerText = "❤️";
-            document.getElementById("wishlistText").innerHTML = data.alreadyAdded ? "In wishlist" : "Added";
-
-            Swal.fire({
-                icon: "success",
-                title: data.alreadyAdded ? "Already in wishlist" : "Added to wishlist",
-                timer: 1000,
-                showConfirmButton: true
-            })
-        } catch {
-            Swal.fire("Error", "Something wrong", "error");
+          if (cartCounte1) {
+            cartCounte1.innerText = data.cartCount;
+            cartCounte1.style.display = "flex"
+          }
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "Oops!",
+            text: data.message || "Unable to add item"
+          })
         }
+      }).catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "error",
+          text: "Something went wrong.Please try again."
+        })
+      })
+  }
+
+  async function addToWishlist(productId, variantId) {
+    try {
+      const res = await fetch("/wishlist/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          productId,
+          variantId
+        })
+      })
+
+      if (res.status === 401) {
+        const data = await res.json();
+        return Swal.fire({
+          icon: "warning",
+          title: "Login Required",
+          text: data.message,
+          background: "#161b18",
+          color: "#fff",
+          confirmButtonColor: "#4ade80"
+        });
+      }
+
+      const data = await res.json();
+
+      if (!data.success) {
+        Swal.fire("Error", "Unable to add wishlist", "error");
+      }
+
+      document.getElementById("wishlistIcon").innerText = "❤️";
+      document.getElementById("wishlistText").innerHTML = data.alreadyAdded ? "In wishlist" : "Added";
+
+      Swal.fire({
+        icon: "success",
+        title: data.alreadyAdded ? "Already in wishlist" : "Added to wishlist",
+        timer: 1000,
+        showConfirmButton: true
+      })
+    } catch {
+      Swal.fire("Error", "Something wrong", "error");
     }
+  }
 </script>

@@ -1,257 +1,318 @@
 <body class="h-full font-sans antialiased text-slate-200 bg-black">
+  <div class="flex min-h-screen w-full">
+    <div
+      class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:w-1/2 xl:px-24 bg-black relative border-r border-white/5"
+    >
+      <div
+        class="mx-auto w-full max-w-md bg-card-dark rounded-xl p-8 shadow-2xl ring-1 ring-white/10"
+      >
+        <header class="mb-6">
+          <h1 class="text-3xl font-bold text-white mb-2">Create Your Account</h1>
+          <p class="text-sm text-neutral-400">
+            Join us to track orders, save favourites, and receive exclusive offers.
+          </p>
+        </header>
 
-    <div class="flex min-h-screen w-full">
-        <div
-            class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:w-1/2 xl:px-24 bg-black relative border-r border-white/5">
+        <form id="signupForm" method="POST" class="space-y-4" novalidate>
+          <!-- Flash alerts -->
+          <%- include('../partials/alerts') %>
 
-            <div class="mx-auto w-full max-w-md bg-card-dark rounded-xl p-8 shadow-2xl ring-1 ring-white/10">
-                <header class="mb-6">
-                    <h1 class="text-3xl font-bold text-white mb-2">Create Your Account</h1>
-                    <p class="text-sm text-neutral-400">
-                        Join us to track orders, save favourites, and receive exclusive offers.
-                    </p>
-                </header>
+          <div>
+            <label class="block text-sm font-semibold text-neutral-200 mb-2">Full Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Enter your full name"
+              class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6"
+            />
+            <p id="nameErr" class="text-xs text-red-500 mt-1 hidden"></p>
+          </div>
 
-                <form id="signupForm" method="POST" class="space-y-4" novalidate>
+          <div>
+            <label class="block text-sm font-semibold text-neutral-200 mb-2">Email Address</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6"
+            />
+            <p id="emailErr" class="text-xs text-red-500 mt-1 hidden"></p>
+          </div>
 
-                    <!-- Flash alerts -->
-                    <%- include('../partials/alerts') %>
+          <div>
+            <label class="block text-sm font-semibold text-neutral-200 mb-2">Mobile Number</label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="Enter your phone number"
+              class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6"
+            />
+            <p id="phoneErr" class="text-xs text-red-500 mt-1 hidden"></p>
+          </div>
 
-                        <div>
-                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Full Name</label>
-                            <input id="name" name="name" type="text" placeholder="Enter your full name"
-                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                            <p id="nameErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                        </div>
+          <div>
+            <label class="block text-sm font-semibold text-neutral-200 mb-2">Referral Code</label>
+            <input
+              id="referralCode"
+              name="referralCode"
+              type="text"
+              placeholder="Enter your referalCode"
+              class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6"
+            />
+            <p id="referralErr" class="text-xs text-red-500 mt-1 hidden"></p>
+          </div>
 
-                        <div>
-                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Email Address</label>
-                            <input id="email" name="email" type="email" placeholder="Enter your email"
-                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                            <p id="emailErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                        </div>
+          <div>
+            <label class="block text-sm font-semibold text-neutral-200 mb-2">Password</label>
+            <div class="relative">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Create a password"
+                class="block w-full rounded-lg border-0 bg-dark-input py-3 pl-4 pr-10 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6"
+              />
 
-                        <div>
-                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Mobile Number</label>
-                            <input id="phone" name="phone" type="tel" placeholder="Enter your phone number"
-                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                            <p id="phoneErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                        </div>
+              <span
+                class="material-symbols-outlined absolute inset-y-0 right-0 pr-3 text-lg flex items-center text-neutral-500 cursor-pointer select-none z-10"
+                onclick="togglePassword('password')"
+              >
+                visibility_off
+              </span>
+            </div>
+            <p id="passwordErr" class="text-xs text-red-500 mt-1 hidden"></p>
+          </div>
 
-                        <div>
-                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Referral Code</label>
-                            <input id="referralCode" name="referralCode" type="text"
-                                placeholder="Enter your referalCode"
-                                class="block w-full rounded-lg border-0 bg-dark-input py-3 px-4 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-                            <p id="referralErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                        </div>
+          <div class="mt-4">
+            <label class="block text-sm font-semibold text-neutral-200 mb-2"
+              >Confirm Password</label
+            >
+            <div class="relative">
+              <input
+                id="confirm-password"
+                type="password"
+                placeholder="Re-enter your password"
+                class="block w-full rounded-lg border-0 bg-dark-input py-3 pl-4 pr-10 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6"
+              />
 
+              <span
+                class="material-symbols-outlined absolute inset-y-0 right-0 text-lg pr-3 flex items-center text-neutral-500 cursor-pointer select-none z-10"
+                onclick="togglePassword('confirm-password')"
+              >
+                visibility_off
+              </span>
+            </div>
+            <p id="confirmPasswordErr" class="text-xs text-red-500 mt-1 hidden"></p>
+          </div>
 
+          <div class="flex items-start pt-2">
+            <div class="flex h-5 items-center">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                required
+                class="h-4 w-4 rounded border-neutral-700 bg-neutral-800 text-primary focus:ring-primary cursor-pointer"
+              />
+            </div>
+            <div class="ml-3 text-sm leading-5">
+              <label class="font-medium text-neutral-400" for="terms"
+                >I agree to the
+                <a
+                  class="font-bold text-white hover:text-primary underline transition-colors"
+                  href="#"
+                  >Terms & Conditions</a
+                >
+                and
+                <a
+                  class="font-bold text-white hover:text-primary underline transition-colors"
+                  href="#"
+                  >Privacy Policy</a
+                >.</label
+              >
+            </div>
+          </div>
 
+          <div class="pt-2 space-y-3">
+            <button
+              type="submit"
+              class="w-full rounded-lg bg-primary py-3.5 text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20"
+            >
+              Create Account
+            </button>
 
-                        <div>
-                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Password</label>
-                            <div class="relative">
-                                <input id="password" name="password" type="password" placeholder="Create a password"
-                                    class="block w-full rounded-lg border-0 bg-dark-input py-3 pl-4 pr-10 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-
-                                <span
-                                    class="material-symbols-outlined absolute inset-y-0 right-0 pr-3 text-lg flex items-center text-neutral-500 cursor-pointer select-none z-10"
-                                    onclick="togglePassword('password')">
-                                    visibility_off
-                                </span>
-                            </div>
-                            <p id="passwordErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                        </div>
-
-                        <div class="mt-4">
-                            <label class="block text-sm font-semibold text-neutral-200 mb-2">Confirm Password</label>
-                            <div class="relative">
-                                <input id="confirm-password" type="password" placeholder="Re-enter your password"
-                                    class="block w-full rounded-lg border-0 bg-dark-input py-3 pl-4 pr-10 text-white shadow-sm ring-1 ring-inset ring-neutral-800 placeholder:text-neutral-600 focus:ring-2 focus:ring-inset focus:ring-primary-hover focus:bg-black transition-all duration-200 sm:text-sm sm:leading-6" />
-
-                                <span
-                                    class="material-symbols-outlined absolute inset-y-0 right-0 text-lg pr-3 flex items-center text-neutral-500 cursor-pointer select-none z-10"
-                                    onclick="togglePassword('confirm-password')">
-                                    visibility_off
-                                </span>
-                            </div>
-                            <p id="confirmPasswordErr" class="text-xs text-red-500 mt-1 hidden"></p>
-                        </div>
-
-                        <div class="flex items-start pt-2">
-                            <div class="flex h-5 items-center">
-                                <input id="terms" name="terms" type="checkbox" required
-                                    class="h-4 w-4 rounded border-neutral-700 bg-neutral-800 text-primary focus:ring-primary cursor-pointer" />
-                            </div>
-                            <div class="ml-3 text-sm leading-5">
-                                <label class="font-medium text-neutral-400" for="terms">I agree to the <a
-                                        class="font-bold text-white hover:text-primary underline transition-colors"
-                                        href="#">Terms & Conditions</a> and <a
-                                        class="font-bold text-white hover:text-primary underline transition-colors"
-                                        href="#">Privacy Policy</a>.</label>
-                            </div>
-                        </div>
-
-                        <div class="pt-2 space-y-3">
-                            <button type="submit"
-                                class="w-full rounded-lg bg-primary py-3.5 text-black font-bold hover:bg-primary-hover transition shadow-lg shadow-primary/20">
-                                Create Account
-                            </button>
-
-                            <div class="relative flex justify-center items-center py-2">
-                                <div class="absolute w-full border-t border-neutral-700"></div>
-                                <span class="relative text-sm font-medium text-neutral-500 bg-card-dark px-3">OR</span>
-                            </div>
-
-                            <button type="button" onclick="window.location.href='/auth/google'"
-                                class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-dark-input px-5 py-3 text-sm font-medium text-gray-300 hover:bg-neutral-800 transition-colors">
-                                <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M12.001 4.75a6.52 6.52 0 00-4.48 1.84l-2.67-2.67A10 10 0 0112.001 2c2.72 0 5.22.95 7.15 2.58l-2.88 2.22A6.52 6.52 0 0012.001 4.75z"
-                                        fill="#EA4335" />
-                                    <path
-                                        d="M4.851 7.21a10 10 0 000 9.58l2.7 2.1c.88-2.14 2.82-3.7 5.21-4.04l.05-2.73a6.51 6.51 0 01-5.71-3.71l-2.25-1.2Z"
-                                        fill="#FBBC04" />
-                                    <path
-                                        d="M12.001 19.25a6.52 6.52 0 004.86-2.1l2.88 2.22A10 10 0 0112.001 22c-2.72 0-5.22-.95-7.15-2.58l2.67-2.67a6.52 6.52 0 004.48 2.45Z"
-                                        fill="#34A853" />
-                                    <path
-                                        d="M19.141 12c0-.52-.05-1.03-.15-1.53h-7.07v3.06h4.01a3.63 3.63 0 01-1.58 2.37v2.02h2.59c1.55-1.42 2.46-3.5 2.46-5.88z"
-                                        fill="#4285F4" />
-                                </svg>
-                                Login with Google
-                            </button>
-                        </div>
-                </form>
-
-                <p class="mt-6 text-center text-sm text-neutral-400">
-                    Already have an account?
-                    <a href="/login" class="text-white font-bold hover:text-primary underline transition-colors">
-                        Login
-                    </a>
-                </p>
+            <div class="relative flex justify-center items-center py-2">
+              <div class="absolute w-full border-t border-neutral-700"></div>
+              <span class="relative text-sm font-medium text-neutral-500 bg-card-dark px-3"
+                >OR</span
+              >
             </div>
 
+            <button
+              type="button"
+              onclick="window.location.href = '/auth/google'"
+              class="flex w-full items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-dark-input px-5 py-3 text-sm font-medium text-gray-300 hover:bg-neutral-800 transition-colors"
+            >
+              <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12.001 4.75a6.52 6.52 0 00-4.48 1.84l-2.67-2.67A10 10 0 0112.001 2c2.72 0 5.22.95 7.15 2.58l-2.88 2.22A6.52 6.52 0 0012.001 4.75z"
+                  fill="#EA4335"
+                />
+                <path
+                  d="M4.851 7.21a10 10 0 000 9.58l2.7 2.1c.88-2.14 2.82-3.7 5.21-4.04l.05-2.73a6.51 6.51 0 01-5.71-3.71l-2.25-1.2Z"
+                  fill="#FBBC04"
+                />
+                <path
+                  d="M12.001 19.25a6.52 6.52 0 004.86-2.1l2.88 2.22A10 10 0 0112.001 22c-2.72 0-5.22-.95-7.15-2.58l2.67-2.67a6.52 6.52 0 004.48 2.45Z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M19.141 12c0-.52-.05-1.03-.15-1.53h-7.07v3.06h4.01a3.63 3.63 0 01-1.58 2.37v2.02h2.59c1.55-1.42 2.46-3.5 2.46-5.88z"
+                  fill="#4285F4"
+                />
+              </svg>
+              Login with Google
+            </button>
+          </div>
+        </form>
 
-        </div>
-
-        <div class="hidden lg:relative lg:block lg:flex-1 bg-black watch-bg">
-            <div class="absolute inset-0 bg-black/50"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-l from-transparent via-black/20 to-black/90"></div>
-
-            <div class="absolute inset-0 flex flex-col justify-end p-16 xl:p-24 pb-20">
-                <img alt="Premium Watch Lifestyle" class="absolute inset-0 h-full w-full object-cover opacity-80"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYw1JEImZt53rCLsocLo76kNEvPa_w5Cd3fczTBLMC1JkcIdRPekN7GPXHY02HO0pV9hHp0i5vX4j_YiQzxhyiS2kg9W83F8BkN3VmKaEehwxkMNPEZqrE_bNS-ZUhuLdqaxE6XFo_ewLZj3vFDHTs1Gf2WHQHtp6imXWn2RtWHyFpRSoRODoLC04VZ10FmB7LqxU1x0b-jXpeMFAyaQOQ9khFNZhIZfRABrKUQ5ZwU6cR7ahqNNz6GwOSUEIfVOa5s9UHdXJpWtPI" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
-                <div class="relative z-10 max-w-xl">
-                    <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-3">
-                        PREMIUM MEMBERSHIP
-                    </p>
-                    <h2 class="text-5xl font-bold tracking-tight text-white mb-6 leading-tight drop-shadow-md">
-                        Timeless Style <br />Starts Here.
-                    </h2>
-                    <p class="text-lg text-gray-300 font-light leading-relaxed max-w-md">
-                        Experience the pinnacle of craftsmanship. Create your account today to access limited editions
-                        and curated collections.
-                    </p>
-                </div>
-            </div>
-        </div>
+        <p class="mt-6 text-center text-sm text-neutral-400">
+          Already have an account?
+          <a
+            href="/login"
+            class="text-white font-bold hover:text-primary underline transition-colors"
+          >
+            Login
+          </a>
+        </p>
+      </div>
     </div>
 
-    <script>
-        const form = document.getElementById("signupForm");
-        const name = document.getElementById("name");
-        const email = document.getElementById("email");
-        const phone = document.getElementById("phone");
-        const password = document.getElementById("password");
-        const confirmPassword = document.getElementById("confirm-password");
+    <div class="hidden lg:relative lg:block lg:flex-1 bg-black watch-bg">
+      <div class="absolute inset-0 bg-black/50"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-l from-transparent via-black/20 to-black/90"
+      ></div>
 
-        const nameErr = document.getElementById("nameErr");
-        const emailErr = document.getElementById("emailErr");
-        const phoneErr = document.getElementById("phoneErr");
-        const passwordErr = document.getElementById("passwordErr");
-        const confirmPasswordErr = document.getElementById("confirmPasswordErr");
+      <div class="absolute inset-0 flex flex-col justify-end p-16 xl:p-24 pb-20">
+        <img
+          alt="Premium Watch Lifestyle"
+          class="absolute inset-0 h-full w-full object-cover opacity-80"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYw1JEImZt53rCLsocLo76kNEvPa_w5Cd3fczTBLMC1JkcIdRPekN7GPXHY02HO0pV9hHp0i5vX4j_YiQzxhyiS2kg9W83F8BkN3VmKaEehwxkMNPEZqrE_bNS-ZUhuLdqaxE6XFo_ewLZj3vFDHTs1Gf2WHQHtp6imXWn2RtWHyFpRSoRODoLC04VZ10FmB7LqxU1x0b-jXpeMFAyaQOQ9khFNZhIZfRABrKUQ5ZwU6cR7ahqNNz6GwOSUEIfVOa5s9UHdXJpWtPI"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"
+        ></div>
+        <div class="relative z-10 max-w-xl">
+          <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-3">
+            PREMIUM MEMBERSHIP
+          </p>
+          <h2
+            class="text-5xl font-bold tracking-tight text-white mb-6 leading-tight drop-shadow-md"
+          >
+            Timeless Style <br />Starts Here.
+          </h2>
+          <p class="text-lg text-gray-300 font-light leading-relaxed max-w-md">
+            Experience the pinnacle of craftsmanship. Create your account today to access limited
+            editions and curated collections.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    const form = document.getElementById('signupForm');
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm-password');
 
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            let valid = true;
+    const nameErr = document.getElementById('nameErr');
+    const emailErr = document.getElementById('emailErr');
+    const phoneErr = document.getElementById('phoneErr');
+    const passwordErr = document.getElementById('passwordErr');
+    const confirmPasswordErr = document.getElementById('confirmPasswordErr');
 
-            const nameRegex = /^[A-Za-z ]+$/;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
 
-            [nameErr, emailErr, phoneErr, passwordErr, confirmPasswordErr].forEach(err => {
-                err.classList.add("hidden");
-                err.textContent = "";
-            });
+      const nameRegex = /^[A-Za-z ]+$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (name.value.trim() === "") {
-                nameErr.textContent = "Name cannot be empty";
-                nameErr.classList.remove("hidden");
-                valid = false;
-            } else if (!nameRegex.test(name.value.trim())) {
-                nameErr.textContent = "Name must contain only letters";
-                nameErr.classList.remove("hidden");
-                valid = false;
-            }
+      [nameErr, emailErr, phoneErr, passwordErr, confirmPasswordErr].forEach((err) => {
+        err.classList.add('hidden');
+        err.textContent = '';
+      });
 
-            if (email.value.trim() === "") {
-                emailErr.textContent = "Email cannot be empty";
-                emailErr.classList.remove("hidden");
-                valid = false;
-            } else if (!emailRegex.test(email.value.trim())) {
-                emailErr.textContent = "Enter a valid email";
-                emailErr.classList.remove("hidden");
-                valid = false;
-            }
+      if (name.value.trim() === '') {
+        nameErr.textContent = 'Name cannot be empty';
+        nameErr.classList.remove('hidden');
+        valid = false;
+      } else if (!nameRegex.test(name.value.trim())) {
+        nameErr.textContent = 'Name must contain only letters';
+        nameErr.classList.remove('hidden');
+        valid = false;
+      }
 
-            const phoneRegex = /^[6-9]\d{9}$/;
+      if (email.value.trim() === '') {
+        emailErr.textContent = 'Email cannot be empty';
+        emailErr.classList.remove('hidden');
+        valid = false;
+      } else if (!emailRegex.test(email.value.trim())) {
+        emailErr.textContent = 'Enter a valid email';
+        emailErr.classList.remove('hidden');
+        valid = false;
+      }
 
-            if (phone.value.trim() === "") {
-                phoneErr.textContent = "Mobile number cannot be empty";
-                phoneErr.classList.remove("hidden");
-                valid = false;
-            } else if (!phoneRegex.test(phone.value.trim())) {
-                phoneErr.textContent = "Enter a valid 10-digit mobile number";
-                phoneErr.classList.remove("hidden");
-                valid = false;
-            }
+      const phoneRegex = /^[6-9]\d{9}$/;
 
+      if (phone.value.trim() === '') {
+        phoneErr.textContent = 'Mobile number cannot be empty';
+        phoneErr.classList.remove('hidden');
+        valid = false;
+      } else if (!phoneRegex.test(phone.value.trim())) {
+        phoneErr.textContent = 'Enter a valid 10-digit mobile number';
+        phoneErr.classList.remove('hidden');
+        valid = false;
+      }
 
-            if (password.value.trim() === "") {
-                passwordErr.textContent = "Password cannot be empty";
-                passwordErr.classList.remove("hidden");
-                valid = false;
-            } else if (password.value.length < 6) {
-                passwordErr.textContent = "Password must be at least 6 characters";
-                passwordErr.classList.remove("hidden");
-                valid = false;
-            }
+      if (password.value.trim() === '') {
+        passwordErr.textContent = 'Password cannot be empty';
+        passwordErr.classList.remove('hidden');
+        valid = false;
+      } else if (password.value.length < 6) {
+        passwordErr.textContent = 'Password must be at least 6 characters';
+        passwordErr.classList.remove('hidden');
+        valid = false;
+      }
 
-            if (confirmPassword.value !== password.value) {
-                confirmPasswordErr.textContent = "Passwords do not match";
-                confirmPasswordErr.classList.remove("hidden");
-                valid = false;
-            }
+      if (confirmPassword.value !== password.value) {
+        confirmPasswordErr.textContent = 'Passwords do not match';
+        confirmPasswordErr.classList.remove('hidden');
+        valid = false;
+      }
 
-            if (valid) {
-                form.submit();
-            }
-        });
-        function togglePassword(inputId, iconEl) {
-            const input = document.getElementById(inputId);
+      if (valid) {
+        form.submit();
+      }
+    });
+    function togglePassword(inputId, iconEl) {
+      const input = document.getElementById(inputId);
 
-            if (input.type === "password") {
-                input.type = "text";
-                iconEl.textContent = "visibility";
-            } else {
-                input.type = "password";
-                iconEl.textContent = "visibility_off";
-            }
-        }
-    </script>
-
+      if (input.type === 'password') {
+        input.type = 'text';
+        iconEl.textContent = 'visibility';
+      } else {
+        input.type = 'password';
+        iconEl.textContent = 'visibility_off';
+      }
+    }
+  </script>
 </body>

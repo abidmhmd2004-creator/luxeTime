@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const couponSchema = new mongoose.Schema(
   {
@@ -24,9 +24,9 @@ const couponSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    maxDiscount:{
-      type:Number,
-      default:0
+    maxDiscount: {
+      type: Number,
+      default: 0,
     },
     expiry: {
       type: Date,
@@ -36,9 +36,9 @@ const couponSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    useCount:{
-      type:Number,
-      default:0
+    useCount: {
+      type: Number,
+      default: 0,
     },
     isListed: {
       type: Boolean,
@@ -48,12 +48,14 @@ const couponSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    usedBy:[{
-      type:mongoose.Schema.Types.ObjectId,
-      ref:"User"
-    }]
+    usedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-export default mongoose.model("Coupon", couponSchema);
+export default mongoose.model('Coupon', couponSchema);

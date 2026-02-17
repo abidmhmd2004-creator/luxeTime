@@ -80,10 +80,9 @@ import {
   getWishlist,
   removeWishlistItem,
 } from "../controllers/user/wishlist.conroller.js";
-import { getWalletPage } from "../controllers/user/wallet.controller.js";
+import {  createWalletRecharge, getWalletPage, verifyWalletPayment } from "../controllers/user/wallet.controller.js";
 import { getReferralPage } from "../controllers/user/referral.controller.js";
 
-// const uploadProfile =createUploader("profile");
 
 const router = express.Router();
 
@@ -131,7 +130,7 @@ router.get(
 
 //forgot password
 router
-.route("forgot-password")
+.route("/forgot-password")
 .get(loadForgotPass)
 .post(postForgotPass)
 
@@ -163,9 +162,9 @@ router
 
 //address
 router.get("/address", requireAuth, getAddress);
-router.post("/add-address", addAddress);
-router.patch("/edit-address/:id", editAddress);
-router.delete("/delete-address/:id", deleteAddress);
+router.post("/add-address", requireAuth,addAddress);
+router.patch("/edit-address/:id",requireAuth, editAddress);
+router.delete("/delete-address/:id",requireAuth, deleteAddress);
 
 //profile photo
 router.post(
@@ -185,10 +184,11 @@ router.get("/product/:id", productDetails);
 
 //cart
 router.get("/cart", requireAuth, getCart);
-router.post("/cart/add", requireAuth, addToCart);
+router.post("/cart/add", addToCart);
 router.delete("/cart/remove/:variantId", removeFromCart);
 router.post("/cart/update-qty", requireAuth, updateQty);
 
+//checkout
 router
   .route("/checkout") 
   .get(requireAuth, getCheckoutPage)
@@ -201,13 +201,14 @@ router.post("/checkout/mark-payment-failed", markPaymentFailed);
 router.post("/checkout/apply-coupon", applyCoupon);
 router.delete("/checkout/remove-coupon", removeCoupon);
 
+//orders
 router.get("/orders", requireAuth, getOrders);
-router.get("/order-success/:orderId", getOrdersSucces);
+router.get("/order-success/:orderId",requireAuth, getOrdersSucces);
 
-router.get("/orderDetails/:orderId", getOrderDetailsPage);
-router.post("/orders/:orderId/cancel-item", cancelOrderItem);
+router.get("/orderDetails/:orderId", requireAuth,getOrderDetailsPage);
+router.post("/orders/:orderId/cancel-item",requireAuth, cancelOrderItem);
 
-router.post("/orders/:orderId/cancel", cancellFullOrder);
+router.post("/orders/:orderId/cancel",requireAuth, cancellFullOrder);
 
 router.post("/orders/:orderId/return", requireAuth, returnRequest);
 
@@ -220,9 +221,12 @@ router.post("/wishlist/add", addToWishlist);
 router.delete("/wishlist/remove/:itemId", removeWishlistItem);
 router.post("/wishlist/toggle", toggleWishlist);
 
-router.get("/wallet", getWalletPage);
+//wallet
+router.get("/wallet", requireAuth,getWalletPage);
+router.post("/wallet/create-order",requireAuth, createWalletRecharge);
+router.post("/wallet/verify-payment",requireAuth, verifyWalletPayment);
 
-router.get("/referral", getReferralPage);
+router.get("/referral",requireAuth, getReferralPage);
 
 router.get("/about", getAboutPage);
 

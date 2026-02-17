@@ -1,46 +1,37 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxe Time - Premium Watches</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Luxe Time - Premium Watches</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet" />
+    <!-- Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700"
+      rel="stylesheet"
+    />
 
-  <!-- Material Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700" rel="stylesheet" />
+    <!-- Tailwind -->
 
-  <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
-
-
-</head>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-<body class=" bg-[#0d120f]  font-display text-slate-900 dark:text-white overflow-x-hidden">
-
-  <!-- Navbar -->
-  <%- include('../partials/navbar') %>
-
-
+  <body class="bg-[#0d120f] font-display text-slate-900 dark:text-white overflow-x-hidden">
+    <!-- Navbar -->
+    <%- include('../partials/navbar') %>
 
     <!-- Page Content -->
-    <main class="flex-1">
-      <%- body %>
-    </main>
+    <main class="flex-1"><%- body %></main>
 
     <%- include('../partials/footer') %>
-
-
-</body>
-
+  </body>
 </html>

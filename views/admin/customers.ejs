@@ -1,152 +1,149 @@
 <%- include('../partials/adminSidebar') %>
 
-    <main class="flex-1 p-8 space-y-8 overflow-y-auto">
-
-        <div class="space-y-1">
-            <p class="text-xs text-neutral-500">/ Admin / <span class="text-primary">Customers</span></p>
-            <h1 class="text-2xl font-bold">Customers</h1>
-            <p class="text-sm text-neutral-400">Manage registered customers.</p>
+<main class="flex-1 p-8 space-y-8 overflow-y-auto">
+  <div class="space-y-1">
+    <p class="text-xs text-neutral-500">/ Admin / <span class="text-primary">Customers</span></p>
+    <h1 class="text-2xl font-bold">Customers</h1>
+    <p class="text-sm text-neutral-400">Manage registered customers.</p>
+  </div>
+  <form action="/admin/customers" method="get">
+    <div class="bg-[#1A1D1A] p-4 rounded-xl shadow-lg space-y-5">
+      <h2 class="text-lg font-semibold text-white">SEARCH CUSTOMERS</h2>
+      <div class="grid grid-cols-12 gap-2 items-end">
+        <div class="col-span-12 sm:col-span-7">
+          <label for="searchQuery" class="text-xs uppercase text-neutral-400 font-medium"
+            >Search by name or email...</label
+          >
+          <input
+            type="text"
+            id="search"
+            name="search"
+            placeholder="Search by name or email..."
+            value="<%=search %>"
+            class="w-full bg-black px-3 mt-2 rounded-2xl py-3 text-sm text-white placeholder-[#5E6261] focus:outline-none"
+            title="Search by customer name or email"
+          />
         </div>
-        <form action="/admin/customers" method="get">
-            <div class="bg-[#1A1D1A] p-4 rounded-xl shadow-lg space-y-5">
-                <h2 class="text-lg font-semibold text-white">SEARCH CUSTOMERS</h2>
-                <div class="grid grid-cols-12 gap-2 items-end ">
-                    <div class="col-span-12 sm:col-span-7">
-                        <label for="searchQuery" class="text-xs uppercase text-neutral-400 font-medium">Search by name
-                            or
-                            email...</label>
-                        <input type="text" id="search" name="search" placeholder="Search by name or email..."
-                            value="<%=search %>"
-                            class="w-full bg-black px-3 mt-2 rounded-2xl py-3 text-sm text-white placeholder-[#5E6261] focus:outline-none"
-                            title="Search by customer name or email" />
-                    </div>
 
-                    <div class="col-span-6 sm:col-span-2 ">
-                        <label for="statusFilter" class="text-xs uppercase text-neutral-400 font-medium">Status</label>
-                        <div class="relative mt-2">
-                            <select id="statusFilter" name="status"
-                                class="custom-field w-full px-3 py-3 appearance-none bg-gray-950 rounded-2xl text-white pr-8 focus:outline-none">
-                                <option class="bg-gray-950 text-white" value="">All Statuses</option>
-                                <option class="bg-gray-950 text-white" value="Active">Active</option>
-                                <option class="bg-gray-950 text-white" value="Blocked">Blocked</option>
-                            </select>
-                            <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none text-base">
-                                keyboard_arrow_down
-                            </span>
-                        </div>
-                    </div>
+        <div class="col-span-6 sm:col-span-2">
+          <label for="statusFilter" class="text-xs uppercase text-neutral-400 font-medium"
+            >Status</label
+          >
+          <div class="relative mt-2">
+            <select
+              id="statusFilter"
+              name="status"
+              class="custom-field w-full px-3 py-3 appearance-none bg-gray-950 rounded-2xl text-white pr-8 focus:outline-none"
+            >
+              <option class="bg-gray-950 text-white" value="">All Statuses</option>
+              <option class="bg-gray-950 text-white" value="Active">Active</option>
+              <option class="bg-gray-950 text-white" value="Blocked">Blocked</option>
+            </select>
+            <span
+              class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none text-base"
+            >
+              keyboard_arrow_down
+            </span>
+          </div>
+        </div>
 
-                    <div class="col-span-6 sm:col-span-3 flex space-x-2 justify-end">
-                        <button
-                            class="w-auto px-4 py-2 rounded-lg border border-neutral-600 text-neutral-300 hover:bg-neutral-800 transition">
-                            <a href="/admin/customers">
-                                Clear
-                            </a>
-                        </button>
-                        <button type="submit"
-                            class="w-auto flex items-center justify-center space-x-1 px-4 py-2 rounded-lg bg-green-500 text-black font-bold hover:bg-green-600 transition">
-                            <span class="material-symbols-outlined text-lg">search</span>
-                            <span>Search</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="col-span-6 sm:col-span-3 flex space-x-2 justify-end">
+          <button
+            class="w-auto px-4 py-2 rounded-lg border border-neutral-600 text-neutral-300 hover:bg-neutral-800 transition"
+          >
+            <a href="/admin/customers"> Clear </a>
+          </button>
+          <button
+            type="submit"
+            class="w-auto flex items-center justify-center space-x-1 px-4 py-2 rounded-lg bg-green-500 text-black font-bold hover:bg-green-600 transition"
+          >
+            <span class="material-symbols-outlined text-lg">search</span>
+            <span>Search</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
 
-        </form>
+  <div class="bg-[#1A1D1A] p-6 rounded-xl shadow-lg space-y-4">
+    <div class="flex justify-between items-center border-b border-neutral-700 pb-3">
+      <h3 class="text-lg font-semibold">Registered Users</h3>
+      <!-- <p class="text-sm text-neutral-400">Showing 1-10 of 1,248 customers</p> -->
+    </div>
 
+    <div class="overflow-x-auto">
+      <%- include('../partials/alerts') %>
 
+      <table class="min-w-full text-sm text-neutral-300">
+        <thead>
+          <tr class="text-left text-neutral-400 border-b border-neutral-700">
+            <th class="py-3 pr-4 font-normal">CUSTOMER NAME</th>
+            <th class="py-3 pr-4 font-normal">EMAIL ADDRESS</th>
+            <th class="py-3 pr-4 font-normal">PHONE NUMBER</th>
+            <th class="py-3 pr-4 font-normal">JOINED DATE</th>
+            <th class="py-3 pr-4 font-normal">STATUS</th>
+            <th class="py-3 font-normal text-center">ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (users.length===0){ %>
+          <tr>
+            <td colspan="6" class="text-center py-6 text-neutral-500">No customers found</td>
+          </tr>
+          <% } %>
 
-
-
-        <div class="bg-[#1A1D1A] p-6 rounded-xl shadow-lg space-y-4">
-            <div class="flex justify-between items-center border-b border-neutral-700 pb-3 ">
-                <h3 class="text-lg font-semibold">Registered Users</h3>
-                <!-- <p class="text-sm text-neutral-400">Showing 1-10 of 1,248 customers</p> -->
-            </div>
-
-            <div class="overflow-x-auto">
-                <%- include('../partials/alerts') %>
-
-                    <table class="min-w-full text-sm text-neutral-300">
-                        <thead>
-                            <tr class="text-left text-neutral-400 border-b border-neutral-700">
-                                <th class="py-3 pr-4 font-normal">CUSTOMER NAME</th>
-                                <th class="py-3 pr-4 font-normal">EMAIL ADDRESS</th>
-                                <th class="py-3 pr-4 font-normal">PHONE NUMBER</th>
-                                <th class="py-3 pr-4 font-normal">JOINED DATE</th>
-                                <th class="py-3 pr-4 font-normal">STATUS</th>
-                                <th class="py-3 font-normal text-center">ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (users.length===0){ %>
-                                <tr>
-                                    <td colspan="6" class="text-center py-6 text-neutral-500">
-                                        No customers found
-                                    </td>
-                                </tr>
-                                <% } %>
-
-                                    <% users.forEach(user=> { %>
-                                        <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
-                                            <td class="py-3 font-medium text-white flex items-center space-x-3">
-                                                <!-- <div
+          <% users.forEach(user=> { %>
+          <tr class="border-b border-neutral-800 hover:bg-neutral-800/50 transition">
+            <td class="py-3 font-medium text-white flex items-center space-x-3">
+              <!-- <div
                                             class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold">
                                             RV</div> -->
-                                                <span>
-                                                    <%= user.name %>
-                                                </span>
-                                            </td>
-                                            <td class="py-3">
-                                                <%= user.email %>
-                                            </td>
-                                            <td class="py-3">
-                                                <%= user.phone || '-' %>
-                                            </td>
-                                            <td class="py-3">
-                                                <%= user.createdAt ? user.createdAt.toDateString():'-' %>
-                                            </td>
-                                            <td class="py-3"><span
-                                                    class=" text-light-green px-2 py-0.5 rounded text-xs font-medium <%= user.isBlocked?'bg-red-500/20 text-red-400' :'bg-light-green/20 text-light-green ' %>">
-                                                    <%= user.isBlocked ?'BLOCKED':'ACTIVE' %>
-                                                </span>
-                                            </td>
+              <span>
+                <%= user.name %>
+              </span>
+            </td>
+            <td class="py-3"><%= user.email %></td>
+            <td class="py-3"><%= user.phone || '-' %></td>
+            <td class="py-3"><%= user.createdAt ? user.createdAt.toDateString():'-' %></td>
+            <td class="py-3">
+              <span
+                class="text-light-green px-2 py-0.5 rounded text-xs font-medium <%= user.isBlocked?'bg-red-500/20 text-red-400' :'bg-light-green/20 text-light-green ' %>"
+              >
+                <%= user.isBlocked ?'BLOCKED':'ACTIVE' %>
+              </span>
+            </td>
 
+            <td class="py-3 text-center">
+              <form
+                action="/admin/customers/toggle/<%= user._id %>/?_method=PATCH"
+                method="POST"
+                class="toggleform"
+                data-status="<%= user.isBlocked ? 'unblock' : 'block' %>"
+              >
+                <label class="flex justify-center items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" <%=user.isBlocked ? '' : 'checked' %>>
 
-                                            <td class="py-3 text-center">
-                                                <form action="/admin/customers/toggle/<%= user._id %>/?_method=PATCH"
-                                                    method="POST" class="toggleform"
-                                                    data-status="<%= user.isBlocked ? 'unblock' : 'block' %>">
-                                                    <label class="flex justify-center items-center cursor-pointer">
-                                                        <input type="checkbox" class="sr-only peer" <%=user.isBlocked
-                                                            ? '' : 'checked' %>>
+                  <div
+                    class="relative w-11 h-6 rounded-full <%= user.isBlocked ? 'bg-red-500' : 'bg-green-500' %>"
+                  >
+                    <div
+                      class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full <%= user.isBlocked ? '' : 'translate-x-full' %>"
+                    ></div>
+                  </div>
 
-                                                        <div
-                                                            class="relative w-11 h-6 rounded-full  <%= user.isBlocked ? 'bg-red-500' : 'bg-green-500' %>">
-                                                            <div
-                                                                class="absolute top-[2px] left-[2px] w-5 h-5 bg-white rounded-full <%= user.isBlocked ? '' : 'translate-x-full' %>">
-                                                            </div>
-                                                        </div>
+                  <span class="ml-2 text-xs"> <%= user.isBlocked ? 'Unblock' : 'Block' %> </span>
+                </label>
+              </form>
+            </td>
+          </tr>
 
-                                                        <span class="ml-2 text-xs">
-                                                            <%= user.isBlocked ? 'Unblock' : 'Block' %>
-                                                        </span>
-                                                    </label>
-                                                </form>
-                                            </td>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
 
-
-
-                                        </tr>
-
-                                        <% }) %>
-                        </tbody>
-                    </table>
-            </div>
-
-            <div class="p-6 flex items-center justify-center  bg-black/20">
-                <!-- <div class="flex items-center space-x-2">
+    <div class="p-6 flex items-center justify-center bg-black/20">
+      <!-- <div class="flex items-center space-x-2">
         <span class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.1em]">Showing</span>
         <span class="px-2 py-0.5 bg-white/5 rounded text-white text-[10px] font-bold">
             Page <%= currentPage %>
@@ -154,77 +151,80 @@
         <span class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.1em]">of <%= totalPages %></span>
     </div> -->
 
-                <nav class="flex items-center gap-3">
-                    <% if (currentPage> 1) { %>
-                        <a href="/admin/customers?page=<%= currentPage-1 %>&search=<%= search %>&status=<%= status %>"
-                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
-                            <i class="fa-solid fa-arrow-left text-[10px]">Prev</i>
-                        </a>
-                        <% } else { %>
-                            <span
-                                class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed">
-                                <i class="fa-solid fa-arrow-left text-[10px]">Prev</i>
-                            </span>
-                            <% } %>
+      <nav class="flex items-center gap-3">
+        <% if (currentPage> 1) { %>
+        <a
+          href="/admin/customers?page=<%= currentPage-1 %>&search=<%= search %>&status=<%= status %>"
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300"
+        >
+          <i class="fa-solid fa-arrow-left text-[10px]">Prev</i>
+        </a>
+        <% } else { %>
+        <span
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed"
+        >
+          <i class="fa-solid fa-arrow-left text-[10px]">Prev</i>
+        </span>
+        <% } %>
 
-                                <div class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
-                                    <div
-                                        class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]">
-                                        <%= currentPage %>
-                                    </div>
-                                    <% if (currentPage < totalPages) { %>
-                                        <a href="/admin/customers?page=<%= totalPages %>&search=<%= search %>&status=<%= status %>"
-                                            class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
-                                            <%= totalPages %>
-                                        </a>
-                                        <% } %>
-                                </div>
-
-                                <% if (currentPage < totalPages) { %>
-                                    <a href="/admin/customers?page=<%= currentPage + 1 %>&search=<%= search %>&status=<%= status %>"
-                                        class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
-                                        <i class="fa-solid fa-arrow-right text-[10px]">Next</i>
-                                    </a>
-                                    <% } else { %>
-                                        <span
-                                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed">
-                                            <i class="fa-solid fa-arrow-right text-[10px]">Next</i>
-                                        </span>
-                                        <% } %>
-                </nav>
-            </div>
-
+        <div class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
+          <div
+            class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]"
+          >
+            <%= currentPage %>
+          </div>
+          <% if (currentPage < totalPages) { %>
+          <a
+            href="/admin/customers?page=<%= totalPages %>&search=<%= search %>&status=<%= status %>"
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold"
+          >
+            <%= totalPages %>
+          </a>
+          <% } %>
         </div>
 
-    </main>
+        <% if (currentPage < totalPages) { %>
+        <a
+          href="/admin/customers?page=<%= currentPage + 1 %>&search=<%= search %>&status=<%= status %>"
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300"
+        >
+          <i class="fa-solid fa-arrow-right text-[10px]">Next</i>
+        </a>
+        <% } else { %>
+        <span
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed"
+        >
+          <i class="fa-solid fa-arrow-right text-[10px]">Next</i>
+        </span>
+        <% } %>
+      </nav>
+    </div>
+  </div>
+</main>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        document.querySelectorAll(".toggleform input[type='checkbox']")
-            .forEach(checkbox => {
+<script>
+  document.querySelectorAll(".toggleform input[type='checkbox']").forEach((checkbox) => {
+    checkbox.addEventListener('change', function () {
+      const form = this.closest('form');
+      const action = form.dataset.status;
 
-                checkbox.addEventListener("change", function () {
-                    const form = this.closest("form");
-                    const action = form.dataset.status;
+      this.checked = !this.checked;
 
-                    this.checked = !this.checked;
-
-                    Swal.fire({
-                        title: "Are you sure?",
-                        text: `Do you want to ${action} this user?`,
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: action === "block" ? "#ef4444" : "#22c55e",
-                        confirmButtonText: `Yes, ${action}`,
-                        cancelButtonText: "Cancel"
-                    }).then(result => {
-                        if (result.isConfirmed) {
-                            form.submit();
-                        }
-                    });
-                });
-
-            });
-
-    </script>
+      Swal.fire({
+        title: 'Are you sure?',
+        text: `Do you want to ${action} this user?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: action === 'block' ? '#ef4444' : '#22c55e',
+        confirmButtonText: `Yes, ${action}`,
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.submit();
+        }
+      });
+    });
+  });
+</script>

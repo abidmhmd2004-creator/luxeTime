@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema(
   {
@@ -9,23 +9,17 @@ const orderSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     items: [
       {
-        product: { type: mongoose.Schema.ObjectId, ref: "Product" },
-        variant: { type: mongoose.Schema.ObjectId, ref: "Variant" },
+        product: { type: mongoose.Schema.ObjectId, ref: 'Product' },
+        variant: { type: mongoose.Schema.ObjectId, ref: 'Variant' },
         itemStatus: {
           type: String,
-          enum: [
-            "ACTIVE",
-            "CANCELLED",
-            "RETURN_REQUESTED",
-            "RETURNED",
-            "RETURN_REJECTED",
-          ],
-          default: "ACTIVE",
+          enum: ['ACTIVE', 'CANCELLED', 'RETURN_REQUESTED', 'RETURNED', 'RETURN_REJECTED'],
+          default: 'ACTIVE',
         },
         quantity: Number,
         price: Number,
@@ -44,31 +38,31 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["RAZORPAY", "WALLET", "COD"],
+      enum: ['RAZORPAY', 'WALLET', 'COD'],
       required: true,
     },
     paymentStatus: {
       type: String,
-      enum: ["PENDING", "PAID", "FAILED"],
-      default: "PENDING",
+      enum: ['PENDING', 'PAID', 'FAILED'],
+      default: 'PENDING',
     },
     orderStatus: {
       type: String,
       enum: [
-        "PLACED",
-        "CONFIRM",
-        "SHIPPED",
-        "DELIVERED",
-        "CANCELLED",
-        "RETURN_REQUESTED",
-        "RETURNED",
+        'PLACED',
+        'CONFIRMED',
+        'SHIPPED',
+        'DELIVERED',
+        'CANCELLED',
+        'RETURN_REQUESTED',
+        'RETURNED',
       ],
-      default: "PLACED",
+      default: 'PLACED',
     },
     coupon: {
       couponId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Coupon",
+        ref: 'Coupon',
       },
       code: String,
       dsicountAmount: Number,
@@ -83,7 +77,7 @@ const orderSchema = new mongoose.Schema(
     tax: Number,
     totalAmount: Number,
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-export default mongoose.model("Order", orderSchema);
+export default mongoose.model('Order', orderSchema);

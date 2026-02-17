@@ -1,9 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
 const walletShema = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
     unique: true,
   },
@@ -16,7 +16,7 @@ const walletShema = new Schema({
     {
       type: {
         type: String,
-        enum: ["CREDIT", "DEBIT"],
+        enum: ['CREDIT', 'DEBIT'],
         required: true,
       },
       amount: {
@@ -26,7 +26,7 @@ const walletShema = new Schema({
       reason: String,
       orderId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
+        ref: 'Order',
       },
       razorpayPaymentId: String,
       createdAt: {
@@ -37,4 +37,4 @@ const walletShema = new Schema({
   ],
 });
 
-export default mongoose.model("Wallet", walletShema);
+export default mongoose.model('Wallet', walletShema);

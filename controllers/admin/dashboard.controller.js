@@ -1,9 +1,9 @@
-import asyncHandler from "../../utils/asyncHandler.js";
-import Order from "../../models/order.model.js";
-import mongoose from "mongoose";
+import asyncHandler from '../../utils/asyncHandler.js';
+import Order from '../../models/order.model.js';
+import mongoose from 'mongoose';
 
 export const getDashboard = asyncHandler(async (req, res) => {
-  const { range = "daily", startDate, endDate, limit = 5 } = req.query;
+  const { range = 'daily', startDate, endDate, limit = 5 } = req.query;
   const page = parseInt(req.query.page) || 1;
 
   const skip = (page - 1) * limit;
@@ -11,18 +11,18 @@ export const getDashboard = asyncHandler(async (req, res) => {
   let from;
   let to = new Date();
 
-  if (range === "daily") {
+  if (range === 'daily') {
     from = new Date();
     from.setHours(0, 0, 0, 0);
     to.setHours(23, 59, 59, 9999);
-  } else if (range === "weekly") {
+  } else if (range === 'weekly') {
     from = new Date();
     from.setDate(from.getDate() - 7);
     from.setHours(0, 0, 0, 0);
-  } else if (range === "yearly") {
+  } else if (range === 'yearly') {
     from = new Date(new Date().getFullYear(), 0, 1);
     from.setHours(0, 0, 0, 0);
-  } else if (range === "custom" && startDate && endDate) {
+  } else if (range === 'custom' && startDate && endDate) {
     from = new Date(startDate);
     from.setHours(0, 0, 0, 0);
 
@@ -32,7 +32,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
 
   const matchStage = {
     createdAt: { $gte: from, $lte: to },
-    paymentStatus: "PAID",
+    paymentStatus: 'PAID',
   };
 
   const summary = await Order.aggregate([
@@ -41,19 +41,15 @@ export const getDashboard = asyncHandler(async (req, res) => {
       $group: {
         _id: null,
         totalOrders: { $sum: 1 },
-        grossAmount: { $sum: "$subtotal" },
-        discountAmount: { $sum: "$discount" },
-        netRevenue: { $sum: "$totalAmount" },
+        grossAmount: { $sum: '$subtotal' },
+        discountAmount: { $sum: '$discount' },
+        netRevenue: { $sum: '$totalAmount' },
       },
     },
     {
       $addFields: {
         avgOrderValue: {
-          $cond: [
-            { $eq: ["$totalOrders", 0] },
-            0,
-            { $divide: ["$netRevenue", "$totalOrders"] },
-          ],
+          $cond: [{ $eq: ['$totalOrders', 0] }, 0, { $divide: ['$netRevenue', '$totalOrders'] }],
         },
       },
     },
@@ -61,20 +57,20 @@ export const getDashboard = asyncHandler(async (req, res) => {
 
   const salesByColor = await Order.aggregate([
     { $match: matchStage },
-    { $unwind: "$items" },
+    { $unwind: '$items' },
     {
       $lookup: {
-        from: "variants",
-        localField: "items.variant",
-        foreignField: "_id",
-        as: "variant",
+        from: 'variants',
+        localField: 'items.variant',
+        foreignField: '_id',
+        as: 'variant',
       },
     },
-    { $unwind: "$variant" },
+    { $unwind: '$variant' },
     {
       $group: {
-        _id: "$variant.color",
-        units: { $sum: "$items.quantity" },
+        _id: '$variant.color',
+        units: { $sum: '$items.quantity' },
       },
     },
   ]);
@@ -83,13 +79,13 @@ export const getDashboard = asyncHandler(async (req, res) => {
     { $match: matchStage },
     {
       $lookup: {
-        from: "users",
-        localField: "user",
-        foreignField: "_id",
-        as: "user",
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
       },
     },
-    { $unwind: "$user" },
+    { $unwind: '$user' },
     {
       $project: {
         orderId: 1,
@@ -98,7 +94,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
         totalAmount: 1,
         discount: 1,
         paymentStatus: 1,
-        "user.name": 1,
+        'user.name': 1,
       },
     },
     { $sort: { createdAt: -1 } },
@@ -112,11 +108,11 @@ export const getDashboard = asyncHandler(async (req, res) => {
       $group: {
         _id: {
           $dateToString: {
-            format: "%Y-%m-%d",
-            date: "$createdAt",
+            format: '%Y-%m-%d',
+            date: '$createdAt',
           },
         },
-        revenue: { $sum: "$totalAmount" },
+        revenue: { $sum: '$totalAmount' },
       },
     },
     { $sort: { _id: 1 } },
@@ -124,7 +120,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
 
   const totalOrder = await Order.countDocuments(matchStage);
 
-  res.render("admin/dashboard", {
+  res.render('admin/dashboard', {
     summary: summary[0] || {
       totalOrders: 0,
       grossAmount: 0,
@@ -138,6 +134,6 @@ export const getDashboard = asyncHandler(async (req, res) => {
     currentPage: Number(page),
     totalPages: Math.ceil(totalOrder / limit),
     query: req.query,
-    layout: "layouts/admin",
+    layout: 'layouts/admin',
   });
 });

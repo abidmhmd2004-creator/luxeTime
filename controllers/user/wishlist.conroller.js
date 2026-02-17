@@ -1,21 +1,20 @@
-import asyncHandler from "../../utils/asyncHandler.js";
-import Wishlist from "../../models/wishlist.model.js";
-import { calculateBestOffer } from "../../helpers/calculateOffer.js";
+import asyncHandler from '../../utils/asyncHandler.js';
+import Wishlist from '../../models/wishlist.model.js';
+import { calculateBestOffer } from '../../helpers/calculateOffer.js';
 
 export const getWishlist = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
 
   const wishlist = await Wishlist.findOne({ user: userId })
     .populate({
-      path: "items.product",
-      populate: { path: "category" },
+      path: 'items.product',
+      populate: { path: 'category' },
     })
-    .populate("items.variant");
+    .populate('items.variant');
 
   let items = [];
 
-  if (wishlist)
-    items = wishlist.items.filter((item) => item.product && item.variant);
+  if (wishlist) items = wishlist.items.filter((item) => item.product && item.variant);
 
   for (const item of items) {
     const { finalPrice, appliedOffer } = calculateBestOffer({
@@ -28,17 +27,25 @@ export const getWishlist = asyncHandler(async (req, res) => {
     item.variant.appliedOffer = appliedOffer;
   }
 
-  res.render("user/wishlist", { items });
+  res.render('user/wishlist', { items });
 });
 
 export const addToWishlist = asyncHandler(async (req, res) => {
-  const userId = req.session.user.id;
+  const userId = req.session?.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({
+      success: false,
+      message: 'Please login first',
+    });
+  }
+
   const { productId, variantId } = req.body;
 
   if (!productId || !variantId) {
     return res.status(400).json({
       success: false,
-      message: "Product or variant missing",
+      message: 'Product or variant missing',
     });
   }
 
@@ -54,9 +61,7 @@ export const addToWishlist = asyncHandler(async (req, res) => {
   }
 
   const exists = wishlist.items.some(
-    (item) =>
-      item.product.toString() === productId &&
-      item.variant.toString() === variantId,
+    (item) => item.product.toString() === productId && item.variant.toString() === variantId
   );
 
   if (exists) {
@@ -78,18 +83,16 @@ export const removeWishlistItem = asyncHandler(async (req, res) => {
   if (!wishlist) {
     return res.status(404).json({
       success: false,
-      message: "Wishlist not found",
+      message: 'Wishlist not found',
     });
   }
 
-  wishlist.items = wishlist.items.filter(
-    (item) => item._id.toString() !== itemId,
-  );
+  wishlist.items = wishlist.items.filter((item) => item._id.toString() !== itemId);
 
   await wishlist.save();
 
   return res.json({
     success: true,
-    message: "Item removed successfully",
+    message: 'Item removed successfully',
   });
 });

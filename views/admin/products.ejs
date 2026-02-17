@@ -1,340 +1,351 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  rel="stylesheet"
+/>
 
 <%- include('../partials/adminSidebar') %>
 
-    <main class="flex-1 p-8 overflow-y-auto bg-[#0d0f0d] min-h-screen">
-        <div class="flex items-center space-x-2 text-xs text-gray-500 mb-2">
-            <i class="fa-solid fa-house"></i> <span>/ Products</span>
-        </div>
+<main class="flex-1 p-8 overflow-y-auto bg-[#0d0f0d] min-h-screen">
+  <div class="flex items-center space-x-2 text-xs text-gray-500 mb-2">
+    <i class="fa-solid fa-house"></i> <span>/ Products</span>
+  </div>
 
-        <div class="flex justify-between items-start mb-8">
-            <div>
-                <h2 class="text-3xl font-bold text-white tracking-tight">Products</h2>
-                <p class="text-sm text-gray-500">Manage all watch products.</p>
-            </div>
-            <button onclick="window.location.href='/admin/add-products'"
-                class="bg-[#4ade80] text-black px-6 py-2.5 rounded-full text-xs font-bold flex items-center shadow-[0_0_15px_rgba(74,222,128,0.3)] hover:scale-105 transition-all">
-                <i class="fa-solid fa-plus mr-2"></i> Add Watch
-            </button>
-        </div>
+  <div class="flex justify-between items-start mb-8">
+    <div>
+      <h2 class="text-3xl font-bold text-white tracking-tight">Products</h2>
+      <p class="text-sm text-gray-500">Manage all watch products.</p>
+    </div>
+    <button
+      onclick="window.location.href='/admin/add-products'"
+      class="bg-[#4ade80] text-black px-6 py-2.5 rounded-full text-xs font-bold flex items-center shadow-[0_0_15px_rgba(74,222,128,0.3)] hover:scale-105 transition-all"
+    >
+      <i class="fa-solid fa-plus mr-2"></i> Add Watch
+    </button>
+  </div>
 
-        <div class="bg-[#1A1D1A] rounded-t-3xl border-x border-t border-white/5 p-6">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div class="relative w-full max-w-sm">
-                    <span class="absolute inset-y-0 left-4 flex items-center text-gray-500">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                    </span>
-                    <form method="GET" action="/admin/products">
-                        <input type="text" name="search" value="<%= search ||'' %>"
-                            placeholder="Search by watch name..."
-                            class="w-full bg-[#0a0a0a] border-none text-sm text-white rounded-full py-2.5 pl-10 pr-4 focus:ring-1 focus:ring-[#4ade80] outline-none">
-                    </form>
-                </div>
-            </div>
-        </div>
+  <div class="bg-[#1A1D1A] rounded-t-3xl border-x border-t border-white/5 p-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="relative w-full max-w-sm">
+        <span class="absolute inset-y-0 left-4 flex items-center text-gray-500">
+          <i class="fa-solid fa-magnifying-glass text-xs"></i>
+        </span>
+        <form method="GET" action="/admin/products">
+          <input
+            type="text"
+            name="search"
+            value="<%= search ||'' %>"
+            placeholder="Search by watch name..."
+            class="w-full bg-[#0a0a0a] border-none text-sm text-white rounded-full py-2.5 pl-10 pr-4 focus:ring-1 focus:ring-[#4ade80] outline-none"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
 
-        <div class="bg-[#1A1D1A] rounded-b-3xl border border-white/5 overflow-hidden shadow-xl">
-            <table class="w-full text-left text-[12px]">
-                <thead class="bg-black/20 text-gray-500 uppercase tracking-wider border-y border-white/5">
-                    <tr>
-                        <th class="px-6 py-4 font-semibold">Watch Details</th>
-                        <th class="px-6 py-4 font-semibold text-center">Category</th>
-                        <!-- <th class="px-6 py-4 font-semibold text-center">Brand</th> -->
-                        <th class="px-6 py-4 font-semibold text-center">Price (Base)</th>
-                        <th class="px-6 py-4 font-semibold text-center">Variants</th>
-                        <th class="px-6 py-4 font-semibold text-center">Total Stock</th>
-                        <th class="px-6 py-4 font-semibold text-center">Status</th>
-                        <th class="px-6 py-4 font-semibold text-right">Actions</th>
+  <div class="bg-[#1A1D1A] rounded-b-3xl border border-white/5 overflow-hidden shadow-xl">
+    <table class="w-full text-left text-[12px]">
+      <thead class="bg-black/20 text-gray-500 uppercase tracking-wider border-y border-white/5">
+        <tr>
+          <th class="px-6 py-4 font-semibold">Watch Details</th>
+          <th class="px-6 py-4 font-semibold text-center">Category</th>
+          <!-- <th class="px-6 py-4 font-semibold text-center">Brand</th> -->
+          <th class="px-6 py-4 font-semibold text-center">Price (Base)</th>
+          <th class="px-6 py-4 font-semibold text-center">Variants</th>
+          <th class="px-6 py-4 font-semibold text-center">Total Stock</th>
+          <th class="px-6 py-4 font-semibold text-center">Status</th>
+          <th class="px-6 py-4 font-semibold text-right">Actions</th>
+        </tr>
+      </thead>
 
-
-                    </tr>
-                </thead>
-
-                <tbody class="divide-y divide-white/5">
-                    <% if (products && products.length> 0) { %>
-                        <% products.forEach(product=> {
-                            const variant = product.variants?.[0];
-                            const imageUrl = variant?.images?.[0]?.url || "/images/placeholder.png";
-
-                            const totalStock = product.variants.reduce((acc, curr) => acc + (curr.stock || 0), 0);
-                            const variantCount = product.variants.length;
-                            %>
-                            <tr class="hover:bg-white/[0.02] transition">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center space-x-3">
-                                        <div
-                                            class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center overflow-hidden border border-white/10">
-                                            <img src="<%= imageUrl %>" alt="Watch" class="w-8 h-8 object-contain">
-                                        </div>
-                                        <div>
-                                            <p class="text-white font-bold">
-                                                <%= product.name %>
-                                            </p>
-                                            <!-- <p class="text-[9px] text-gray-500 truncate w-32">
+      <tbody class="divide-y divide-white/5">
+        <% if (products && products.length> 0) { %> <% products.forEach(product=> { const variant =
+        product.variants?.[0]; const imageUrl = variant?.images?.[0]?.url ||
+        "/images/placeholder.png"; const totalStock = product.variants.reduce((acc, curr) => acc +
+        (curr.stock || 0), 0); const variantCount = product.variants.length; %>
+        <tr class="hover:bg-white/[0.02] transition">
+          <td class="px-6 py-4">
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center overflow-hidden border border-white/10"
+              >
+                <img src="<%= imageUrl %>" alt="Watch" class="w-8 h-8 object-contain" />
+              </div>
+              <div>
+                <p class="text-white font-bold"><%= product.name %></p>
+                <!-- <p class="text-[9px] text-gray-500 truncate w-32">
                                                 <%= product.brand %>
                                             </p> -->
-                                        </div>
-                                    </div>
-                                </td>
+              </div>
+            </div>
+          </td>
 
-                                <td class="px-6 py-4 text-center">
-                                    <span class="text-gray-400">
-                                        <%= product.category ? product.category.name : "-" %>
-                                    </span>
-                                </td>
+          <td class="px-6 py-4 text-center">
+            <span class="text-gray-400">
+              <%= product.category ? product.category.name : "-" %>
+            </span>
+          </td>
 
-                                <!-- <td class="px-6 py-4 text-center text-white font-medium">
+          <!-- <td class="px-6 py-4 text-center text-white font-medium">
                                     <%= product.brand || "-" %>
                                 </td> -->
 
-                                <td class="px-6 py-4 text-center text-gray-400">
-                                    ₹<%= variant ? variant.basePrice.toLocaleString() : "0" %>
-                                </td>
+          <td class="px-6 py-4 text-center text-gray-400">
+            ₹<%= variant ? variant.basePrice.toLocaleString() : "0" %>
+          </td>
 
-                                <td class="px-6 py-4 text-center">
-                                    <span
-                                        class="bg-[#14291d] text-[#4ade80] px-2.5 py-1 rounded-lg text-[10px] font-bold border border-[#4ade80]/20">
-                                        <%= variantCount %> Styles
-                                    </span>
-                                </td>
+          <td class="px-6 py-4 text-center">
+            <span
+              class="bg-[#14291d] text-[#4ade80] px-2.5 py-1 rounded-lg text-[10px] font-bold border border-[#4ade80]/20"
+            >
+              <%= variantCount %> Styles
+            </span>
+          </td>
 
-                                <td class="px-6 py-4 text-center">
-                                    <div class="flex flex-col items-center">
-                                        <span class="text-white font-bold">
-                                            <%= totalStock %>
-                                        </span>
-                                        <% if (totalStock <=0) { %>
-                                            <span class="text-[8px] text-red-500 uppercase font-black">Sold Out</span>
-                                            <% } %>
-                                    </div>
-                                </td>
-
-                                <td class="px-6 py-4 text-center">
-                                    <% if (product.isActive) { %>
-                                        <span
-                                            class="bg-[#14291d] text-[#4ade80] px-3 py-1 rounded-full text-[9px] font-bold flex items-center justify-center w-fit mx-auto">
-                                            <span class="w-1 h-1 bg-[#4ade80] rounded-full mr-1.5"></span> Active
-                                        </span>
-                                        <% } else { %>
-                                            <span
-                                                class="bg-white/5 text-gray-500 px-3 py-1 rounded-full text-[9px] font-bold flex items-center justify-center w-fit mx-auto">
-                                                <span class="w-1 h-1 bg-gray-500 rounded-full mr-1.5"></span> Inactive
-                                            </span>
-                                            <% } %>
-                                </td>
-
-
-                                <td class="px-5 py-4 text-right space-x-2 text-gray-500">
-                                    <button onclick="showProductDetails('<%= product._id %>')"
-                                        class="hover:text-white transition">
-                                        <i class="fa-solid fa-eye text-[12px]"></i>
-                                    </button>
-                                    <button onclick="window.location.href='/admin/edit-product/<%= product._id %>'"
-                                        class="hover:text-white transition">
-                                        <i class="fa-solid fa-pen text-[12px]"></i>
-                                    </button>
-                                    <button onclick="deleteProduct('<%= product._id %>')"
-                                        class="hover:text-red-500 transition">
-                                        <i class="fa-solid fa-trash text-[12px]"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <% }) %>
-                                <% } %>
-                </tbody>
-            </table>
-            <div class="p-6 flex items-center justify-center  bg-black/20">
-
-                <nav id="paginationNav" class="flex items-center gap-3 justify-center">
-
-                    <% if (currentPage> 1) { %>
-                        <a href="/admin/products?page=<%= currentPage - 1 %> & search =<%=search %>"
-                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
-                            <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                        </a>
-                        <% } else { %>
-                            <span
-                                class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed">
-                                <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                            </span>
-                            <% } %>
-
-                                <div class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
-
-                                    <div
-                                        class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]">
-                                        <%= currentPage %>
-                                    </div>
-
-                                    <% if (currentPage < totalPages) { %>
-                                        <a href="/admin/products?page=<%= totalPages %>&search=<%= search %>"
-                                            class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
-                                            <%= totalPages %>
-                                        </a>
-                                        <% } %>
-
-                                </div>
-
-                                <% if (currentPage < totalPages) { %>
-                                    <a href="/admin/products?page=<%= currentPage + 1 %> & search=<%=search %>"
-                                        class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
-                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                    </a>
-                                    <% } else { %>
-                                        <span
-                                            class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed">
-                                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                        </span>
-                                        <% } %>
-
-                </nav>
+          <td class="px-6 py-4 text-center">
+            <div class="flex flex-col items-center">
+              <span class="text-white font-bold"> <%= totalStock %> </span>
+              <% if (totalStock <=0) { %>
+              <span class="text-[8px] text-red-500 uppercase font-black">Sold Out</span>
+              <% } %>
             </div>
-        </div>
-    </main>
+          </td>
 
+          <td class="px-6 py-4 text-center">
+            <% if (product.isActive) { %>
+            <span
+              class="bg-[#14291d] text-[#4ade80] px-3 py-1 rounded-full text-[9px] font-bold flex items-center justify-center w-fit mx-auto"
+            >
+              <span class="w-1 h-1 bg-[#4ade80] rounded-full mr-1.5"></span> Active
+            </span>
+            <% } else { %>
+            <span
+              class="bg-white/5 text-gray-500 px-3 py-1 rounded-full text-[9px] font-bold flex items-center justify-center w-fit mx-auto"
+            >
+              <span class="w-1 h-1 bg-gray-500 rounded-full mr-1.5"></span> Inactive
+            </span>
+            <% } %>
+          </td>
 
-    <div id="quickViewModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
-        <div class="fixed inset-0 bg-black/90 backdrop-blur-md" onclick="closeQuickView()"></div>
+          <td class="px-5 py-4 text-right space-x-2 text-gray-500">
+            <button
+              onclick="showProductDetails('<%= product._id %>')"
+              class="hover:text-white transition"
+            >
+              <i class="fa-solid fa-eye text-[12px]"></i>
+            </button>
+            <button
+              onclick="window.location.href='/admin/edit-product/<%= product._id %>'"
+              class="hover:text-white transition"
+            >
+              <i class="fa-solid fa-pen text-[12px]"></i>
+            </button>
+            <button
+              onclick="deleteProduct('<%= product._id %>')"
+              class="hover:text-red-500 transition"
+            >
+              <i class="fa-solid fa-trash text-[12px]"></i>
+            </button>
+          </td>
+        </tr>
+        <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+    <div class="p-6 flex items-center justify-center bg-black/20">
+      <nav id="paginationNav" class="flex items-center gap-3 justify-center">
+        <% if (currentPage> 1) { %>
+        <a
+          href="/admin/products?page=<%= currentPage - 1 %> & search =<%=search %>"
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300"
+        >
+          <i class="fa-solid fa-arrow-left text-[10px]"></i>
+        </a>
+        <% } else { %>
+        <span
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed"
+        >
+          <i class="fa-solid fa-arrow-left text-[10px]"></i>
+        </span>
+        <% } %>
 
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div
-                class="bg-[#1A1D1A] w-full max-w-5xl rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
+        <div class="flex items-center bg-[#0a0a0a] rounded-xl border border-white/5 p-1 gap-1">
+          <div
+            class="px-4 h-8 flex items-center justify-center rounded-lg bg-[#4ade80] text-black font-black text-[11px] shadow-[0_0_15px_rgba(74,222,128,0.2)]"
+          >
+            <%= currentPage %>
+          </div>
 
-                <div class="flex justify-between items-center p-6 border-b border-white/5 bg-white/[0.02]">
-                    <div>
-                        <span id="modalBrand"
-                            class="text-[#4ade80] text-[9px] font-bold uppercase tracking-[0.3em]"></span>
-                        <h2 id="modalName" class="text-xl font-bold text-white uppercase tracking-tight"></h2>
-                    </div>
-                    <button onclick="closeQuickView()"
-                        class="w-10 h-10 rounded-full bg-white/5 text-gray-400 hover:bg-red-500/20 hover:text-red-500 transition flex items-center justify-center">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-
-                <div class="p-6">
-                    <div class="grid grid-cols-3 gap-4 mb-8">
-                        <div class="bg-black/40 p-4 rounded-2xl border border-white/5">
-                            <p class="text-[8px] text-gray-500 uppercase font-black mb-1">Movement</p>
-                            <p id="specMovement" class="text-xs text-white font-bold"></p>
-                        </div>
-                        <div class="bg-black/40 p-4 rounded-2xl border border-white/5">
-                            <p class="text-[8px] text-gray-500 uppercase font-black mb-1">Case Size</p>
-                            <p id="specCase" class="text-xs text-white font-bold"></p>
-                        </div>
-                        <div class="bg-black/40 p-4 rounded-2xl border border-white/5">
-                            <p class="text-[8px] text-gray-500 uppercase font-black mb-1">Strap Material</p>
-                            <p id="specStrap" class="text-xs text-white font-bold"></p>
-                        </div>
-                    </div>
-
-                    <h3 class="text-[10px] text-gray-400 font-bold uppercase mb-4 tracking-widest flex items-center">
-                        <i class="fa-solid fa-layer-group mr-2 text-[#4ade80]"></i> Associated Style Variants
-                    </h3>
-
-                    <div id="variantList" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                    </div>
-                </div>
-            </div>
-
+          <% if (currentPage < totalPages) { %>
+          <a
+            href="/admin/products?page=<%= totalPages %>&search=<%= search %>"
+            class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold"
+          >
+            <%= totalPages %>
+          </a>
+          <% } %>
         </div>
 
+        <% if (currentPage < totalPages) { %>
+        <a
+          href="/admin/products?page=<%= currentPage + 1 %> & search=<%=search %>"
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300"
+        >
+          <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </a>
+        <% } else { %>
+        <span
+          class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.01] text-gray-700 cursor-not-allowed"
+        >
+          <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </span>
+        <% } %>
+      </nav>
     </div>
+  </div>
+</main>
 
-    <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
+<div id="quickViewModal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+  <div class="fixed inset-0 bg-black/90 backdrop-blur-md" onclick="closeQuickView()"></div>
 
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div
+      class="bg-[#1A1D1A] w-full max-w-5xl rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden"
+    >
+      <div class="flex justify-between items-center p-6 border-b border-white/5 bg-white/[0.02]">
+        <div>
+          <span
+            id="modalBrand"
+            class="text-[#4ade80] text-[9px] font-bold uppercase tracking-[0.3em]"
+          ></span>
+          <h2 id="modalName" class="text-xl font-bold text-white uppercase tracking-tight"></h2>
+        </div>
+        <button
+          onclick="closeQuickView()"
+          class="w-10 h-10 rounded-full bg-white/5 text-gray-400 hover:bg-red-500/20 hover:text-red-500 transition flex items-center justify-center"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
 
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 10px;
-        }
-    </style>
+      <div class="p-6">
+        <div class="grid grid-cols-3 gap-4 mb-8">
+          <div class="bg-black/40 p-4 rounded-2xl border border-white/5">
+            <p class="text-[8px] text-gray-500 uppercase font-black mb-1">Movement</p>
+            <p id="specMovement" class="text-xs text-white font-bold"></p>
+          </div>
+          <div class="bg-black/40 p-4 rounded-2xl border border-white/5">
+            <p class="text-[8px] text-gray-500 uppercase font-black mb-1">Case Size</p>
+            <p id="specCase" class="text-xs text-white font-bold"></p>
+          </div>
+          <div class="bg-black/40 p-4 rounded-2xl border border-white/5">
+            <p class="text-[8px] text-gray-500 uppercase font-black mb-1">Strap Material</p>
+            <p id="specStrap" class="text-xs text-white font-bold"></p>
+          </div>
+        </div>
 
+        <h3
+          class="text-[10px] text-gray-400 font-bold uppercase mb-4 tracking-widest flex items-center"
+        >
+          <i class="fa-solid fa-layer-group mr-2 text-[#4ade80]"></i> Associated Style Variants
+        </h3>
 
-    <script>
+        <div
+          id="variantList"
+          class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        function openQuickView() {
-            document.getElementById("quickViewModal").classList.remove("hidden");
-            document.body.style.overflow = "hidden";
-        }
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
 
-        function closeQuickView() {
-            document.getElementById("quickViewModal").classList.add("hidden");
-            document.body.style.overflow = "auto";
-        }
-        async function deleteProduct(productId) {
-            const result = await Swal.fire({
-                title: "Are you sure?",
-                text: "This product will be hidden",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                confirmButtonText: "Yes, delete"
-            });
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-            if (!result.isConfirmed) return;
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+  }
+</style>
 
-            const res = await fetch(`/admin/products/${productId}/delete`, {
-                method: "PATCH"
-            });
+<script>
+  function openQuickView() {
+    document.getElementById('quickViewModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
 
-            const data = await res.json();
+  function closeQuickView() {
+    document.getElementById('quickViewModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+  async function deleteProduct(productId) {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This product will be hidden',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete',
+    });
 
-            if (data.success) {
-                Swal.fire("Deleted!", "Product hidden", "success")
-                    .then(() => location.reload());
-            }
-        }
+    if (!result.isConfirmed) return;
 
-        async function showProductDetails(productId) {
-            try {
-                const res = await fetch(`/admin/products/${productId}`);
-                const data = await res.json();
+    const res = await fetch(`/admin/products/${productId}/delete`, {
+      method: 'PATCH',
+    });
 
-                if (!data.success) {
-                    return Swal.fire("Error", data.message, "error");
-                }
+    const data = await res.json();
 
-                const { product, variants } = data;
+    if (data.success) {
+      Swal.fire('Deleted!', 'Product hidden', 'success').then(() => location.reload());
+    }
+  }
 
-                document.getElementById("modalName").innerText = product.name || "-";
-                // document.getElementById("modalBrand").innerText = "";
+  async function showProductDetails(productId) {
+    try {
+      const res = await fetch(`/admin/products/${productId}`);
+      const data = await res.json();
 
-                document.getElementById("specMovement").innerText =
-                    product.specifications?.movementType || "-";
+      if (!data.success) {
+        return Swal.fire('Error', data.message, 'error');
+      }
 
-                document.getElementById("specCase").innerText =
-                    product.specifications?.caseSize
-                        ? product.specifications.caseSize + " mm"
-                        : "-";
+      const { product, variants } = data;
 
-                document.getElementById("specStrap").innerText =
-                    product.specifications?.strapType || "-";
+      document.getElementById('modalName').innerText = product.name || '-';
+      // document.getElementById("modalBrand").innerText = "";
 
-                const variantList = document.getElementById("variantList");
-                variantList.innerHTML = "";
+      document.getElementById('specMovement').innerText =
+        product.specifications?.movementType || '-';
 
-                if (!variants || variants.length === 0) {
-                    variantList.innerHTML = `
+      document.getElementById('specCase').innerText = product.specifications?.caseSize
+        ? product.specifications.caseSize + ' mm'
+        : '-';
+
+      document.getElementById('specStrap').innerText = product.specifications?.strapType || '-';
+
+      const variantList = document.getElementById('variantList');
+      variantList.innerHTML = '';
+
+      if (!variants || variants.length === 0) {
+        variantList.innerHTML = `
                 <p class="text-center text-gray-500 text-sm">No variants found</p>
             `;
-                } else {
-                    const offer = product.offerPercentage || 0;
+      } else {
+        const offer = product.offerPercentage || 0;
 
-                    variants.forEach((variant, index) => {
-                        const base = variant.basePrice || 0;
-                        const finalPrice = Math.round(base - (base * offer / 100));
+        variants.forEach((variant, index) => {
+          const base = variant.basePrice || 0;
+          const finalPrice = Math.round(base - (base * offer) / 100);
 
-                        const imageUrl =
-                            variant.images?.[0]?.url || "/images/placeholder.png";
+          const imageUrl = variant.images?.[0]?.url || '/images/placeholder.png';
 
-                        variantList.innerHTML += `
+          variantList.innerHTML += `
                     <div class="flex items-center gap-4 bg-black/40 p-4 rounded-xl border border-white/5">
                         <img src="${imageUrl}"
                              class="w-16 h-16 rounded-lg object-cover border border-white/10">
@@ -355,7 +366,8 @@
                             <p class="text-[#4ade80] font-bold text-sm">
                                 ₹${finalPrice.toLocaleString()}
                             </p>
-                            ${offer > 0
+                            ${
+                              offer > 0
                                 ? `<p class="text-[9px] text-[#4ade80] uppercase font-bold">
                                         ${offer}% OFF
                                        </p>`
@@ -366,14 +378,13 @@
                         </div>
                     </div>
                 `;
-                    });
-                }
+        });
+      }
 
-                openQuickView();
-
-            } catch (error) {
-                console.error(error);
-                Swal.fire("Error", "Something went wrong", "error");
-            }
-        }
-    </script>
+      openQuickView();
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error', 'Something went wrong', 'error');
+    }
+  }
+</script>

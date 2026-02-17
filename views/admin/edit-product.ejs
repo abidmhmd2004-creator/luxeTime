@@ -4,438 +4,392 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <%- include('../partials/adminSidebar') %>
-    <main class="flex-1 p-3 overflow-y-auto bg-[#0d0f0d] min-h-screen text-gray-200">
-        <form id="editProductForm">
-            <input type="hidden" id="productId" value="<%= product._id %>">
 
-            <div class="max-w-[1200px] mx-auto mb-5">
-                <h2 class="text-2xl font-extrabold text-white tracking-tight">Edit Product:</h2>
-                <a href="/admin/products"
-                    class="text-[12px] justify-end mr-8 uppercase font-bold text-gray-500 hover:text-[#4ade80] transition flex items-center mb-2 tracking-widest">
-                    <i class="fa-solid fa-arrow-left mr-2"></i> Back to Products
-                </a>
+<main class="flex-1 p-3 overflow-y-auto bg-[#0d0f0d] min-h-screen text-gray-200">
+  <form id="editProductForm">
+    <input type="hidden" id="productId" value="<%= product._id %>">
+
+    <div class="max-w-[1200px] mx-auto mb-5">
+      <h2 class="text-2xl font-extrabold text-white tracking-tight">Edit Product:</h2>
+      <a href="/admin/products" class="text-[12px] justify-end mr-8 uppercase font-bold text-gray-500 hover:text-[#4ade80] transition flex items-center mb-2 tracking-widest">
+        <i class="fa-solid fa-arrow-left mr-2"></i> Back to Products
+      </a>
+    </div>
+
+    <div class="max-w-[1200px] mx-auto grid grid-cols-12 gap-4">
+      
+      <div class="col-span-12 lg:col-span-8 space-y-6">
+        
+        <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-4 shadow-xl">
+          <div class="flex items-center space-x-3 mb-5">
+            <div class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
+              <i class="fa-solid fa-circle-info text-xs"></i>
+            </div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Basic Information</h3>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Product Name *</label>
+              <input type="text" name="name" value="<%= product.name %>" required class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
             </div>
 
-            <div class="max-w-[1200px] mx-auto grid grid-cols-12 gap-4">
-                <div class="col-span-12 lg:col-span-8 space-y-6">
-                    <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-4 shadow-xl">
-                        <div class="flex items-center space-x-3 mb-5">
-                            <div
-                                class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
-                                <i class="fa-solid fa-circle-info text-xs"></i>
-                            </div>
-                            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Basic Information</h3>
-                        </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Brand *</label>
+                <input name="brand" value="<%= product.brand %>" required class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Category *</label>
+                <select name="category" required class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
+                  <% categories.forEach(cat=> { %>
+                    <option value="<%= cat._id %>" <%= String(product.category._id) === String(cat._id) ? 'selected' : '' %>>
+                      <%= cat.name %>
+                    </option>
+                  <% }) %>
+                </select>
+              </div>
+            </div>
 
-                        <div class="space-y-4">
-                            <div>
-                                <label
-                                    class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Product
-                                    Name *</label>
-                                <input type="text" name="name" value="<%= product.name %>" required
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                            </div>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label
-                                        class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Brand
-                                        *</label>
-                                    <input  name="brand" value="<%= product.brand %>" required
-                                        class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Category
-                                        *</label>
-                                    <select name="category" required
-                                        class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white outline-none">
-                                        <% categories.forEach(cat=> { %>
-                                            <option value="<%= cat._id %>"
-                                                <%=String(product.category._id)===String(cat._id) ? 'selected' : '' %>>
-                                                <%= cat.name %>
-                                            </option>
-                                            <% }) %>
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Description</label>
-                                <textarea name="description" rows="3"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-3 text-sm text-white outline-none resize-none"><%= product.description %></textarea>
-                            </div>
-                        </div>
-                    </div>
+            <div>
+              <label class="block text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-widest">Description</label>
+              <textarea name="description" rows="3" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-3 text-sm text-white outline-none resize-none"><%= product.description %></textarea>
+            </div>
+          </div>
+        </div>
 
-                    <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-3 shadow-xl">
-                        <div class="flex items-center space-x-3 mb-6">
-                            <div
-                                class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
-                                <i class="fa-solid fa-palette text-xs"></i>
-                            </div>
-                            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Style Variants</h3>
-                        </div>
+        <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-3 shadow-xl">
+          <div class="flex items-center space-x-3 mb-6">
+            <div class="w-7 h-7 rounded bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
+              <i class="fa-solid fa-palette text-xs"></i>
+            </div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Style Variants</h3>
+          </div>
 
-                        <div id="variantContainer" class="space-y-4">
-                            <% variants.forEach((variant, index)=> { %>
-                                <div class="variant-card bg-black/40 rounded-xl p-5 border border-white/5 relative">
-                                    <input type="hidden" name="variants[<%= index %>][_id]" value="<%= variant._id %>">
+          <div id="variantContainer" class="space-y-4">
+            <% variants.forEach((variant, index)=> { %>
+              <div class="variant-card bg-black/40 rounded-xl p-5 border border-white/5 relative">
+                <input type="hidden" name="variants[<%= index %>][_id]" value="<%= variant._id %>">
 
-                                    <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
-                                        <h4 class="text-[9px] uppercase font-bold text-[#4ade80] tracking-[0.2em]">
-                                            Variant Configuration</h4>
-                                        <button type="button" onclick="removeVariant(this)"
-                                            class="text-red-500/50 hover:text-red-500 text-[9px] font-bold uppercase">
-                                            <i class="fa-solid fa-trash-can mr-1"></i> Remove
-                                        </button>
-                                    </div>
-
-                                    <div class="grid grid-cols-12 gap-3">
-                                        <div class="col-span-12 md:col-span-7 grid grid-cols-2 gap-3">
-                                            <div class="col-span-2">
-                                                <label
-                                                    class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Color
-                                                    Name</label>
-                                                <input type="text" name="variants[<%= index %>][color]"
-                                                    value="<%= variant.color %>"
-                                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                                            </div>
-                                            <div>
-                                                <label
-                                                    class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Stock</label>
-                                                <input type="number" name="variants[<%= index %>][stock]"
-                                                    value="<%= variant.stock %>" required
-                                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                                            </div>
-                                            <div>
-                                                <label
-                                                    class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Base
-                                                    Price (₹)</label>
-                                                <input type="number" name="variants[<%= index %>][basePrice]"
-                                                    value="<%= variant.basePrice %>"
-                                                    class="base-price-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                                            </div>
-                                            <div class="col-span-2">
-                                                <label
-                                                    class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Final
-                                                    Price</label>
-                                                <input type="text" readonly
-                                                    class="final-price-display w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-[#4ade80] font-bold outline-none"
-                                                    value="₹ <%= variant.finalPrice %>">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-span-12 md:col-span-5">
-                                            <label
-                                                class="block text-[9px] text-gray-500 mb-2 uppercase font-bold">Media</label>
-                                            <div class="grid grid-cols-2 gap-2">
-                                                <div onclick="triggerUpload(this)"
-                                                    class="aspect-square rounded-lg bg-[#141a14] border-2 border-dashed border-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-[#4ade80]/30 transition group">
-                                                    <i
-                                                        class="fa-solid fa-image text-gray-600 group-hover:text-[#4ade80] text-sm mb-1"></i>
-                                                    <span class="text-[7px] text-gray-500 uppercase font-bold">Add
-                                                        Image</span>
-                                                </div>
-                                                <div class="imagePreviewGrid grid grid-cols-2 gap-2">
-                                                    <% variant.images.forEach(img=> { %>
-                                                        <div
-                                                            class="relative aspect-square rounded-lg overflow-hidden border border-white/10 group">
-                                                            <img src="<%= img.url %>"
-                                                                class="w-full h-full object-cover">
-                                                            <button type="button"
-                                                                class="absolute top-1 right-1 bg-red-600 p-1 rounded-full text-[8px]"
-                                                                onclick="removeImage(this)">
-                                                                <i class="fa-solid fa-xmark text-white"></i>
-                                                            </button>
-                                                        </div>
-                                                        <% }) %>
-                                                </div>
-                                            </div>
-                                            <input type="file" class="imagePicker hidden" accept="image/*">
-                                        </div>
-                                    </div>
-                                </div>
-                                <% }) %>
-                        </div>
-
-                        <button type="button" onclick="addNewVariant()"
-                            class="w-full mt-4 py-4 rounded-xl border border-dashed border-white/10 text-gray-500 hover:text-[#4ade80] transition flex items-center justify-center text-[10px] font-bold uppercase">
-                            <i class="fa-solid fa-plus mr-2"></i> Add Another Style Variant
-                        </button>
-                    </div>
+                <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
+                  <h4 class="text-[9px] uppercase font-bold text-[#4ade80] tracking-[0.2em]">Variant Configuration</h4>
+                  <button type="button" onclick="removeVariant(this)" class="text-red-500/50 hover:text-red-500 text-[9px] font-bold uppercase">
+                    <i class="fa-solid fa-trash-can mr-1"></i> Remove
+                  </button>
                 </div>
 
-                <div class="col-span-12 lg:col-span-4 space-y-6">
-                    <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-6">
-                        <div class="flex items-center space-x-3 mb-6">
-                            <div
-                                class="w-8 h-8 rounded-lg bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
-                                <i class="fa-solid fa-tag text-sm"></i>
-                            </div>
-                            <h3 class="text-lg font-bold text-white font-bold">Offer</h3>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
-                                    (%)</label>
-                                <input type="number" name="offerPercentage"
-                                    class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none"
-                                    value="<%= product.offerPercentage %>">
-                            </div>
-                            <div>
-                                <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer
-                                    Expiry </label>
-                                <div class="relative">
-                                    <input type="date" id="offerExpiry" name="offerExpiry"
-                                        value="<%= product.offerExpiry ? new Date(product.offerExpiry).toISOString().split('T')[0] : '' %>"
-                                        class="offerExpiry w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white/60 outline-none">
-
-                                    <i
-                                        class="fa-solid fa-calendar-days  absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
-                                </div>
-                            </div>
-                        </div>
+                <div class="grid grid-cols-12 gap-3">
+                  <div class="col-span-12 md:col-span-7 grid grid-cols-2 gap-3">
+                    <div class="col-span-2">
+                      <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Color Name</label>
+                      <input type="text" name="variants[<%= index %>][color]" value="<%= variant.color %>" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                     </div>
-
-                    <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
-                        <h3 class="text-sm font-bold text-white uppercase mb-5">Specifications</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Case Size
-                                    (mm)</label>
-                                <input type="text" name="caseSize" value="<%= product.specifications.caseSize %>"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Strap
-                                    Type</label>
-                                <input type="text" name="strapType" value="<%= product.specifications.strapType %>"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Movement</label>
-                                <input type="text" name="movementType"
-                                    value="<%= product.specifications.movementType %>"
-                                    class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
-                            </div>
-                        </div>
+                    <div>
+                      <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Stock</label>
+                      <input type="number" name="variants[<%= index %>][stock]" value="<%= variant.stock %>" required class="w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                     </div>
-
-                    <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
-                        <h3 class="text-sm font-bold text-white uppercase mb-5">Product Visibility</h3>
-                        <div class="flex items-center justify-between">
-                            <p class="text-[10px] text-white font-bold uppercase tracking-tight">List Product</p>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" name="isListed" class="sr-only peer" <%=product.isActive
-                                    ? 'checked' : '' %>>
-                                <div
-                                    class="w-11 h-6 bg-white/5 rounded-full peer peer-checked:bg-[#4ade80] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-500 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:bg-black">
-                                </div>
-                            </label>
-                        </div>
+                    <div>
+                      <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Base Price (₹)</label>
+                      <input type="number" name="variants[<%= index %>][basePrice]" value="<%= variant.basePrice %>" class="base-price-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none">
                     </div>
+                    <div class="col-span-2">
+                      <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Final Price</label>
+                      <input type="text" readonly class="final-price-display w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-[#4ade80] font-bold outline-none" value="₹ <%= variant.finalPrice %>">
+                    </div>
+                  </div>
+
+                  <div class="col-span-12 md:col-span-5">
+                    <label class="block text-[9px] text-gray-500 mb-2 uppercase font-bold">Media</label>
+                    <div class="grid grid-cols-2 gap-2">
+                      <div onclick="triggerUpload(this)" class="aspect-square rounded-lg bg-[#141a14] border-2 border-dashed border-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-[#4ade80]/30 transition group">
+                        <i class="fa-solid fa-image text-gray-600 group-hover:text-[#4ade80] text-sm mb-1"></i>
+                        <span class="text-[7px] text-gray-500 uppercase font-bold">Add Image</span>
+                      </div>
+                      <div class="imagePreviewGrid grid grid-cols-2 gap-2">
+                        <% variant.images.forEach(img=> { %>
+                          <div class="relative aspect-square rounded-lg overflow-hidden border border-white/10 group">
+                            <img src="<%= img.url %>" class="w-full h-full object-cover">
+                            <button type="button" class="absolute top-1 right-1 bg-red-600 p-1 rounded-full text-[8px]" onclick="removeImage(this)">
+                              <i class="fa-solid fa-xmark text-white"></i>
+                            </button>
+                          </div>
+                        <% }) %>
+                      </div>
+                    </div>
+                    <input type="file" class="imagePicker hidden" accept="image/*">
+                  </div>
                 </div>
+              </div>
+            <% }) %>
+          </div>
+
+          <button type="button" onclick="addNewVariant()" class="w-full mt-4 py-4 rounded-xl border border-dashed border-white/10 text-gray-500 hover:text-[#4ade80] transition flex items-center justify-center text-[10px] font-bold uppercase">
+            <i class="fa-solid fa-plus mr-2"></i> Add Another Style Variant
+          </button>
+        </div>
+      </div>
+
+      <div class="col-span-12 lg:col-span-4 space-y-6">
+        <div class="bg-[#1A1D1A] rounded-3xl border border-white/5 p-6">
+          <div class="flex items-center space-x-3 mb-6">
+            <div class="w-8 h-8 rounded-lg bg-[#4ade80]/10 flex items-center justify-center text-[#4ade80]">
+              <i class="fa-solid fa-tag text-sm"></i>
             </div>
+            <h3 class="text-lg font-bold text-white">Offer</h3>
+          </div>
 
-            <div class="max-w-[500px] mx-auto flex justify-center py-10">
-                <button type="submit"
-                    class="bg-[#4ade80] text-black px-12 py-3 rounded-full text-[10px] font-extrabold uppercase hover:scale-105 transition-all">
-                    Update Product
-                </button>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer (%)</label>
+              <input type="number" name="offerPercentage" class="offer-input w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none" value="<%= product.offerPercentage %>">
             </div>
-        </form>
-    </main>
+            <div>
+              <label class="block text-[9px] text-gray-500 mb-1 uppercase font-bold">Offer Expiry</label>
+              <div class="relative">
+                <input type="date" id="offerExpiry" name="offerExpiry" value="<%= product.offerExpiry ? new Date(product.offerExpiry).toISOString().split('T')[0] : '' %>" class="offerExpiry w-full bg-[#141a14] border border-white/10 rounded-lg px-3 py-2 text-xs text-white/60 outline-none">
+                <i class="fa-solid fa-calendar-days absolute right-4 top-1/2 -translate-y-1/2 text-[14px] text-gray-500 pointer-events-none"></i>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.variant-card').forEach(card => {
-                card.images = [];
-                card.querySelectorAll('.imagePreviewGrid img').forEach(img => {
-                    card.images.push(img.src);
-                });
+        <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
+          <h3 class="text-sm font-bold text-white uppercase mb-5">Specifications</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Case Size (mm)</label>
+              <input type="text" name="caseSize" value="<%= product.specifications.caseSize %>" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
+            </div>
+            <div>
+              <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Strap Type</label>
+              <input type="text" name="strapType" value="<%= product.specifications.strapType %>" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
+            </div>
+            <div>
+              <label class="block text-[10px] text-gray-500 mb-1.5 uppercase font-bold">Movement</label>
+              <input type="text" name="movementType" value="<%= product.specifications.movementType %>" class="w-full bg-[#141a14] border border-white/10 rounded-lg px-4 py-2 text-xs text-white outline-none">
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[#1A1D1A] rounded-xl border border-white/5 p-6 shadow-xl">
+          <h3 class="text-sm font-bold text-white uppercase mb-5">Product Visibility</h3>
+          <div class="flex items-center justify-between">
+            <p class="text-[10px] text-white font-bold uppercase tracking-tight">List Product</p>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" name="isListed" class="sr-only peer" <%= product.isActive ? 'checked' : '' %>>
+              <div class="w-11 h-6 bg-white/5 rounded-full peer peer-checked:bg-[#4ade80] after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-500 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:bg-black"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-[500px] mx-auto flex justify-center py-10">
+      <button type="submit" class="bg-[#4ade80] text-black px-12 py-3 rounded-full text-[10px] font-extrabold uppercase hover:scale-105 transition-all">
+        Update Product
+      </button>
+    </div>
+  </form>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. Initialize images array for existing cards
+    document.querySelectorAll('.variant-card').forEach(card => {
+      card.images = [];
+      card.querySelectorAll('.imagePreviewGrid img').forEach(img => {
+        card.images.push(img.src);
+      });
+    });
+
+    // 2. Pricing Logic
+    const globalOfferInput = document.querySelector('input[name="offerPercentage"]');
+    const variantContainer = document.getElementById('variantContainer');
+
+    function updatePrices() {
+      if (!globalOfferInput) return;
+      const globalOffer = parseFloat(globalOfferInput.value) || 0;
+      const variantCards = document.querySelectorAll('.variant-card');
+
+      variantCards.forEach(card => {
+        const baseInput = card.querySelector('.base-price-input');
+        const finalDisplay = card.querySelector('.final-price-display');
+        if (baseInput && finalDisplay) {
+          const base = parseFloat(baseInput.value) || 0;
+          const final = Math.round(base - (base * (globalOffer / 100)));
+          finalDisplay.value = `₹ ${final.toLocaleString()}`;
+        }
+      });
+    }
+
+    if (globalOfferInput) globalOfferInput.addEventListener('input', updatePrices);
+    if (variantContainer) {
+      variantContainer.addEventListener('input', function(e) {
+        if (e.target.classList.contains('base-price-input')) updatePrices();
+      });
+    }
+
+    // 3. Image Cropping Logic
+    document.addEventListener('change', function(e) {
+      if (e.target.classList.contains('imagePicker')) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const card = e.target.closest('.variant-card');
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+          Swal.fire({
+            title: 'Crop Image',
+            width: '450px',
+            html: `<div class="p-1 overflow-hidden"><img id="cropperTarget" src="${event.target.result}" style="max-width: 100%; max-height: 400px; display: block;"></div>`,
+            background: '#1A1D1A',
+            confirmButtonColor: '#4ade80',
+            confirmButtonText: 'Crop & Save',
+            showCancelButton: true,
+            willOpen: () => {
+              const image = document.getElementById('cropperTarget');
+              window.cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1
+              });
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const canvas = window.cropper.getCroppedCanvas({
+                width: 800,
+                height: 800
+              });
+              canvas.toBlob((blob) => {
+                if (!card.images) card.images = [];
+                card.images.push(blob);
+
+                const previewGrid = card.querySelector('.imagePreviewGrid');
+                const imgUrl = URL.createObjectURL(blob);
+                const div = document.createElement("div");
+                div.className = "relative aspect-square rounded-lg overflow-hidden border border-white/10 group";
+                div.innerHTML = `
+                  <img src="${imgUrl}" class="w-full h-full object-cover">
+                  <button type="button" class="absolute top-1 right-1 bg-red-600 p-1 rounded-full text-[8px]" onclick="removeImage(this)">
+                    <i class="fa-solid fa-xmark text-white"></i>
+                  </button>`;
+                previewGrid.appendChild(div);
+              }, 'image/jpeg');
+            }
+            window.cropper.destroy();
+          });
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      }
+    });
+
+    // 4. Form Submission
+    const editForm = document.getElementById("editProductForm");
+    if (editForm) {
+      editForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!validateForm()) return;
+
+        const id = document.getElementById('productId').value;
+        const formData = new FormData(editForm);
+        const cards = document.querySelectorAll('.variant-card');
+
+        cards.forEach((card, i) => {
+          if (card.images) {
+            card.images.forEach(imgData => {
+              if (imgData instanceof Blob) {
+                formData.append(`variantImages_${i}`, imgData, `new_image_${i}.jpg`);
+              } else {
+                formData.append(`existingImages_${i}`, imgData);
+              }
             });
-
-            // 2. Pricing Logic
-            const globalOfferInput = document.querySelector('input[name="offerPercentage"]');
-            const variantContainer = document.getElementById('variantContainer');
-
-            function updatePrices() {
-                if (!globalOfferInput) return;
-                const globalOffer = parseFloat(globalOfferInput.value) || 0;
-                const variantCards = document.querySelectorAll('.variant-card');
-
-                variantCards.forEach(card => {
-                    const baseInput = card.querySelector('.base-price-input');
-                    const finalDisplay = card.querySelector('.final-price-display');
-                    if (baseInput && finalDisplay) {
-                        const base = parseFloat(baseInput.value) || 0;
-                        const final = Math.round(base - (base * (globalOffer / 100)));
-                        finalDisplay.value = `₹ ${final.toLocaleString()}`;
-                    }
-                });
-            }
-
-            if (globalOfferInput) globalOfferInput.addEventListener('input', updatePrices);
-            if (variantContainer) {
-                variantContainer.addEventListener('input', function (e) {
-                    if (e.target.classList.contains('base-price-input')) updatePrices();
-                });
-            }
-
-            // 3. Image Cropping Logic
-            document.addEventListener('change', function (e) {
-                if (e.target.classList.contains('imagePicker')) {
-                    const file = e.target.files[0];
-                    if (!file) return;
-
-                    const card = e.target.closest('.variant-card');
-                    const reader = new FileReader();
-
-                    reader.onload = function (event) {
-                        Swal.fire({
-                            title: 'Crop Image',
-                            width: '450px',
-                            html: `<div class="p-1 overflow-hidden"><img id="cropperTarget" src="${event.target.result}" style="max-width: 100%; max-height: 400px; display: block;"></div>`,
-                            background: '#1A1D1A',
-                            confirmButtonColor: '#4ade80',
-                            confirmButtonText: 'Crop & Save',
-                            showCancelButton: true,
-                            willOpen: () => {
-                                const image = document.getElementById('cropperTarget');
-                                window.cropper = new Cropper(image, { aspectRatio: 1, viewMode: 1 });
-                            }
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                const canvas = window.cropper.getCroppedCanvas({ width: 800, height: 800 });
-                                canvas.toBlob((blob) => {
-                                    if (!card.images) card.images = [];
-                                    card.images.push(blob); // Push the new Blob
-
-                                    const previewGrid = card.querySelector('.imagePreviewGrid');
-                                    const imgUrl = URL.createObjectURL(blob);
-                                    const div = document.createElement("div");
-                                    div.className = "relative aspect-square rounded-lg overflow-hidden border border-white/10 group";
-                                    div.innerHTML = `
-                                <img src="${imgUrl}" class="w-full h-full object-cover">
-                                <button type="button" class="absolute top-1 right-1 bg-red-600 p-1 rounded-full text-[8px]" onclick="removeImage(this)">
-                                    <i class="fa-solid fa-xmark text-white"></i>
-                                </button>`;
-                                    previewGrid.appendChild(div);
-                                }, 'image/jpeg');
-                            }
-                            window.cropper.destroy();
-                        });
-                    };
-                    reader.readAsDataURL(file);
-                    e.target.value = ""; // Reset input
-                }
-            });
-
-            // 4. Form Submission
-            const editForm = document.getElementById("editProductForm");
-            if (editForm) {
-                editForm.addEventListener("submit", async (e) => {
-                    e.preventDefault();
-
-                    if (!validateForm()) return;
-
-                    const id = document.getElementById('productId').value;
-                    const formData = new FormData(editForm);
-                    const cards = document.querySelectorAll('.variant-card');
-
-                    cards.forEach((card, i) => {
-                        if (card.images) {
-                            card.images.forEach(imgData => {
-                                if (imgData instanceof Blob) {
-                                    // These are new files
-                                    formData.append(`variantImages_${i}`, imgData, `new_image_${i}.jpg`);
-                                } else {
-                                    // These are existing image URL strings
-                                    formData.append(`existingImages_${i}`, imgData);
-                                }
-                            });
-                        }
-                    });
-
-                    Swal.fire({ title: "Updating...", didOpen: () => Swal.showLoading() });
-
-                    try {
-                        const res = await fetch(`/admin/edit-product/${id}`, { method: "POST", body: formData });
-                        const data = await res.json();
-                        if (data.success) {
-                            Swal.fire("Success", data.message, "success").then(() => window.location.href = "/admin/products");
-                        } else {
-                            Swal.fire("Error", data.message, "error");
-                        }
-                    } catch (err) {
-                        Swal.fire("Error", "Server error", "error");
-                    }
-                });
-            }
-
-            function validateForm() {
-                const cards = document.querySelectorAll('.variant-card');
-                for (let i = 0; i < cards.length; i++) {
-                    const base = parseInt(cards[i].querySelector('.base-price-input').value) || 0;
-                    if (base <= 0) {
-                        Swal.fire("Error", `Variant ${i + 1}: Price must be > 0`, "error");
-                        return false;
-                    }
-                    if (!cards[i].images || cards[i].images.length < 3) {
-                        Swal.fire("Error", `Variant ${i + 1}: Need at least 3 images`, "error");
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-            updatePrices();
+          }
         });
 
-        function addNewVariant() {
-            const container = document.getElementById("variantContainer");
-            const cards = container.querySelectorAll(".variant-card");
-            const index = cards.length;
+        Swal.fire({
+          title: "Updating...",
+          didOpen: () => Swal.showLoading()
+        });
 
-            const clone = cards[0].cloneNode(true);
-
-            clone.querySelectorAll("input").forEach(input => {
-                if (input.name) input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
-
-                if (input.type !== "hidden") {
-                    if (!input.classList.contains('final-price-display')) input.value = "";
-                } else {
-                    if (input.name && input.name.includes('_id')) input.value = "";
-                }
-            });
-
-            clone.querySelector(".imagePreviewGrid").innerHTML = "";
-            clone.images = [];
-            container.appendChild(clone);
-
-            const globalOffer = parseFloat(document.querySelector('input[name="offerPercentage"]').value) || 0;
-            clone.querySelector('.final-price-display').value = "₹ 0";
+        try {
+          const res = await fetch(`/admin/edit-product/${id}`, {
+            method: "POST",
+            body: formData
+          });
+          const data = await res.json();
+          if (data.success) {
+            Swal.fire("Success", data.message, "success").then(() => window.location.href = "/admin/products");
+          } else {
+            Swal.fire("Error", data.message, "error");
+          }
+        } catch (err) {
+          Swal.fire("Error", "Server error", "error");
         }
+      });
+    }
 
-        function removeVariant(btn) {
-            if (document.querySelectorAll('.variant-card').length > 1) {
-                btn.closest('.variant-card').remove();
-            } else {
-                Swal.fire("Error", "Need at least one variant", "warning");
-            }
+    function validateForm() {
+      const cards = document.querySelectorAll('.variant-card');
+      for (let i = 0; i < cards.length; i++) {
+        const base = parseInt(cards[i].querySelector('.base-price-input').value) || 0;
+        if (base <= 0) {
+          Swal.fire("Error", `Variant ${i + 1}: Price must be > 0`, "error");
+          return false;
         }
+        if (!cards[i].images || cards[i].images.length < 3) {
+          Swal.fire("Error", `Variant ${i + 1}: Need at least 3 images`, "error");
+          return false;
+        }
+      }
+      return true;
+    }
 
-        function triggerUpload(btn) {
-            btn.closest('.variant-card').querySelector('.imagePicker').click();
-        }
+    updatePrices();
+  });
 
-        function removeImage(btn) {
-            const card = btn.closest('.variant-card');
-            const previewItem = btn.closest('.relative');
-            const index = Array.from(previewItem.parentElement.children).indexOf(previewItem);
-            if (card.images) card.images.splice(index, 1);
-            previewItem.remove();
-        }
-    </script>
+  function addNewVariant() {
+    const container = document.getElementById("variantContainer");
+    const cards = container.querySelectorAll(".variant-card");
+    const index = cards.length;
+
+    const clone = cards[0].cloneNode(true);
+
+    clone.querySelectorAll("input").forEach(input => {
+      if (input.name) input.name = input.name.replace(/\[\d+\]/, `[${index}]`);
+
+      if (input.type !== "hidden") {
+        if (!input.classList.contains('final-price-display')) input.value = "";
+      } else {
+        if (input.name && input.name.includes('_id')) input.value = "";
+      }
+    });
+
+    clone.querySelector(".imagePreviewGrid").innerHTML = "";
+    clone.images = [];
+    container.appendChild(clone);
+
+    clone.querySelector('.final-price-display').value = "₹ 0";
+  }
+
+  function removeVariant(btn) {
+    if (document.querySelectorAll('.variant-card').length > 1) {
+      btn.closest('.variant-card').remove();
+    } else {
+      Swal.fire("Error", "Need at least one variant", "warning");
+    }
+  }
+
+  function triggerUpload(btn) {
+    btn.closest('.variant-card').querySelector('.imagePicker').click();
+  }
+
+  function removeImage(btn) {
+    const card = btn.closest('.variant-card');
+    const previewItem = btn.closest('.relative');
+    const index = Array.from(previewItem.parentElement.children).indexOf(previewItem);
+    if (card.images) card.images.splice(index, 1);
+    previewItem.remove();
+  }
+</script>
