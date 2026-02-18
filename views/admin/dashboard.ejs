@@ -22,6 +22,36 @@
   .custom-scroll::-webkit-scrollbar-thumb:hover {
     background: #333333;
   }
+
+  /* Makes the entire date input clickable to open the calendar */
+  input[type='date'] {
+    position: relative;
+    color-scheme: dark;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+    z-index: 2;
+  }
+
+  /* Prevent layout shift when dates appear */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 </style>
 
 <div class="flex w-full h-screen overflow-y-auto bg-[#0d0f0d]">
@@ -29,17 +59,21 @@
 
   <main class="flex-1 h-full p-5 space-y-5 overflow-y-auto text-white custom-scroll">
     <div
-      class="flex flex-col md:flex-row justify-between bg-card items-start md:items-center border-b border-neutral-700 pb-4 gap-4 top-0 z-10 p-4 rounded-t-lg"
+      class="flex flex-col lg:flex-row justify-between bg-card items-start lg:items-center border-b border-neutral-700 pb-4 gap-4 top-0 z-10 p-4 rounded-t-lg"
     >
-      <div>
+      <div class="flex-shrink-0">
         <h1 class="text-lg font-bold tracking-wider uppercase">Sales & Revenue Report</h1>
         <p class="text-[11px] text-neutral-400">
           Detailed analytics of orders, discounts, and performance
         </p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2">
-        <div class="flex bg-neutral-800 rounded-lg p-0.5 text-[10px] text-neutral-400">
+      <div
+        class="flex items-center gap-3 overflow-x-auto no-scrollbar w-full lg:w-auto pb-2 lg:pb-0"
+      >
+        <div
+          class="flex bg-neutral-800 rounded-lg p-0.5 text-[10px] text-neutral-400 flex-shrink-0"
+        >
           <button data-range="daily" class="range-btn px-2.5 py-1 rounded-md">Daily</button>
           <button data-range="weekly" class="range-btn px-2.5 py-1 rounded-md">Weekly</button>
           <button data-range="yearly" class="range-btn px-2.5 py-1 rounded-md">Yearly</button>
@@ -48,40 +82,61 @@
           </button>
         </div>
 
-        <div id="customDateBox" class="hidden flex items-center gap-2">
-          <input
-            type="date"
-            id="startDate"
-            class="bg-neutral-900 border border-neutral-700 text-[10px] px-2 py-1 rounded"
-          />
-          <input
-            type="date"
-            id="endDate"
-            class="bg-neutral-900 border border-neutral-700 text-[10px] px-2 py-1 rounded"
-          />
+        <div
+          id="customDateBox"
+          class="hidden flex-shrink-0 flex items-center gap-2 bg-neutral-800/50 p-1 rounded-lg border border-neutral-700"
+        >
+          <div class="relative flex items-center">
+            <input
+              type="date"
+              id="startDate"
+              class="bg-neutral-900 border border-neutral-700 text-[10px] pl-2 pr-7 py-1 rounded outline-none focus:border-[#4ade80] w-28"
+            />
+            <span
+              class="material-symbols-outlined text-[12px] absolute right-2 pointer-events-none text-neutral-500"
+              >calendar_today</span
+            >
+          </div>
+
+          <span class="text-neutral-600 text-[10px]">to</span>
+
+          <div class="relative flex items-center">
+            <input
+              type="date"
+              id="endDate"
+              class="bg-neutral-900 border border-neutral-700 text-[10px] pl-2 pr-7 py-1 rounded outline-none focus:border-[#4ade80] w-28"
+            />
+            <span
+              class="material-symbols-outlined text-[12px] absolute right-2 pointer-events-none text-neutral-500"
+              >calendar_today</span
+            >
+          </div>
+
           <button
             id="applyCustom"
-            class="px-3 py-1 bg-light-green text-black text-[10px] font-bold rounded"
+            class="px-3 py-1 bg-[#4ade80] text-black text-[10px] font-bold rounded hover:bg-[#38a169] transition flex-shrink-0"
           >
             Apply
           </button>
         </div>
 
-        <div class="h-6 w-[1px] bg-neutral-700 hidden md:block"></div>
+        <div class="h-6 w-[1px] bg-neutral-700 flex-shrink-0"></div>
 
-        <a
-          href="/admin/reports/pdf?<%= new URLSearchParams(query).toString() %>"
-          class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-neutral-700 hover:bg-neutral-800 text-[10px] text-neutral-300 transition"
-        >
-          <span class="material-symbols-outlined text-sm">picture_as_pdf</span> PDF
-        </a>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <a
+            href="/admin/reports/pdf?<%= new URLSearchParams(query).toString() %>"
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-neutral-700 hover:bg-neutral-800 text-[10px] text-neutral-300 transition whitespace-nowrap"
+          >
+            <span class="material-symbols-outlined text-sm">picture_as_pdf</span> PDF
+          </a>
 
-        <a
-          href="/admin/reports/excel?<%= new URLSearchParams(query).toString() %>"
-          class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-light-green/10 text-light-green border border-light-green/20 hover:bg-light-green hover:text-black text-[10px] font-bold transition"
-        >
-          <span class="material-symbols-outlined text-sm">description</span> EXCEL
-        </a>
+          <a
+            href="/admin/reports/excel?<%= new URLSearchParams(query).toString() %>"
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#4ade80]/10 text-[#4ade80] border border-[#4ade80]/20 hover:bg-[#4ade80] hover:text-black text-[10px] font-bold transition whitespace-nowrap"
+          >
+            <span class="material-symbols-outlined text-sm">description</span> EXCEL
+          </a>
+        </div>
       </div>
     </div>
 
@@ -89,7 +144,7 @@
       <div class="bg-card p-4 rounded-xl border border-neutral-800 space-y-1">
         <p class="text-[10px] text-neutral-400 uppercase font-semibold">Total Sales Count</p>
         <h2 class="text-lg font-black"><%= summary.totalOrders %></h2>
-        <p class="text-[9px] text-light-green flex items-center gap-1">
+        <p class="text-[9px] text-[#4ade80] flex items-center gap-1">
           <span class="material-symbols-outlined text-[10px]">trending_up</span> +8% vs last month
         </p>
       </div>
@@ -98,9 +153,9 @@
         <h2 class="text-lg font-black">₹<%= summary.grossAmount.toLocaleString() %></h2>
       </div>
       <div
-        class="bg-card p-4 rounded-xl border border-neutral-800 ring-1 ring-light-green/20 space-y-1"
+        class="bg-card p-4 rounded-xl border border-neutral-800 ring-1 ring-[#4ade80]/20 space-y-1"
       >
-        <p class="text-[10px] text-light-green uppercase font-semibold">Net Revenue</p>
+        <p class="text-[10px] text-[#4ade80] uppercase font-semibold">Net Revenue</p>
         <h2 class="text-lg font-black text-white">₹<%= summary.netRevenue.toLocaleString() %></h2>
       </div>
       <div class="bg-card p-4 rounded-xl border border-neutral-800 space-y-1">
@@ -175,12 +230,6 @@
         <h3 class="text-xs font-bold text-neutral-200 uppercase tracking-widest">
           Detailed Sales Ledger
         </h3>
-        <div class="relative">
-          <!-- <input type="text" placeholder="Search report..."
-                            class="bg-neutral-900 border border-neutral-700 text-[10px] px-7 py-1 rounded-lg outline-none focus:border-light-green w-40">
-                        <span
-                            class="material-symbols-outlined absolute left-2 top-1 text-sm text-neutral-500">search</span> -->
-        </div>
       </div>
 
       <div class="overflow-x-auto">
@@ -191,7 +240,7 @@
               <th class="px-4 py-2 text-left">Order ID</th>
               <th class="px-4 py-2 text-left">Customer</th>
               <th class="px-4 py-2 text-right">Amount</th>
-              <th class="px-4 py-2 text-right text-light-green">Net Total</th>
+              <th class="px-4 py-2 text-right text-[#4ade80]">Net Total</th>
               <th class="px-4 py-2 text-center">Status</th>
             </tr>
           </thead>
@@ -207,7 +256,7 @@
               </td>
               <td class="px-4 py-3 text-center">
                 <span
-                  class="px-2 py-0.5 rounded bg-light-green/10 text-light-green text-[9px] font-bold uppercase tracking-tighter"
+                  class="px-2 py-0.5 rounded bg-[#4ade80]/10 text-[#4ade80] text-[9px] font-bold uppercase tracking-tighter"
                 >
                   <%= order.paymentStatus %>
                 </span>
@@ -234,17 +283,14 @@
         class="p-3 border-t border-neutral-800 flex items-center justify-between bg-neutral-900/10"
       >
         <span class="text-[10px] text-neutral-500 font-medium tracking-tight"
-          >Page
-          <%= currentPage %>
-          of
-          <%= totalPages %></span
-        >
+          >Page <%= currentPage %> of <%= totalPages %>
+        </span>
         <div class="flex items-center gap-1">
           <% for (let i=1; i <=totalPages; i++) { %> <% const params=new URLSearchParams(query);
           params.set("page", i); %>
           <a
             href="?<%= params.toString() %>"
-            class="px-2.5 py-1 text-[10px] border rounded transition <%= i === currentPage ? 'bg-light-green text-light-green font-bold border-light-green' : 'text-neutral-400 border-neutral-700 hover:bg-neutral-800' %>"
+            class="px-2.5 py-1 text-[10px] border rounded transition <%= i === currentPage ? 'bg-[#4ade80] text-black font-bold border-[#4ade80]' : 'text-neutral-400 border-neutral-700 hover:bg-neutral-800' %>"
           >
             <%= i %>
           </a>

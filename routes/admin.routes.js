@@ -29,6 +29,7 @@ import createUploader from '../middlewares/upload.middleware.js';
 import {
   getOrderDetailsPage,
   getOrdersPage,
+  updateOrderStatus,
   updateReturnStatus,
 } from '../controllers/admin/order.controller.js';
 import {
@@ -83,6 +84,7 @@ router.patch('/products/:id/delete', adminAuth, softDeleteProduct);
 //orders
 router.get('/orders', adminAuth, getOrdersPage);
 router.get('/orders/:orderId', adminAuth, getOrderDetailsPage);
+router.patch('/admin/orders/:orderId/status', adminAuth, updateOrderStatus);
 router.patch('/orders/return-update', adminAuth, updateReturnStatus);
 
 //coupons

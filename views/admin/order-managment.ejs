@@ -49,8 +49,7 @@
     <form action="/admin/orders" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
       <div class="space-y-2">
         <label class="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Search</label>
-        <input type="text" name="search" value="<%= query.search %>" placeholder="Order ID or Customer..."
-          class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-green-500/50 transition-all">
+        <input type="text" name="search" value="<%= query.search %>" placeholder="Order ID or Customer..." class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-green-500/50 transition-all">
       </div>
 
       <div class="space-y-2">
@@ -84,12 +83,10 @@
       </div>
 
       <div class="flex gap-1">
-        <button type="submit"
-          class="flex-1 text-[12px] bg-[#22c55e] hover:bg-green-400 text-black font-bold py-2 rounded-2xl transition-all shadow-[0_0_20px_rgba(34,197,94,0.1)]">
+        <button type="submit" class="flex-1 text-[12px] bg-[#22c55e] hover:bg-green-400 text-black font-bold py-2 rounded-2xl transition-all shadow-[0_0_20px_rgba(34,197,94,0.1)]">
           Search
         </button>
-        <button type="button" onclick="window.location.href='/admin/orders'"
-          class="px-6 bg-[#1a1a1a] hover:bg-white/10 text-gray-400 rounded-2xl text-xs font-medium border border-white/5">
+        <button type="button" onclick="window.location.href='/admin/orders'" class="px-6 bg-[#1a1a1a] hover:bg-white/10 text-gray-400 rounded-2xl text-xs font-medium border border-white/5">
           Clear
         </button>
       </div>
@@ -183,14 +180,18 @@
                       <i class="fa-solid fa-chevron-down"></i>
                     </div>
 
-                    <select onchange="updateStatus('<%= order._id %>', this.value)"
-                      <%= ['DELIVERED','CANCELLED','RETURNED'].includes(order.orderStatus) ? 'disabled' : '' %>
-                      class="appearance-none w-full bg-black/40 border <%= orderClass %> rounded-lg px-3 py-1.5 text-[10px] font-bold uppercase focus:outline-none cursor-pointer disabled:cursor-not-allowed transition-all">
+                    <% const isLocked = ['DELIVERED', 'CANCELLED', 'RETURNED'].includes(order.orderStatus) || (order.paymentMethod === 'RAZORPAY' && order.paymentStatus !== 'PAID'); %>
 
+                    <select onchange="updateStatus('<%= order._id %>', this.value)" 
+                      <%= isLocked ? 'disabled' : '' %>
+                      class="appearance-none w-full bg-black/40 border <%= orderClass %> rounded-lg px-3 py-1.5 text-[10px] font-bold uppercase focus:outline-none transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                    >
                       <% if (order.orderStatus === "RETURN_REQUESTED") { %>
                         <option value="RETURN_REQUESTED" selected hidden>Return Requested</option>
                       <% } else if (order.orderStatus === "RETURNED") { %>
                         <option value="RETURNED" selected hidden>Returned</option>
+                      <% } else if (order.paymentMethod === 'RAZORPAY' && order.paymentStatus !== 'PAID') { %>
+                        <option value="UNPAID" selected hidden>Unpaid</option>
                       <% } %>
 
                       <option value="PENDING" class="bg-[#1A1D1A] text-white" <%= order.orderStatus === "PENDING" ? "selected" : "" %>>Pending</option>
@@ -207,8 +208,7 @@
                 </td>
 
                 <td class="pr-6 py-4 text-right">
-                  <a href="/admin/orders/<%= order._id %>"
-                    class="inline-block px-4 py-2 bg-blue-500/5 hover:bg-blue-500/10 text-blue-400 rounded-xl text-[11px] font-bold border border-blue-500/20 transition-all">
+                  <a href="/admin/orders/<%= order._id %>" class="inline-block px-4 py-2 bg-blue-500/5 hover:bg-blue-500/10 text-blue-400 rounded-xl text-[11px] font-bold border border-blue-500/20 transition-all">
                     View Details
                   </a>
                 </td>
@@ -237,8 +237,7 @@
       <div class="p-6 flex items-center justify-center bg-black/20">
         <nav id="paginationNav" class="flex items-center gap-3 justify-center">
           <% if (currentPage > 1) { %>
-            <a href="/admin/orders?page=<%= currentPage - 1 %>&search=<%= query.search %>&orderStatus=<%= query.orderStatus %>&paymentStatus=<%= query.paymentStatus %>&sort=<%= query.sort %>"
-              class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
+            <a href="/admin/orders?page=<%= currentPage - 1 %>&search=<%= query.search %>&orderStatus=<%= query.orderStatus %>&paymentStatus=<%= query.paymentStatus %>&sort=<%= query.sort %>" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
               <i class="fa-solid fa-arrow-left text-[10px]"></i>
             </a>
           <% } %>
@@ -248,16 +247,14 @@
               <%= currentPage %>
             </div>
             <% if (currentPage < totalPages) { %>
-              <a href="/admin/orders?page=<%= totalPages %>&search=<%= query.search %>&orderStatus=<%= query.orderStatus %>&paymentStatus=<%= query.paymentStatus %>&sort=<%= query.sort %>"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
+              <a href="/admin/orders?page=<%= totalPages %>&search=<%= query.search %>&orderStatus=<%= query.orderStatus %>&paymentStatus=<%= query.paymentStatus %>&sort=<%= query.sort %>" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition text-[11px] font-bold">
                 <%= totalPages %>
               </a>
             <% } %>
           </div>
 
           <% if (currentPage < totalPages) { %>
-            <a href="/admin/orders?page=<%= currentPage + 1 %>&search=<%= query.search %>&orderStatus=<%= query.orderStatus %>&paymentStatus=<%= query.paymentStatus %>&sort=<%= query.sort %>"
-              class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
+            <a href="/admin/orders?page=<%= currentPage + 1 %>&search=<%= query.search %>&orderStatus=<%= query.orderStatus %>&paymentStatus=<%= query.paymentStatus %>&sort=<%= query.sort %>" class="w-10 h-10 flex items-center justify-center rounded-xl border border-white/5 bg-white/[0.02] text-gray-500 hover:text-[#4ade80] hover:border-[#4ade80]/30 transition-all duration-300">
               <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </a>
           <% } %>
@@ -284,7 +281,7 @@
         window.location.reload();
       }
     } catch (err) {
-      console.log("Status update failed", err)
+      console.log("Status update failed", err);
     }
   }
 </script>

@@ -118,6 +118,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
     { $sort: { _id: 1 } },
   ]);
 
+
   const totalOrder = await Order.countDocuments(matchStage);
 
   res.render('admin/dashboard', {

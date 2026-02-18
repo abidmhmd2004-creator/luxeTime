@@ -1,0 +1,29 @@
+<div id="global-loader"
+     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-md transition-opacity duration-500">
+
+    <div class="flex flex-col items-center gap-6">
+        <div class="relative w-16 h-16">
+            <div class="absolute inset-0 border-2 border-white/10 rounded-full"></div>
+            <div class="absolute inset-0 border-2 border-t-[#4ade80] border-transparent rounded-full animate-spin"></div>
+        </div>
+
+        <div class="flex flex-col items-center gap-1">
+            <p class="text-[10px] font-bold uppercase tracking-[0.5em] text-white animate-pulse">
+                LUXETIME
+            </p>
+            <div class="w-8 h-[1px] bg-[#4ade80]/50"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', () => {
+        const loader = document.getElementById('global-loader');
+        
+        loader.style.opacity = '0';
+
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 500);
+    });
+</script>

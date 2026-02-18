@@ -28,6 +28,19 @@ export const getProducts = asyncHandler(async (req, res) => {
     filter.brand = brand;
   }
 
+  let wishlistItems = [];
+
+  if (req.session?.user?.id) {
+    const wishlist = await Wishlist.findOne({ user: req.session.user.id });
+
+    if (wishlist) {
+      wishlistItems = wishlist.items.map((item) => ({
+        product: item.product.toString(),
+        variant: item.variant.toString(),
+      }));
+    }
+  }
+
   const products = await Product.find(filter).populate('category');
 
   const finalProducts = [];
@@ -82,6 +95,7 @@ export const getProducts = asyncHandler(async (req, res) => {
     currentPage: Number(page),
     totalPages,
     query: req.query,
+    wishlistItems,
   });
 });
 

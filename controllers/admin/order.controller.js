@@ -89,6 +89,10 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
     return res.status(400).json({ success: false });
   }
 
+  if (order.paymentMethod === 'RAZORPAY' && order.paymentStatus !== 'PAID') {
+    return res.status(400).json({ success: false });
+  }
+
   order.orderStatus = status;
 
   if (status == 'DELIVERED') {

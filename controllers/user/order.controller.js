@@ -107,12 +107,15 @@ export const cancelOrderItem = asyncHandler(async (req, res) => {
   if (allCancelled) {
     order.orderStatus = 'CANCELLED';
   }
-  const refundAmount = order.totalAmount;
+
+  const itemTotal = item.price * item.quantity;
+  const itemTax = Math.round((itemTotal / order.subtotal) * order.tax);
+  const refundAmount = itemTotal + itemTax;
 
   await creditWallet({
     userId,
     amount: refundAmount,
-    reason: 'Order cancelled refund',
+    reason: 'Item cancelled refund',
     orderId: order._id,
   });
 
@@ -120,7 +123,7 @@ export const cancelOrderItem = asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: 'Order cancelled successfully',
+    message: 'Item cancelled successfully',
   });
 });
 
@@ -286,7 +289,7 @@ export const downloadInvoice = async (req, res) => {
   doc.text(`Payment Method:`, left, y + 30);
   doc.text(order.paymentMethod, left + 90, y + 30);
 
-   doc.text(`Payment Status:`, left, y + 45);
+  doc.text(`Payment Status:`, left, y + 45);
   doc.text(order.paymentStatus, left + 90, y + 45);
 
   y += 70;
@@ -380,8 +383,6 @@ export const downloadInvoice = async (req, res) => {
 
   doc.end();
 };
-
-// orderController.js
 
 export const getPaymentFailurePage = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
