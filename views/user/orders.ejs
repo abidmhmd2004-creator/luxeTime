@@ -66,6 +66,8 @@
                                                 if(order.orderStatus==='DELIVERED' )
                                                 statusClasses='text-green-500 border-green-500/20' ;
                                                 if(order.orderStatus==='CANCELLED' )
+                                                statusClasses='text-red-500 border-red-500/20' ;
+                                                 if(order.orderStatus==='RETURNED' )
                                                 statusClasses='text-red-500 border-red-500/20' ; %>
               <span
                 class="text-[9px] font-bold px-2 py-0.5 border rounded uppercase tracking-widest <%= statusClasses %>"

@@ -13,6 +13,7 @@ export const exportSalesPDF = async (req, res) => {
       $match: {
         createdAt: { $gte: from, $lte: to },
         paymentStatus: 'PAID',
+        orderStatus: { $in: ['DELIVERED', 'RETURNED'] },
       },
     },
     {
@@ -31,6 +32,7 @@ export const exportSalesPDF = async (req, res) => {
         subtotal: 1,
         discount: 1,
         totalAmount: 1,
+        orderStatus: 1,
         'user.name': 1,
       },
     },
@@ -40,11 +42,17 @@ export const exportSalesPDF = async (req, res) => {
   const doc = new PDFDocument({ margin: 40, size: 'A4' });
 
   res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', 'attachment; filename=sales-report.pdf');
+  res.setHeader(
+    'Content-Disposition',
+    'attachment; filename=sales-report.pdf'
+  );
 
   doc.pipe(res);
 
-  doc.fontSize(18).font('Helvetica-Bold').text('Sales Report', { align: 'center' });
+  // ---------------- HEADER ----------------
+  doc.fontSize(18).font('Helvetica-Bold').text('Sales Report', {
+    align: 'center',
+  });
 
   doc
     .moveDown(0.5)
@@ -56,35 +64,42 @@ export const exportSalesPDF = async (req, res) => {
 
   doc.moveDown(1.5);
 
-  const tableTop = doc.y;
   const colX = {
     date: 40,
     order: 100,
-    customer: 180,
-    gross: 300,
-    discount: 380,
+    customer: 170,
+    status: 260,
+    gross: 320,
+    discount: 390,
     net: 460,
   };
 
-  doc
-    .font('Helvetica-Bold')
-    .fontSize(10)
-    .text('Date', colX.date, tableTop)
-    .text('Order ID', colX.order, tableTop)
-    .text('Customer', colX.customer, tableTop)
-    .text('Gross', colX.gross, tableTop, { width: 60, align: 'right' })
-    .text('Discount', colX.discount, tableTop, { width: 60, align: 'right' })
-    .text('Net', colX.net, tableTop, { width: 60, align: 'right' });
+  const drawTableHeader = (yPos) => {
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(10)
+      .text('Date', colX.date, yPos)
+      .text('Order ID', colX.order, yPos)
+      .text('Customer', colX.customer, yPos)
+      .text('Status', colX.status, yPos)
+      .text('Gross', colX.gross, yPos, { width: 60, align: 'right' })
+      .text('Discount', colX.discount, yPos, { width: 60, align: 'right' })
+      .text('Net', colX.net, yPos, { width: 60, align: 'right' });
 
-  doc
-    .moveTo(40, tableTop + 15)
-    .lineTo(550, tableTop + 15)
-    .stroke();
+    doc
+      .moveTo(40, yPos + 15)
+      .lineTo(550, yPos + 15)
+      .stroke();
+  };
 
-  let y = tableTop + 25;
+  let y = doc.y;
+  drawTableHeader(y);
+  y += 25;
+
   let totalGross = 0;
   let totalDiscount = 0;
-  let totalNet = 0;
+  let totalReturns = 0;
+  let finalNetRevenue = 0;
 
   doc.font('Helvetica').fontSize(9);
 
@@ -92,11 +107,23 @@ export const exportSalesPDF = async (req, res) => {
     if (y > 750) {
       doc.addPage();
       y = 50;
+      drawTableHeader(y);
+      y += 25;
     }
 
     totalGross += order.subtotal;
     totalDiscount += order.discount;
-    totalNet += order.totalAmount;
+
+    let netAmount = order.totalAmount;
+    let returnAmount = 0;
+
+    if (order.orderStatus === 'RETURNED') {
+      returnAmount = order.totalAmount;
+      totalReturns += returnAmount;
+      netAmount = 0;
+    } else {
+      finalNetRevenue += netAmount;
+    }
 
     if (index % 2 === 0) {
       doc
@@ -106,9 +133,14 @@ export const exportSalesPDF = async (req, res) => {
     }
 
     doc
-      .text(new Date(order.createdAt).toLocaleDateString(), colX.date, y)
+      .text(
+        new Date(order.createdAt).toLocaleDateString(),
+        colX.date,
+        y
+      )
       .text(order.orderId, colX.order, y)
-      .text(order.user.name, colX.customer, y, { width: 110 })
+      .text(order.user.name, colX.customer, y, { width: 80 })
+      .text(order.orderStatus, colX.status, y)
       .text(`₹${order.subtotal.toLocaleString()}`, colX.gross, y, {
         width: 60,
         align: 'right',
@@ -117,7 +149,7 @@ export const exportSalesPDF = async (req, res) => {
         width: 60,
         align: 'right',
       })
-      .text(`₹${order.totalAmount.toLocaleString()}`, colX.net, y, {
+      .text(`₹${netAmount.toLocaleString()}`, colX.net, y, {
         width: 60,
         align: 'right',
       });
@@ -125,18 +157,34 @@ export const exportSalesPDF = async (req, res) => {
     y += 18;
   });
 
+  // ---------------- SUMMARY ----------------
   doc.moveDown(2);
 
-  doc.font('Helvetica-Bold').fontSize(11).text('Summary', 40);
+  doc.font('Helvetica-Bold').fontSize(12).text('Summary', 40);
 
   doc.moveDown(0.5);
 
+  doc.fontSize(10).font('Helvetica');
+
+  doc.text(`Total Orders: ${orders.length}`, 40);
+  doc.text(`Gross Sales: ₹${totalGross.toLocaleString()}`, 40);
+  doc.text(`Total Discount: ₹${totalDiscount.toLocaleString()}`, 40);
+  doc.text(`Total Returns: ₹${totalReturns.toLocaleString()}`, 40);
+  doc.text(
+    `Final Net Revenue: ₹${finalNetRevenue.toLocaleString()}`,
+    40
+  );
+
+  doc.moveDown(1);
+
   doc
-    .fontSize(10)
-    .text(`Total Orders: ${orders.length}`, 40)
-    .text(`Gross Sales: ₹${totalGross.toLocaleString()}`, 40)
-    .text(`Total Discount: ₹${totalDiscount.toLocaleString()}`, 40)
-    .text(`Net Revenue: ₹${totalNet.toLocaleString()}`, 40);
+    .fontSize(8)
+    .text(
+      `Generated on: ${new Date().toLocaleString()}`,
+      40,
+      800,
+      { align: 'center' }
+    );
 
   doc.end();
 };

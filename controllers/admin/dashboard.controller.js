@@ -118,6 +118,49 @@ export const getDashboard = asyncHandler(async (req, res) => {
     { $sort: { _id: 1 } },
   ]);
 
+  const topProducts = await Order.aggregate([
+    { $match: matchStage },
+
+    { $unwind: '$items' },
+
+    {
+      $group: {
+        _id: '$items.product',
+        totalUnitsSold: { $sum: '$items.quantity' },
+        totalRevenue: {
+          $sum: {
+            $multiply: ['$items.price', '$items.quantity'],
+          },
+        },
+      },
+    },
+
+    { $sort: { totalUnitsSold: -1 } },
+
+    { $limit: 5 },
+
+    {
+      $lookup: {
+        from: 'products',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'product',
+      },
+    },
+
+    { $unwind: '$product' },
+
+    {
+      $project: {
+        _id: 0,
+        productId: '$_id',
+        name: '$product.name',
+        brand: '$product.brand',
+        totalUnitsSold: 1,
+        totalRevenue: 1,
+      },
+    },
+  ]);
 
   const totalOrder = await Order.countDocuments(matchStage);
 
@@ -132,6 +175,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
     salesByColor,
     ledger,
     revenueTrend,
+    topProducts,
     currentPage: Number(page),
     totalPages: Math.ceil(totalOrder / limit),
     query: req.query,

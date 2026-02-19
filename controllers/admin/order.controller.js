@@ -178,17 +178,17 @@ export const updateReturnStatus = asyncHandler(async (req, res) => {
   const activeReturns = order.items.some((i) => i.itemStatus === 'RETURN_REQUESTED');
   const allReturned = order.items.every((i) => i.itemStatus === 'RETURNED');
 
-  if (!itemId && allReturned) {
+  if (allReturned) {
     order.orderStatus = 'RETURNED';
 
-    const refundAmount = order.totalAmount;
-
-    await creditWallet({
-      userId: order.user,
-      amount: refundAmount,
-      reason: 'Full order return refund',
-      orderId: order._id,
-    });
+    if (!itemId && isApprove) {
+      await creditWallet({
+         userId: order.user,
+         amount: order.totalAmount,
+         reason: 'Full order return refund',
+         orderId: order._id,
+      });
+    }
   } else if (!activeReturns) {
     order.orderStatus = 'DELIVERED';
   }
