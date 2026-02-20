@@ -46,7 +46,7 @@ export const getDashboard = asyncHandler(async (req, res) => {
         netRevenue: { $sum: '$totalAmount' },
       },
     },
-    {
+    { 
       $addFields: {
         avgOrderValue: {
           $cond: [{ $eq: ['$totalOrders', 0] }, 0, { $divide: ['$netRevenue', '$totalOrders'] }],

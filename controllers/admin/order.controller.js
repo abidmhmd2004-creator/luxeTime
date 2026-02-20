@@ -73,7 +73,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
 
-  const allowedStatuses = ['PENIDNG', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+  const allowedStatuses = ['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
   if (!allowedStatuses.includes(status)) {
     return res.status(400).json({ success: false });
@@ -93,8 +93,18 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
     return res.status(400).json({ success: false });
   }
 
-  order.orderStatus = status;
+  if (status === 'CANCELLED') {
+    if (order.paymentStatus === 'PAID') {
+      await creditWallet({
+        userId: order.user,
+        amount: order.totalAmount,
+        reason: 'Admin cancelled order refund',
+        orderId: order._id,
+      });
+    }
+  }
 
+  order.orderStatus = status;
   if (status == 'DELIVERED') {
     order.deliveredAt = new Date();
     if (order.paymentMethod === 'COD' && order.paymentStatus !== 'PAID') {
@@ -183,10 +193,10 @@ export const updateReturnStatus = asyncHandler(async (req, res) => {
 
     if (!itemId && isApprove) {
       await creditWallet({
-         userId: order.user,
-         amount: order.totalAmount,
-         reason: 'Full order return refund',
-         orderId: order._id,
+        userId: order.user,
+        amount: order.totalAmount,
+        reason: 'Full order return refund',
+        orderId: order._id,
       });
     }
   } else if (!activeReturns) {
