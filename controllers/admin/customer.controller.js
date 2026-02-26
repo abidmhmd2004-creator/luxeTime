@@ -54,11 +54,7 @@ export const toggleCustomerStatus = asyncHandler(async (req, res) => {
   }
 
   user.isBlocked = !user.isBlocked;
-  // console.log(req.cookies)
-  //         res.clearCookie("luxetime.sid")
   await user.save();
-
-  // console.log("blocked")
 
   if (user.isBlocked) {
     const session = mongoose.connection.collection('user_sessions');
@@ -66,10 +62,18 @@ export const toggleCustomerStatus = asyncHandler(async (req, res) => {
     await session.deleteMany({ 'session.user.id': userId });
   }
 
-  req.flash(
-    'success',
-    user.isBlocked ? 'User blocked successfully' : 'User unblocked successfully'
-  );
 
-  return res.redirect('/admin/customers');
+  // req.flash(
+  //   'success',
+  //   user.isBlocked ? 'User blocked successfully' : 'User unblocked successfully'
+  // );
+
+  // return res.redirect('/admin/customers');
+
+  return res.json({
+    success:true,
+    isBlocked:user.isBlocked,
+    message:user.isBlocked?"User blocked successfully" :"User unblocked successfully"
+  })
+
 });
