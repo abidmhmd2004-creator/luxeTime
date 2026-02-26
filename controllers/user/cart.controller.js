@@ -202,7 +202,6 @@ export const removeFromCart = asyncHandler(async (req, res) => {
 
   await cart.save();
 
-  // 🔥 Recalculate everything exactly like getCart
   let baseSubtotal = 0;
   let subtotal = 0;
 
