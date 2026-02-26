@@ -26,20 +26,12 @@ export const verifyRazorpayPayment = asyncHandler(async (req, res) => {
     });
   }
 
-  const cart = await Cart.findOne({ user: order.user });
-
-  for (const item of cart.items) {
-    await Variant.findByIdAndUpdate(item.variant, {
-      $inc: { stock: -item.quantity },
-    });
-  }
-
-  cart.items = [];
-  await cart.save();
   order.paymentStatus = 'PAID';
   order.razorpayPaymentId = razorpay_payment_id;
   order.razorpaySignature = razorpay_signature;
   await order.save();
+
+  await Cart.findOneAndUpdate({ user: order.user }, { $set: { items: [] } });
 
   return res.json({ success: true });
 });
@@ -47,13 +39,16 @@ export const verifyRazorpayPayment = asyncHandler(async (req, res) => {
 export const markPaymentFailed = asyncHandler(async (req, res) => {
   const { orderId } = req.body;
 
-  await Order.findByIdAndUpdate(orderId, {
-    paymentStatus: 'FAILED',
-  });
-  
-  await Variant.findByIdAndUpdate(item.variant, {
-    $inc: { stock: item.quantity },
-  });
+  const order = await Order.findById(orderId);
+
+  for (const item of order.items) {
+    await Variant.findByIdAndUpdate(item.variant, {
+      $inc: { stock: item.quantity },
+    });
+  }
+
+  order.paymentStatus = 'FAILED';
+  await order.save();
 
   res.json({ success: true });
 });
