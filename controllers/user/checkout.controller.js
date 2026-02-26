@@ -289,7 +289,6 @@ export const placeOrder = asyncHandler(async (req, res) => {
       });
     }
 
-    // Coupon validation
     let appliedCoupon = req.session.appliedCoupon;
 
     if (appliedCoupon) {
@@ -327,7 +326,6 @@ export const placeOrder = asyncHandler(async (req, res) => {
     if (paymentMethod === 'COD' && totalAmount > COD_LIMIT)
       throw new Error('Cash on Delivery not available for this amount');
 
-    // 🔹 COD & WALLET → Deduct stock inside transaction
     if (paymentMethod === 'COD' || paymentMethod === 'WALLET') {
       for (const item of cart.items) {
         const updatedVariant = await Variant.findOneAndUpdate(
@@ -361,7 +359,6 @@ export const placeOrder = asyncHandler(async (req, res) => {
       }
     }
 
-    // Create order
     const order = await Order.create(
       [
         {
@@ -388,8 +385,19 @@ export const placeOrder = asyncHandler(async (req, res) => {
       { session }
     );
 
-    // 🔹 Razorpay block (DO NOT deduct stock here)
     if (paymentMethod === 'RAZORPAY') {
+      const updatedVariant = await Variant.findOneAndUpdate(
+        {
+          _id: item.variant._id,
+          stock: { $gte: item.quantity },
+        },
+        {
+          $inc: { stock: -item.quantity },
+        },
+        { session }
+      );
+
+      if (!updatedVariant) throw new Error('Product out of stock');
       const razorpayOrder = await razorpay.orders.create({
         amount: totalAmount * 100,
         currency: 'INR',
@@ -412,7 +420,6 @@ export const placeOrder = asyncHandler(async (req, res) => {
       });
     }
 
-    // Clear cart
     cart.items = [];
     await cart.save({ session });
 

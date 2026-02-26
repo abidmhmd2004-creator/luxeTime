@@ -50,6 +50,10 @@ export const markPaymentFailed = asyncHandler(async (req, res) => {
   await Order.findByIdAndUpdate(orderId, {
     paymentStatus: 'FAILED',
   });
+  
+  await Variant.findByIdAndUpdate(item.variant, {
+    $inc: { stock: item.quantity },
+  });
 
   res.json({ success: true });
 });
