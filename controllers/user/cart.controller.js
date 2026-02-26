@@ -183,7 +183,12 @@ export const removeFromCart = asyncHandler(async (req, res) => {
   const userId = req.session.user.id;
   const { variantId } = req.params;
 
-  const cart = await Cart.findOne({ user: userId });
+  const cart = await Cart.findOne({ user: userId })
+    .populate({
+      path: 'items.product',
+      populate: { path: 'category' },
+    })
+    .populate('items.variant');
 
   if (!cart) {
     return res.json({
@@ -191,13 +196,46 @@ export const removeFromCart = asyncHandler(async (req, res) => {
       message: 'Cart not found',
     });
   }
-  cart.items = cart.items.filter((item) => item.variant.toString() !== variantId);
+
+  // Remove item
+  cart.items = cart.items.filter((item) => item.variant._id.toString() !== variantId);
 
   await cart.save();
 
-  res.json({
+  // 🔥 Recalculate everything exactly like getCart
+  let baseSubtotal = 0;
+  let subtotal = 0;
+
+  for (const item of cart.items) {
+    const product = item.product;
+    const variant = item.variant;
+    const category = product?.category;
+
+    const { finalPrice } = calculateBestOffer({
+      basePrice: variant.basePrice,
+      product,
+      category,
+    });
+
+    baseSubtotal += variant.basePrice * item.quantity;
+    subtotal += finalPrice * item.quantity;
+  }
+
+  const shipping = subtotal >= 5000 ? 0 : 50;
+  const tax = Math.round(subtotal * 0.18);
+  const total = subtotal + tax + shipping;
+  const discount = baseSubtotal - subtotal;
+
+  return res.json({
     success: true,
     message: 'Item removed',
+    summary: {
+      subtotal,
+      tax,
+      shipping,
+      discount,
+      total,
+    },
   });
 });
 

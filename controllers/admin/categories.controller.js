@@ -154,7 +154,6 @@ export const toggleCategory = asyncHandler(async (req, res) => {
 });
 
 export const softDeleteCategory = asyncHandler(async (req, res) => {
-  // console.log("getting controller")
   const { id } = req.params;
 
   await Category.findByIdAndUpdate(id, {

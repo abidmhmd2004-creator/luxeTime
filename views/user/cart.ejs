@@ -33,6 +33,7 @@
   .item-card {
     background: #121513;
     border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .summary-card {
@@ -52,10 +53,9 @@
     <div>
       <h1 class="text-4xl font-bold tracking-tight">
         Your Cart
-        <span class="text-sm font-medium text-gray-500 ml-2"
-          >(<%= cart ? cart.items.length : 0 %>
-          Items)</span
-        >
+        <span id="header-count" class="text-sm font-medium text-gray-500 ml-2">
+          (<%= cart ? cart.items.length : 0 %> Items)
+        </span>
       </h1>
     </div>
     <button
@@ -65,176 +65,167 @@
     </button>
   </div>
 
-  <% if (cart && cart.items.length> 0) { %>
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-    <div class="lg:col-span-8 space-y-4">
-      <% cart.items.forEach(item=> { %>
-      <div class="item-card rounded-2xl p-5 flex flex-col sm:flex-row items-center gap-6 relative">
+  <div id="cart-content">
+    <% if (cart && cart.items.length > 0) { %>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div id="items-container" class="lg:col-span-8 space-y-4">
+        <% cart.items.forEach(item => { %>
         <div
-          class="w-24 h-24 bg-black/40 rounded-2xl overflow-hidden flex items-center justify-center border border-white/5 shrink-0"
+          id="item-card-<%= item.variant._id %>"
+          class="item-card rounded-2xl p-5 flex flex-col sm:flex-row items-center gap-6 relative"
         >
-          <img
-            src="<%= item.variant.images[0].url %>"
-            class="w-16 h-16 object-contain"
-            alt="<%= item.product.name %>"
-          />
-        </div>
-
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex justify-between items-start">
-            <h3 class="text-lg font-bold text-gray-100"><%= item.product.name %></h3>
-            <button
-              onclick="removeFromCart('<%= item.variant._id %>')"
-              class="text-gray-600 hover:text-red-500 transition sm:hidden"
-            >
-              <i class="fa-solid fa-trash"></i>
-            </button>
+          <div
+            class="w-24 h-24 bg-black/40 rounded-2xl overflow-hidden flex items-center justify-center border border-white/5 shrink-0"
+          >
+            <img
+              src="<%= item.variant.images[0].url %>"
+              class="w-16 h-16 object-contain"
+              alt="<%= item.product.name %>"
+            />
           </div>
-          <p class="text-[9px] text-gray-500 uppercase tracking-widest mb-4">
-            Color: <%= item.variant.color %>
-          </p>
 
-          <div class="flex items-center justify-center sm:justify-start gap-6">
-            <div class="flex flex-col gap-1.5">
-              <div class="flex items-baseline gap-2">
-                <span class="text-xl font-bold text-white tracking-tight">
-                  ₹<%= item.variant.finalPrice.toLocaleString("en-IN") %>
-                </span>
+          <div class="flex-1 text-center sm:text-left">
+            <div class="flex justify-between items-start">
+              <h3 class="text-lg font-bold text-gray-100"><%= item.product.name %></h3>
+              <button
+                onclick="removeFromCart('<%= item.variant._id %>')"
+                class="text-gray-600 hover:text-red-500 transition sm:hidden"
+              >
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+            <p class="text-[9px] text-gray-500 uppercase tracking-widest mb-4">
+              Color: <%= item.variant.color %>
+            </p>
 
-                <% if (item.variant.basePrice> item.variant.finalPrice) { %>
-                <span class="text-xs text-gray-500 line-through decoration-gray-600">
-                  ₹<%= item.variant.basePrice.toLocaleString("en-IN") %>
-                </span>
-                <% } %>
-              </div>
-
-              <% const savedPercent=Math.round(((item.variant.basePrice - item.variant.finalPrice)
-                                        / item.variant.basePrice) * 100); %>
-
-              <div class="flex items-center">
+            <div class="flex items-center justify-center sm:justify-start gap-6">
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-baseline gap-2">
+                  <span class="text-xl font-bold text-white tracking-tight"
+                    >₹<%= item.variant.finalPrice.toLocaleString("en-IN") %></span
+                  >
+                  <% if (item.variant.basePrice > item.variant.finalPrice) { %>
+                  <span class="text-xs text-gray-500 line-through"
+                    >₹<%= item.variant.basePrice.toLocaleString("en-IN") %></span
+                  >
+                  <% } %>
+                </div>
+                <% const savedPercent = Math.round(((item.variant.basePrice - item.variant.finalPrice) / item.variant.basePrice) * 100); %>
                 <span
                   class="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400 uppercase tracking-wide"
                 >
-                  <i class="fa-solid fa-piggy-bank mr-1.5 text-[9px]"></i>
-                  (<span id="save-percent-<%= item.variant._id %>"> <%= savedPercent %> </span>%
-                  OFF)
+                  <i class="fa-solid fa-piggy-bank mr-1.5"></i>(<span
+                    id="save-percent-<%= item.variant._id %>"
+                    ><%= savedPercent %></span
+                  >% OFF)
                 </span>
               </div>
-            </div>
 
-            <div class="flex items-center bg-black/40 border border-white/5 rounded-lg">
-              <button
-                onclick="updateQty('<%= item.variant._id %>', -1)"
-                class="px-3 py-1 text-gray-500 hover:text-white"
+              <div class="flex items-center bg-black/40 border border-white/5 rounded-lg">
+                <button
+                  onclick="updateQty('<%= item.variant._id %>', -1)"
+                  class="px-3 py-1 text-gray-500 hover:text-white"
+                >
+                  -
+                </button>
+                <span
+                  id="qty-<%= item.variant._id %>"
+                  class="px-3 text-sm font-bold border-x border-white/5"
+                  ><%= item.quantity %></span
+                >
+                <button
+                  onclick="updateQty('<%= item.variant._id %>', 1)"
+                  class="px-3 py-1 text-gray-500 hover:text-white"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex flex-col items-end justify-between self-stretch">
+            <button
+              onclick="removeFromCart('<%= item.variant._id %>')"
+              class="text-gray-700 hover:text-red-500 transition"
+            >
+              <i class="fa-solid fa-trash-can text-base"></i>
+            </button>
+            <div class="text-right">
+              <p class="text-[9px] text-gray-500 uppercase font-black">Subtotal</p>
+              <p id="item-subtotal-<%= item.variant._id %>" class="text-primary font-bold text-xl">
+                ₹ <%= (item.variant.finalPrice * item.quantity).toLocaleString("en-IN") %>
+              </p>
+              <% const itemSavings = (item.variant.basePrice - item.variant.finalPrice) * item.quantity; %>
+              <p
+                id="item-savings-row-<%= item.variant._id %>"
+                class="text-green-400 text-xs mt-1 <%= itemSavings > 0 ? '' : 'hidden' %>"
               >
-                -
-              </button>
-              <span
-                id="qty-<%= item.variant._id %>"
-                class="px-3 text-sm font-bold border-x border-white/5"
-              >
-                <%= item.quantity %>
-              </span>
-              <button
-                onclick="updateQty('<%= item.variant._id %>', 1)"
-                class="px-3 py-1 text-gray-500 hover:text-white"
-              >
-                +
-              </button>
+                You saved ₹<span id="item-savings-<%= item.variant._id %>"
+                  ><%= itemSavings.toLocaleString("en-IN") %></span
+                >
+              </p>
             </div>
           </div>
         </div>
+        <% }) %>
+      </div>
 
-        <div class="hidden sm:flex flex-col items-end justify-between self-stretch">
+      <div class="lg:col-span-4 sticky top-8">
+        <div class="summary-card rounded-[2rem] p-8">
+          <h2 class="text-xl font-bold mb-6">Order Summary</h2>
+          <div class="space-y-4 text-[12px] text-gray-400">
+            <div class="flex justify-between">
+              <span>Subtotal</span>
+              <span id="summary-subtotal" class="text-white font-bold"
+                >₹<%= summary.subtotal.toLocaleString("en-IN") %></span
+              >
+            </div>
+            <div class="flex justify-between">
+              <span>Shipping estimate</span>
+              <span id="summary-shipping" class="text-primary font-bold"
+                ><%= summary.shipping === 0 ? "Free" : `₹${summary.shipping}` %></span
+              >
+            </div>
+            <div class="flex justify-between">
+              <span>Tax estimate (18%)</span>
+              <span id="summary-tax" class="text-white font-bold"
+                >₹<%= summary.tax.toLocaleString("en-IN") %></span
+              >
+            </div>
+          </div>
+
+          <div class="my-8 flex justify-between items-end">
+            <div>
+              <p class="text-[11px] font-bold uppercase">Total Amount</p>
+              <p class="text-[9px] text-gray-500 uppercase tracking-widest">Including all taxes</p>
+            </div>
+            <p id="summary-total" class="text-2xl font-black text-primary">
+              ₹<%= summary.total.toLocaleString("en-IN") %>
+            </p>
+          </div>
+
           <button
-            onclick="removeFromCart('<%= item.variant._id %>')"
-            class="text-gray-700 hover:text-red-500 transition"
+            onclick="window.location.href='/checkout'"
+            class="w-full bg-primary hover:bg-green-400 text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 transition text-sm shadow-[0_10px_20px_rgba(74,222,128,0.15)] uppercase"
           >
-            <i class="fa-solid fa-trash-can text-base"></i>
+            Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
           </button>
-          <div class="text-right">
-            <p class="text-[9px] text-gray-500 uppercase font-black">Subtotal</p>
-            <p id="item-subtotal-<%= item.variant._id %>" class="text-primary font-bold text-xl">
-              ₹ <%= (item.variant.finalPrice * item.quantity).toLocaleString("en-IN") %>
-            </p>
-            <% const itemSavings=(item.variant.basePrice - item.variant.finalPrice) * item.quantity;
-                                    %>
-
-            <p
-              id="item-savings-row-<%= item.variant._id %>"
-              class="text-green-400 text-xs mt-1 <%= itemSavings > 0 ? '' : 'hidden' %>"
-            >
-              You saved ₹<span id="item-savings-<%= item.variant._id %>">
-                <%= itemSavings.toLocaleString("en-IN") %>
-              </span>
-            </p>
-          </div>
         </div>
       </div>
-      <% }) %>
     </div>
-
-    <div class="lg:col-span-4 sticky top-8">
-      <div class="summary-card rounded-[2rem] p-8">
-        <h2 class="text-xl font-bold mb-6">Order Summary</h2>
-
-        <div class="space-y-4 text-[12px] text-gray-400">
-          <div class="flex justify-between">
-            <span>Subtotal</span>
-            <span id="summary-subtotal" class="text-white font-bold"
-              >₹<%= summary.subtotal.toLocaleString("en-IN") %></span
-            >
-          </div>
-          <!-- <div class="flex justify-between text-primary font-bold border-t border-white/5 pt-4 mt-4">
-                            <span>Discount</span>
-                            <span>-₹<%= summary.discount.toLocaleString("en-IN") %></span>
-                        </div> -->
-          <div class="flex justify-between">
-            <span>Shipping estimate</span>
-            <span id="summary-shipping" class="text-primary font-bold">
-              <%= summary.shipping===0 ? "Free" : `₹${summary.shipping}` %>
-            </span>
-          </div>
-          <div class="flex justify-between">
-            <span>Tax estimate (18%)</span>
-            <span id="summary-tax" class="text-white font-bold"
-              >₹<%= summary.tax.toLocaleString("en-IN") %></span
-            >
-          </div>
-        </div>
-
-        <div class="my-8 flex justify-between items-end">
-          <div>
-            <p class="text-[11px] font-bold uppercase">Total Amount</p>
-            <p class="text-[9px] text-gray-500 uppercase tracking-widest">Including all taxes</p>
-          </div>
-          <p id="summary-total" class="text-2xl font-black text-primary">
-            ₹<%= summary.total.toLocaleString("en-IN") %>
-          </p>
-        </div>
-
-        <button
-          onclick="window.location.href='/checkout'"
-          class="w-full bg-primary hover:bg-green-400 text-black font-black py-4 rounded-2xl flex items-center justify-center gap-2 transition text-sm shadow-[0_10px_20px_rgba(74,222,128,0.15)] uppercase"
-        >
-          Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
-        </button>
-      </div>
+    <% } else { %>
+    <div id="empty-state" class="flex flex-col items-center justify-center py-24 text-center">
+      <i class="fa-solid fa-cart-shopping text-6xl text-gray-800 mb-6"></i>
+      <h2 class="text-2xl font-bold text-gray-200 mb-2">Your cart is empty</h2>
+      <p class="text-base text-gray-500 mb-8">Looks like you haven’t added anything yet</p>
+      <a
+        href="/shop"
+        class="px-8 py-3 bg-primary text-black font-bold rounded-xl hover:bg-green-400 transition transform hover:scale-105 shadow-lg"
+        >Start Shopping</a
+      >
     </div>
+    <% } %>
   </div>
-  <% } else { %>
-  <div class="flex flex-col items-center justify-center py-24 text-center">
-    <i class="fa-solid fa-cart-shopping text-6xl text-gray-800 mb-6"></i>
-    <h2 class="text-2xl font-bold text-gray-200 mb-2">Your cart is empty</h2>
-    <p class="text-base text-gray-500 mb-8">Looks like you haven’t added anything yet</p>
-    <a
-      href="/shop"
-      class="px-8 py-3 bg-primary text-black font-bold rounded-xl hover:bg-green-400 transition transform hover:scale-105 shadow-lg"
-    >
-      Start Shopping
-    </a>
-  </div>
-  <% } %>
 </main>
 
 <script>
@@ -246,77 +237,83 @@
       confirmButtonText: 'Remove',
       background: '#121513',
       color: '#fff',
-    }).then((result) => {
+      confirmButtonColor: '#ef4444',
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        fetch(`/cart/remove/${variantId}`, {
-          method: 'DELETE',
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.success) {
+        try {
+          const res = await axios.delete(`/cart/remove/${variantId}`);
+
+          if (res.data.success) {
+            const itemElement = document.getElementById(`item-card-${variantId}`);
+
+            itemElement.style.opacity = '0';
+            itemElement.style.transform = 'scale(0.95)';
+
+            setTimeout(() => {
+              itemElement.remove();
+
+              if (res.data.summary) {
+                updateSummaryUI(res.data.summary);
+              }
+
+              const remainingItems = document.querySelectorAll('.item-card').length;
+              document.getElementById('header-count').innerText = `(${remainingItems} Items)`;
+
+              if (remainingItems === 0) {
+                document.getElementById('cart-content').innerHTML = `
+                  <div class="flex flex-col items-center justify-center py-24 text-center">
+                    <i class="fa-solid fa-cart-shopping text-6xl text-gray-800 mb-6"></i>
+                    <h2 class="text-2xl font-bold text-gray-200 mb-2">Your cart is empty</h2>
+                    <a href="/shop" class="px-8 py-3 bg-primary text-black font-bold rounded-xl hover:bg-green-400">Start Shopping</a>
+                  </div>`;
+              }
+
               Swal.fire({
                 icon: 'success',
-                title: 'Item Removed',
-                timer: 1200,
+                title: 'Removed',
+                timer: 800,
                 showConfirmButton: false,
                 background: '#121513',
                 color: '#fff',
-              }).then(() => {
-                location.reload();
               });
-            }
-          });
+            }, 400);
+          }
+        } catch (err) {
+          Swal.fire('Error', 'Failed to remove item', 'error');
+        }
       }
     });
   }
 
   async function updateQty(variantId, change) {
     try {
-      const res = await axios.post('/cart/update-qty', {
-        variantId: variantId,
-        change: change,
-      });
+      const res = await axios.post('/cart/update-qty', { variantId, change });
 
       if (res.data.success) {
-        const { quantity, itemSubtotal, basePrice, finalPrice, subtotal, tax, total, shipping } =
-          res.data;
+        const d = res.data;
 
-        // 1. Update Core Item Info
-        document.getElementById(`qty-${variantId}`).innerText = quantity;
+        document.getElementById(`qty-${variantId}`).innerText = d.quantity;
         document.getElementById(
           `item-subtotal-${variantId}`
-        ).innerText = `₹${itemSubtotal.toLocaleString('en-IN')}`;
+        ).innerText = `₹ ${d.itemSubtotal.toLocaleString('en-IN')}`;
 
-        // 2. Update Item Savings & Percentage
-        const totalSavings = (basePrice - finalPrice) * quantity;
         const savingsRow = document.getElementById(`item-savings-row-${variantId}`);
-        const savingsSpan = document.getElementById(`item-savings-${variantId}`);
-        const percentSpan = document.getElementById(`save-percent-${variantId}`);
+        const savingsVal = (d.basePrice - d.finalPrice) * d.quantity;
 
-        if (totalSavings > 0) {
-          savingsSpan.innerText = totalSavings.toLocaleString('en-IN');
+        if (savingsVal > 0) {
+          document.getElementById(`item-savings-${variantId}`).innerText =
+            savingsVal.toLocaleString('en-IN');
           savingsRow.classList.remove('hidden');
         } else {
           savingsRow.classList.add('hidden');
         }
 
-        const newPercent = Math.round(((basePrice - finalPrice) / basePrice) * 100);
-        percentSpan.innerText = newPercent;
-
-        // 3. Update Order Summary
-        document.getElementById('summary-subtotal').innerText = `₹${subtotal.toLocaleString(
-          'en-IN'
-        )}`;
-        document.getElementById('summary-tax').innerText = `₹${tax.toLocaleString('en-IN')}`;
-        document.getElementById('summary-total').innerText = `₹${total.toLocaleString('en-IN')}`;
-
-        const shippingText = shipping === 0 ? 'Free' : `₹${shipping}`;
-        document.getElementById('summary-shipping').innerText = shippingText;
+        updateSummaryUI(d);
       } else {
         Swal.fire({
           icon: 'warning',
-          title: 'Oops!',
-          text: res.data.message || 'Action not allowed',
+          title: 'Limit Reached',
+          text: res.data.message,
           background: '#121513',
           color: '#fff',
         });
@@ -324,24 +321,21 @@
     } catch (err) {
       Swal.fire({
         icon: 'error',
-        title: 'Oops!',
-        text: err.response?.data?.message || 'Something went wrong.',
+        title: 'Error',
+        text: 'Stock limit or server error',
         background: '#121513',
         color: '#fff',
       });
     }
   }
-</script>
 
-<% if (typeof cartIssues !=='undefined' && cartIssues && cartIssues.length> 0) { %>
-<script>
-  Swal.fire({
-    icon: 'warning',
-    title: 'Cart Needs Attention',
-    text: '<%= cartIssues[0] %>',
-    background: '#181e18',
-    color: '#fff',
-    confirmButtonColor: '#4ade80',
-  });
+  function updateSummaryUI(data) {
+    document.getElementById('summary-subtotal').innerText = `₹${data.subtotal.toLocaleString(
+      'en-IN'
+    )}`;
+    document.getElementById('summary-tax').innerText = `₹${data.tax.toLocaleString('en-IN')}`;
+    document.getElementById('summary-total').innerText = `₹${data.total.toLocaleString('en-IN')}`;
+    document.getElementById('summary-shipping').innerText =
+      data.shipping === 0 ? 'Free' : `₹${data.shipping}`;
+  }
 </script>
-<% } %>
