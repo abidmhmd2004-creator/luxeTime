@@ -386,18 +386,24 @@ export const placeOrder = asyncHandler(async (req, res) => {
     );
 
     if (paymentMethod === 'RAZORPAY') {
-      const updatedVariant = await Variant.findOneAndUpdate(
-        {
-          _id: item.variant._id,
-          stock: { $gte: item.quantity },
-        },
-        {
-          $inc: { stock: -item.quantity },
-        },
-        { session }
-      );
+      // 🔥 Reserve stock first
+      for (const item of cart.items) {
+        const updatedVariant = await Variant.findOneAndUpdate(
+          {
+            _id: item.variant._id,
+            stock: { $gte: item.quantity },
+          },
+          {
+            $inc: { stock: -item.quantity },
+          },
+          { session }
+        );
 
-      if (!updatedVariant) throw new Error('Product out of stock');
+        if (!updatedVariant) {
+          throw new Error(`Only ${item.variant.stock} left for ${item.product.name}.`);
+        }
+      }
+
       const razorpayOrder = await razorpay.orders.create({
         amount: totalAmount * 100,
         currency: 'INR',
