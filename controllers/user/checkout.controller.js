@@ -442,6 +442,13 @@ export const placeOrder = asyncHandler(async (req, res) => {
     await session.abortTransaction();
     session.endSession();
 
+    if (error.message.includes('Write conflict')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Product just went out of stock. Please try again later.',
+      });
+    }
+
     return res.status(400).json({
       success: false,
       message: error.message,
