@@ -154,19 +154,19 @@ router.get('/product/:id', productDetails);
 
 //cart
 router.get('/cart', requireAuth, getCart);
-router.post('/cart/add', addToCart);
-router.delete('/cart/remove/:variantId', removeFromCart);
+router.post('/cart/add', requireAuth, addToCart);
+router.delete('/cart/remove/:variantId', requireAuth, removeFromCart);
 router.post('/cart/update-qty', requireAuth, updateQty);
 
 //checkout
 router.route('/checkout').get(requireAuth, getCheckoutPage).post(requireAuth, placeOrder);
 router.post('/address-checkout', requireAuth, addAddressCheckout);
 
-router.post('/checkout/verify-payment',requireAuth, verifyRazorpayPayment);
-router.get('/payment-failed/:orderId',requireAuth, getPaymentFailurePage);
-router.post('/checkout/mark-payment-failed', requireAuth,markPaymentFailed);
-router.post('/checkout/apply-coupon',requireAuth, applyCoupon);
-router.delete('/checkout/remove-coupon',requireAuth, removeCoupon);
+router.post('/checkout/verify-payment', requireAuth, verifyRazorpayPayment);
+router.get('/payment-failed/:orderId', requireAuth, getPaymentFailurePage);
+router.post('/checkout/mark-payment-failed', requireAuth, markPaymentFailed);
+router.post('/checkout/apply-coupon', requireAuth, applyCoupon);
+router.delete('/checkout/remove-coupon', requireAuth, removeCoupon);
 
 //orders
 router.get('/orders', requireAuth, getOrders);
@@ -179,13 +179,13 @@ router.post('/orders/:orderId/cancel', requireAuth, cancellFullOrder);
 
 router.post('/orders/:orderId/return', requireAuth, returnRequest);
 
-router.get('/orders/:orderId/invoice', downloadInvoice);
+router.get('/orders/:orderId/invoice', requireAuth, downloadInvoice);
 
 //wishlist
 router.get('/wishlist', requireAuth, getWishlist);
-router.post('/wishlist/add', addToWishlist);
-router.delete('/wishlist/remove/:itemId', removeWishlistItem);
-router.post('/wishlist/toggle', toggleWishlist);
+router.post('/wishlist/add', requireAuth, addToWishlist);
+router.delete('/wishlist/remove/:itemId', requireAuth, removeWishlistItem);
+router.post('/wishlist/toggle', requireAuth, toggleWishlist);
 
 //wallet
 router.get('/wallet', requireAuth, getWalletPage);

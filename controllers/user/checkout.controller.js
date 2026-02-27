@@ -386,7 +386,6 @@ export const placeOrder = asyncHandler(async (req, res) => {
     );
 
     if (paymentMethod === 'RAZORPAY') {
-      // 🔥 Reserve stock first
       for (const item of cart.items) {
         const updatedVariant = await Variant.findOneAndUpdate(
           {
