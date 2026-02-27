@@ -43,8 +43,17 @@ export const postSignup = async (req, res) => {
       return res.redirect('/signup');
     }
 
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+    if (!strongPasswordRegex.test(password)) {
+      req.flash(
+        'error',
+        'Password must be at least 8 characters and include uppercase, lowercase, number and special character'
+      );
+      return res.redirect('/signup');
+    }
+
     const existingUser = await User.findOne({ email });
-    // console.log(existingUser);
 
     if (existingUser && existingUser.isVerified) {
       req.flash('error', 'Email already registered,Please login!');
