@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --accent: #22c55e;
+  --glass: #121513;
+  --border: rgba(255, 255, 255, 0.05);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #050605;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.glass-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+}
+
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.step-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #1a1d1b;
+  border: 2px solid #2a2d2b;
+  position: relative;
+  z-index: 10;
+}
+
+.step-dot.active {
+  background: var(--accent);
+  border-color: rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+}
+
+.step-dot.cancelled {
+  background: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+.content-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+}
