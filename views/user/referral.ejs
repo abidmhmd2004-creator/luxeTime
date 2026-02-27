@@ -2,92 +2,8 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: #0a0c0b;
-    color: #ffffff;
-    margin: 0;
-    /* Changed from hidden to auto to allow mobile scrolling */
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  .main-wrapper {
-    display: flex;
-    /* Changed from fixed height to min-height for mobile flexibility */
-    min-height: 100vh;
-    width: 100vw;
-  }
-
-  .content-area {
-    flex-grow: 1;
-    padding: 1.5rem 1rem; /* Reduced padding for mobile */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  /* Desktop padding adjustment */
-  @media (min-width: 768px) {
-    .content-area {
-      padding: 2rem 3rem;
-    }
-  }
-
-  .luxury-card {
-    background: linear-gradient(145deg, #111814 0%, #0d110e 100%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    width: 100%;
-    max-width: 900px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    flex-shrink: 0;
-  }
-
-  .stat-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    flex-shrink: 0;
-  }
-
-  .code-container {
-    background: #161d18;
-    border: 1px dashed rgba(34, 197, 94, 0.3);
-    transition: all 0.3s ease;
-  }
-
-  .how-it-works-container {
-    background: rgba(255, 255, 255, 0.01);
-    border-radius: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.03);
-  }
-
-  .benefit-circle {
-    background: #ffffff;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  }
-
-  .share-btn-pill {
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .share-btn-pill:hover {
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-2px);
-  }
-</style>
+<link rel="stylesheet" href="/user/styles/referral.css">
 
 <div class="main-wrapper">
   <%- include('../partials/sidebar') %>
@@ -232,25 +148,4 @@
   </main>
 </div>
 
-<script>
-  function copyToClipboard(text) {
-    navigator.clipboard.writeText(text);
-    const icon = document.getElementById('codeIcon');
-    const originalClass = icon.className;
-    icon.className = 'fas fa-check mr-1';
-    setTimeout(() => (icon.className = originalClass), 2000);
-  }
-
-  function shareLink(platform) {
-    const code = document.getElementById('referralCode').innerText;
-    const msg = encodeURIComponent(
-      `Elevate your collection. Use code ${code} for ₹100 off at Luxe Time: https://luxetime.com/invite/${code}`
-    );
-    const urls = {
-      whatsapp: `https://wa.me/?text=${msg}`,
-      email: `mailto:?subject=Exclusive Invitation&body=${msg}`,
-      twitter: `https://twitter.com/intent/tweet?text=${msg}`,
-    };
-    window.open(urls[platform], '_blank');
-  }
-</script>
+<script src="/user/js/referral.js"></script>

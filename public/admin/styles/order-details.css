@@ -1,0 +1,28 @@
+.timeline-line {
+  width: 2px;
+  background: #1a1a1a;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 7px;
+  z-index: 0;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 10px;
+}
+
+/* Style for small action links */
+.btn-action {
+  transition: all 0.2s ease;
+  letter-spacing: 0.05em;
+}
