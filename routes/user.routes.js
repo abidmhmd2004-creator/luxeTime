@@ -154,7 +154,7 @@ router.get('/product/:id', productDetails);
 
 //cart
 router.get('/cart', requireAuth, getCart);
-router.post('/cart/add', requireAuth, addToCart);
+router.post('/cart/add', addToCart);
 router.delete('/cart/remove/:variantId', requireAuth, removeFromCart);
 router.post('/cart/update-qty', requireAuth, updateQty);
 
@@ -183,9 +183,9 @@ router.get('/orders/:orderId/invoice', requireAuth, downloadInvoice);
 
 //wishlist
 router.get('/wishlist', requireAuth, getWishlist);
-router.post('/wishlist/add', requireAuth, addToWishlist);
+router.post('/wishlist/add', addToWishlist);
 router.delete('/wishlist/remove/:itemId', requireAuth, removeWishlistItem);
-router.post('/wishlist/toggle', requireAuth, toggleWishlist);
+router.post('/wishlist/toggle', toggleWishlist);
 
 //wallet
 router.get('/wallet', requireAuth, getWalletPage);
