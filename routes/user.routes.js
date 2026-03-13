@@ -189,7 +189,7 @@ router.post('/wishlist/toggle', toggleWishlist);
 
 //wallet
 router.get('/wallet', requireAuth, getWalletPage);
-router.post('/wallet/create-order', requireAuth, createWalletRecharge);
+router.post('/wallet/create-order', requireAuth, createWalletRecharge); 
 router.post('/wallet/verify-payment', requireAuth, verifyWalletPayment);
 
 router.get('/referral', requireAuth, getReferralPage);

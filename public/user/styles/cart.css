@@ -3,7 +3,7 @@ body {
   color: #ffffff;
   font-family: 'Inter', sans-serif;
   zoom: 0.9;
-}
+} 
 
 @media (max-width: 768px) {
   body {
